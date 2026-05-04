@@ -1,3 +1,5 @@
-composer.lock
-composer.phar
-/vendor/
+/vendor
+/node_modules
+/.env
+/public/storage
+/storage/*.key
