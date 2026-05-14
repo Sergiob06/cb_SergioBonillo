@@ -10,7 +10,10 @@
     <section class="seccion-hero">
         <div class="hero-texto">
             <h1>Bellreguard Club de Basket</h1>
-            <p>Pasión, dedicación y excelencia en cada partido. Únete a nuestra familia basketbolística.</p>
+           <p style="background:yellow;padding:10px;">
+DEPLOY AUTOMÁTICO FUNCIONANDO
+</p>
+ <p>Pasión, dedicación y excelencia en cada partido. Únete a nuestra familia basketbolística.</p>
             <div class="botones-hero">
                 <a href="{{ route('basket.partidos') }}" class="boton-principal" style="text-decoration: none;">Ver Próximos Partidos</a>
                 <a href="{{ route('basket.equipos') }}" class="boton-secundario" style="text-decoration: none;">Ver Equipos</a>
