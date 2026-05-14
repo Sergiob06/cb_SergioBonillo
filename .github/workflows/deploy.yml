@@ -13,16 +13,23 @@ jobs:
         uses: appleboy/ssh-action@v1.0.0
 
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: 212.227.146.242
+          username: deploy
+          key: |
+            -----BEGIN OPENSSH PRIVATE KEY-----
+            b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+            QyNTUxOQAAACDKsmIrz8VvXD5KNK0YqfSwUptfJ08mjWvfLvTJSkfXdAAAAJC42SAOuNkg
+            DgAAAAtzc2gtZWQyNTUxOQAAACDKsmIrz8VvXD5KNK0YqfSwUptfJ08mjWvfLvTJSkfXdA
+            AAAEC6dJjYach6HCyf8R8ofUBhwKhH5+NJx64nthkORKuHMMqyYivPxW9cPko0rRip9LBS
+            m18nTyaNa98u9MlKR9d0AAAADWRlcGxveS1naXRodWI=
+            -----END OPENSSH PRIVATE KEY-----
 
           script: |
             cd /var/www/cb_SergioBonillo
 
             git pull origin main
 
-            composer install7 --optimize-autoloader
+            composer install --optimize-autoloader
 
             php artisan optimize:clear
 
