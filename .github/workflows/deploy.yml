@@ -22,7 +22,7 @@ jobs:
 
             git pull origin main
 
-            composer install --no-dev --optimize-autoloader
+            composer install7 --optimize-autoloader
 
             php artisan optimize:clear
 
