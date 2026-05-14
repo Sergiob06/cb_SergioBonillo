@@ -28,7 +28,7 @@
     </div>
 
     <div class="seccion-foto-ficha">
-        <div style="text-align: center;">
+        <div class="admin-form-upload-media" style="text-align: center;">
             <label>Imagen actual</label>
             <div class="preview-foto">
                 @if($galeria?->image)
@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        <div style="flex: 1;">
+        <div class="admin-form-upload-field" style="flex: 1;">
             <label>{{ $galeria ? 'Subir nueva imagen' : 'Subir imagen' }}</label>
             <input type="file" name="imagen" class="input-ficha" style="background: white;">
             <p style="margin: 10px 0 0; font-size: 0.8em; color: #718096;">Formatos permitidos: JPG o PNG.</p>

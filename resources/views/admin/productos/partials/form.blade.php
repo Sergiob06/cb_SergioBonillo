@@ -23,7 +23,7 @@
     </div>
 
     <div class="seccion-foto-ficha">
-        <div style="text-align: center;">
+        <div class="admin-form-upload-media" style="text-align: center;">
             <label>Imagen actual</label>
             <div class="preview-foto">
                 @if($product?->image_url)
@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        <div style="flex: 1;">
+        <div class="admin-form-upload-field" style="flex: 1;">
             <label>{{ $product ? 'Subir nueva imagen' : 'Subir imagen' }}</label>
             <input type="file" name="image" class="input-ficha" style="background: white;">
             <p style="margin: 10px 0 0; font-size: 0.8em; color: #718096;">Formatos permitidos: JPG, PNG o WEBP.</p>

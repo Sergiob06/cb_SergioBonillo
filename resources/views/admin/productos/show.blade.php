@@ -10,11 +10,11 @@
 </header>
 
 <div class="pizarra-admin">
-    <div style="display: flex; gap: 30px; padding: 20px; flex-wrap: wrap;">
-        <div style="flex: 1; min-width: 280px;">
+    <div class="admin-detail-layout admin-detail-layout--media">
+        <div class="admin-detail-media">
             <img src="{{ $product->image_url ?: asset('img/basket.jpeg') }}" alt="{{ $product->name }}" style="width: 100%; max-width: 420px; border-radius: 10px; object-fit: cover;">
         </div>
-        <div style="flex: 1; min-width: 280px;">
+        <div class="admin-detail-content">
             <h3 style="margin-top: 0;">{{ $product->name }}</h3>
             <p><strong>Precio:</strong> {{ number_format((float) $product->price, 2, ',', '.') }} EUR</p>
             <p><strong>Descripcion:</strong> {{ $product->description ?: 'Sin descripcion disponible.' }}</p>

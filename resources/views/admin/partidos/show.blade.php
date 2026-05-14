@@ -13,8 +13,8 @@
 </header>
 
 <div class="pizarra-admin">
-    <div style="display: flex; gap: 40px; align-items: flex-start; padding: 20px; flex-wrap: wrap;">
-        <div style="flex: 1; min-width: 260px; background: #f9f9f9; padding: 25px; border-radius: 10px; border: 1px solid #eee;">
+    <div class="admin-detail-layout admin-detail-layout--match">
+        <div class="admin-detail-panel admin-detail-panel--compact">
             <h3 style="margin-top: 0; color: #333; border-bottom: 2px solid #fb8500; display: inline-block;">Encuentro</h3>
 
             <p style="font-size: 1.2rem; margin: 20px 0 10px;">
@@ -26,7 +26,7 @@
             </p>
         </div>
 
-        <div style="flex: 2; min-width: 320px;">
+        <div class="admin-detail-content">
             <h3 style="margin-top: 0; color: #333; border-bottom: 2px solid #fb8500; display: inline-block;">Información General</h3>
 
             <p style="font-size: 1.1rem; margin: 15px 0;">
@@ -39,12 +39,12 @@
 
             <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
 
-            <div style="display: flex; gap: 10px;">
+            <div class="admin-detail-actions">
                 <a href="{{ route('partidos.edit', $partido->id) }}" class="btn-accion editar" title="Editar" style="margin: 0;">
                     <i class="fas fa-pen"></i>
                 </a>
 
-                <form action="{{ route('partidos.destroy', $partido->id) }}" method="POST" onsubmit="return confirm('¿Eliminar partido?')" style="margin: 0; display: flex; align-items: center;">
+                <form action="{{ route('partidos.destroy', $partido->id) }}" method="POST" onsubmit="return confirm('¿Eliminar partido?')" class="admin-detail-inline-form" style="margin: 0; display: flex; align-items: center;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn-accion borrar" title="Eliminar" style="margin: 0;">

@@ -31,7 +31,8 @@
 @endif
 
 <div class="pizarra-admin">
-    <table class="tabla-admin">
+    <div class="tabla-admin-wrapper">
+    <table class="tabla-admin tabla-admin-listado">
         <thead>
             <tr>
                 <th>Pos</th>
@@ -48,16 +49,16 @@
         <tbody>
             @forelse($clasificaciones as $clasificacion)
                 <tr>
-                    <td><strong>{{ $clasificacion->posicion }}</strong></td>
-                    <td>{{ $clasificacion->equipo_nombre }}</td>
-                    <td>{{ $clasificacion->categoria }}</td>
-                    <td>{{ $clasificacion->temporada }}</td>
-                    <td>{{ $clasificacion->partidos_jugados }}</td>
-                    <td>{{ $clasificacion->partidos_ganados }}</td>
-                    <td>{{ $clasificacion->partidos_perdidos }}</td>
-                    <td><strong>{{ $clasificacion->puntos }}</strong></td>
-                    <td style="padding: 25px 15px; vertical-align: middle;">
-                        <div style="display: flex; gap: 8px; align-items: center;">
+                    <td data-label="Pos"><strong>{{ $clasificacion->posicion }}</strong></td>
+                    <td data-label="Equipo" class="tabla-admin-principal">{{ $clasificacion->equipo_nombre }}</td>
+                    <td data-label="Categoría">{{ $clasificacion->categoria }}</td>
+                    <td data-label="Temporada">{{ $clasificacion->temporada }}</td>
+                    <td data-label="PJ">{{ $clasificacion->partidos_jugados }}</td>
+                    <td data-label="PG">{{ $clasificacion->partidos_ganados }}</td>
+                    <td data-label="PP">{{ $clasificacion->partidos_perdidos }}</td>
+                    <td data-label="Pts"><strong>{{ $clasificacion->puntos }}</strong></td>
+                    <td data-label="Acciones" class="tabla-admin-celda-acciones">
+                        <div class="tabla-admin-acciones">
                             <a href="{{ route('clasificaciones.show', $clasificacion->id) }}" class="btn-accion" title="Ver detalle" style="background-color: #00b4d8; color: white;"><i class="fas fa-eye"></i></a>
                             <a href="{{ route('clasificaciones.edit', $clasificacion->id) }}" class="btn-accion editar" title="Editar" style="margin: 0;"><i class="fas fa-pen"></i></a>
                             <form action="{{ route('clasificaciones.destroy', $clasificacion->id) }}" method="POST" onsubmit="return confirm('¿Eliminar fila de clasificación?')" style="margin: 0; display: flex; align-items: center;">
@@ -70,11 +71,12 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="9" style="text-align: center; padding: 30px; color: #777;">Todavía no hay filas de clasificación registradas.</td>
+                    <td colspan="9" class="tabla-admin-vacia">Todavía no hay filas de clasificación registradas.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
+    </div>
 
     <div class="contenedor-paginacion">
         {{ $clasificaciones->links() }}

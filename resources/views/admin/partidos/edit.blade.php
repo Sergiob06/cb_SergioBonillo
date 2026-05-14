@@ -29,10 +29,10 @@
             @method('PUT')
 
             <div class="grid-formulario-fichas">
-                <div class="seccion-form-ficha seccion-personal" style="grid-column: span 2;">
+                <div class="seccion-form-ficha seccion-personal admin-form-span-full">
                     <h3><i class="fas fa-users"></i> Enfrentamiento</h3>
 
-                    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px;">
+                    <div class="admin-form-inline-grid">
                         <div class="campo-ficha">
                             <label>Equipo Local</label>
                             <select name="equipo_local_id" required class="input-ficha" style="background: white;">
@@ -57,7 +57,7 @@
                     </div>
                 </div>
 
-                <div class="seccion-foto-ficha" style="display: block; grid-column: span 2;">
+                <div class="seccion-foto-ficha admin-form-span-full admin-form-section-block">
                     <h3 style="margin-top: 0;"><i class="fas fa-calendar-alt"></i> Fecha y Lugar</h3>
 
                     <div class="campo-ficha" style="margin-bottom: 20px;">

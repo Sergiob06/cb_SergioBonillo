@@ -1,50 +1,80 @@
 @extends('layouts.admin')
 
 @section('contenido_admin')
-<header class="header-admin">
-    <div>
+<section class="admin-dashboard">
+<header class="header-admin admin-dashboard-header">
+    <div class="admin-dashboard-heading">
         <h2>Bienvenido al Panel</h2>
-        <p style="color: #777;">Resumen del contenido que ya está persistido en la base de datos</p>
+        <p class="admin-dashboard-resumen">Resumen del contenido que ya está persistido en la base de datos</p>
     </div>
 </header>
 
-<div class="pizarra-admin">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px;">
-        <div class="tarjeta-vacia">
-            <i class="fas fa-tshirt"></i>
-            <h3>{{ $resumenAdmin['equipos'] }}</h3>
-            <p>Equipos</p>
-        </div>
-        <div class="tarjeta-vacia">
-            <i class="fas fa-users"></i>
-            <h3>{{ $resumenAdmin['jugadores'] }}</h3>
-            <p>Jugadores</p>
-        </div>
-        <div class="tarjeta-vacia">
-            <i class="fas fa-calendar-alt"></i>
-            <h3>{{ $resumenAdmin['partidos'] }}</h3>
-            <p>Partidos</p>
-        </div>
-        <div class="tarjeta-vacia">
-            <i class="fas fa-chart-line"></i>
-            <h3>{{ $resumenAdmin['estadisticas'] }}</h3>
-            <p>Estadísticas</p>
-        </div>
-        <div class="tarjeta-vacia">
-            <i class="fas fa-trophy"></i>
-            <h3>{{ $resumenAdmin['clasificaciones'] }}</h3>
-            <p>Clasificación</p>
-        </div>
-        <div class="tarjeta-vacia">
-            <i class="fas fa-camera"></i>
-            <h3>{{ $resumenAdmin['galerias'] }}</h3>
-            <p>Galería</p>
-        </div>
-        <div class="tarjeta-vacia">
-            <i class="fas fa-bag-shopping"></i>
-            <h3>{{ $resumenAdmin['productos'] }}</h3>
-            <p>Productos</p>
-        </div>
+<div class="pizarra-admin admin-dashboard-panel">
+    <div class="admin-dashboard-grid" aria-label="Resumen de metricas del panel admin">
+        <article class="tarjeta-vacia admin-dashboard-card">
+            <div class="admin-dashboard-icono">
+                <i class="fas fa-tshirt" aria-hidden="true"></i>
+            </div>
+            <div class="admin-dashboard-card-body">
+                <h3>{{ $resumenAdmin['equipos'] }}</h3>
+                <p>Equipos</p>
+            </div>
+        </article>
+        <article class="tarjeta-vacia admin-dashboard-card">
+            <div class="admin-dashboard-icono">
+                <i class="fas fa-users" aria-hidden="true"></i>
+            </div>
+            <div class="admin-dashboard-card-body">
+                <h3>{{ $resumenAdmin['jugadores'] }}</h3>
+                <p>Jugadores</p>
+            </div>
+        </article>
+        <article class="tarjeta-vacia admin-dashboard-card">
+            <div class="admin-dashboard-icono">
+                <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+            </div>
+            <div class="admin-dashboard-card-body">
+                <h3>{{ $resumenAdmin['partidos'] }}</h3>
+                <p>Partidos</p>
+            </div>
+        </article>
+        <article class="tarjeta-vacia admin-dashboard-card">
+            <div class="admin-dashboard-icono">
+                <i class="fas fa-chart-line" aria-hidden="true"></i>
+            </div>
+            <div class="admin-dashboard-card-body">
+                <h3>{{ $resumenAdmin['estadisticas'] }}</h3>
+                <p>Estadísticas</p>
+            </div>
+        </article>
+        <article class="tarjeta-vacia admin-dashboard-card">
+            <div class="admin-dashboard-icono">
+                <i class="fas fa-trophy" aria-hidden="true"></i>
+            </div>
+            <div class="admin-dashboard-card-body">
+                <h3>{{ $resumenAdmin['clasificaciones'] }}</h3>
+                <p>Clasificación</p>
+            </div>
+        </article>
+        <article class="tarjeta-vacia admin-dashboard-card">
+            <div class="admin-dashboard-icono">
+                <i class="fas fa-camera" aria-hidden="true"></i>
+            </div>
+            <div class="admin-dashboard-card-body">
+                <h3>{{ $resumenAdmin['galerias'] }}</h3>
+                <p>Galería</p>
+            </div>
+        </article>
+        <article class="tarjeta-vacia admin-dashboard-card">
+            <div class="admin-dashboard-icono">
+                <i class="fas fa-bag-shopping" aria-hidden="true"></i>
+            </div>
+            <div class="admin-dashboard-card-body">
+                <h3>{{ $resumenAdmin['productos'] }}</h3>
+                <p>Productos</p>
+            </div>
+        </article>
     </div>
 </div>
+</section>
 @endsection

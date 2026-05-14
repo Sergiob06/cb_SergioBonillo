@@ -54,7 +54,7 @@
                 <div class="seccion-form-ficha seccion-deportiva">
                     <h3><i class="fas fa-basketball-ball"></i> Datos Deportivos</h3>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="admin-form-inline-grid">
                         <div class="campo-ficha">
                             <label>Dorsal</label>
                             <input type="number" name="dorsal" value="{{ $jugador->dorsal }}" class="input-ficha">
@@ -83,7 +83,7 @@
                 </div>
 
                 <div class="seccion-foto-ficha">
-                    <div style="text-align: center;">
+                    <div class="admin-form-upload-media" style="text-align: center;">
                         <label>Imagen Actual</label>
                         <div class="preview-foto">
                             @if($jugador->image)
@@ -94,7 +94,7 @@
                         </div>
                     </div>
                     
-                    <div style="flex: 1;">
+                    <div class="admin-form-upload-field" style="flex: 1;">
                         <label>Subir nueva fotografía</label>
                         <input type="file" name="imagen_jugador" class="input-ficha" style="background: white;">
                         <p style="margin: 10px 0 0; font-size: 0.8em; color: #718096;">Formatos admitidos: JPG o PNG. Se recomienda tamaño cuadrado.</p>

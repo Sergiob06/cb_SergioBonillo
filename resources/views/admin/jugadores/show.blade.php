@@ -14,7 +14,7 @@
                 <i class="fas fa-edit"></i>&nbsp;EDITAR
             </a>
 
-            <form action="{{ route('jugadores.destroy', $jugador->id) }}" method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar este jugador?')" style="margin: 0;">
+            <form action="{{ route('jugadores.destroy', $jugador->id) }}" method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar este jugador?')" class="admin-detail-inline-form" style="margin: 0;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn-ficha-accion btn-ficha-delete">
@@ -92,7 +92,7 @@
 
         </div>
 
-        <div class="form-acciones-ficha" style="justify-content: center; border-top: 1px solid #eee; margin-top: 40px; padding-top: 20px;">
+        <div class="form-acciones-ficha admin-detail-footer" style="justify-content: center; border-top: 1px solid #eee; margin-top: 40px; padding-top: 20px;">
             <p style="color: #bbb; font-size: 0.8rem; margin: 0;">
                 Registro creado el: {{ $jugador->created_at->format('d/m/Y H:i') }} | ID Sistema: #{{ $jugador->id }}
             </p>

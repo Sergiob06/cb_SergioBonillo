@@ -20,7 +20,7 @@
 
 <div class="pizarra-admin">
     {{-- IMPORTANTE: action apunta a "update" con el ID, y usamos enctype para poder subir archivos --}}
-    <form action="{{ route('equipos.update', $equipo->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('equipos.update', $equipo->id) }}" method="POST" enctype="multipart/form-data" class="formulario-admin">
         
         @csrf {{-- Token de seguridad para evitar ataques externos --}}
         
@@ -63,7 +63,7 @@
             {{-- Campo para la imagen --}}
             <div class="campo">
                 <label>Escudo Actual</label>
-                <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="admin-form-inline-row">
                     {{-- Mostramos la imagen que tiene el equipo ahora mismo --}}
                     <img src="{{ $equipo->image_url }}" alt="Escudo" width="60" height="60" style="object-fit: contain;">
                     
@@ -76,7 +76,7 @@
         {{-- Botones de acción --}}
         <div class="form-acciones">
             {{-- Enlace para volver atrás sin guardar nada --}}
-            <a href="{{ route('equipos.index') }}" style="margin-right: 20px; color: #777; text-decoration: none;">Cancelar</a>
+            <a href="{{ route('equipos.index') }}" class="admin-form-link-cancelar">Cancelar</a>
             
             {{-- El botón submit envía el formulario al método "update" del controlador --}}
             <button type="submit" class="btn-guardar">Guardar Cambios</button>

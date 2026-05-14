@@ -23,7 +23,7 @@
     <div class="seccion-form-ficha seccion-personal">
         <h3><i class="fas fa-chart-bar"></i> Totales</h3>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div class="admin-form-inline-grid">
             <div class="campo-ficha"><label>Puntos Totales</label><input type="number" min="0" name="puntos_totales" value="{{ old('puntos_totales', $estadistica?->puntos_totales ?? 0) }}" class="input-ficha"></div>
             <div class="campo-ficha"><label>Rebotes</label><input type="number" min="0" name="rebotes" value="{{ old('rebotes', $estadistica?->rebotes ?? 0) }}" class="input-ficha"></div>
             <div class="campo-ficha"><label>Asistencias</label><input type="number" min="0" name="asistencias" value="{{ old('asistencias', $estadistica?->asistencias ?? 0) }}" class="input-ficha"></div>

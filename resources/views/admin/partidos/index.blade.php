@@ -40,7 +40,8 @@
 @endif
 
 <div class="pizarra-admin">
-    <table class="tabla-admin">
+    <div class="tabla-admin-wrapper">
+    <table class="tabla-admin tabla-admin-listado">
         <thead>
             <tr>
                 <th>Local</th>
@@ -53,12 +54,12 @@
         <tbody>
             @forelse($partidos as $partido)
                 <tr>
-                    <td>{{ $partido->equipoLocal->nombre ?? $partido->equipo_local }}</td>
-                    <td>{{ $partido->equipoVisitante->nombre ?? $partido->equipo_visitante }}</td>
-                    <td>{{ $partido->fecha_partido->format('d/m/Y H:i') }}</td>
-                    <td>{{ $partido->lugar }}</td>
-                    <td style="padding: 25px 15px; vertical-align: middle;">
-                        <div style="display: flex; gap: 8px; align-items: center; justify-content: flex-start;">
+                    <td data-label="Local" class="tabla-admin-principal">{{ $partido->equipoLocal->nombre ?? $partido->equipo_local }}</td>
+                    <td data-label="Visitante">{{ $partido->equipoVisitante->nombre ?? $partido->equipo_visitante }}</td>
+                    <td data-label="Fecha">{{ $partido->fecha_partido->format('d/m/Y H:i') }}</td>
+                    <td data-label="Lugar">{{ $partido->lugar }}</td>
+                    <td data-label="Acciones" class="tabla-admin-celda-acciones">
+                        <div class="tabla-admin-acciones">
                             <a href="{{ route('partidos.show', $partido->id) }}" class="btn-accion" title="Ver detalle" style="background-color: #00b4d8; color: white;">
                                 <i class="fas fa-eye"></i>
                             </a>
@@ -79,11 +80,12 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" style="text-align: center; padding: 30px; color: #777;">Todavía no hay partidos registrados.</td>
+                    <td colspan="5" class="tabla-admin-vacia">Todavía no hay partidos registrados.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
+    </div>
 
     <div class="contenedor-paginacion">
         {{ $partidos->links() }}

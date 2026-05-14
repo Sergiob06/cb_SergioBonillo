@@ -10,11 +10,11 @@
 </header>
 
 <div class="pizarra-admin">
-    <div style="display: flex; gap: 30px; padding: 20px; flex-wrap: wrap;">
-        <div style="flex: 1; min-width: 280px;">
+    <div class="admin-detail-layout admin-detail-layout--media">
+        <div class="admin-detail-media">
             <img src="{{ $galeria->image_url }}" alt="{{ $galeria->titulo }}" style="width: 100%; max-width: 420px; border-radius: 10px; object-fit: cover;">
         </div>
-        <div style="flex: 1; min-width: 280px;">
+        <div class="admin-detail-content">
             <h3 style="margin-top: 0;">{{ $galeria->titulo }}</h3>
             <p><strong>Categoría:</strong> {{ $galeria->categoria }}</p>
             <p><strong>Fecha:</strong> {{ $galeria->fecha_imagen ? $galeria->fecha_imagen->format('d/m/Y') : 'Sin fecha' }}</p>

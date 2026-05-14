@@ -40,7 +40,8 @@
 @endif
 
 <div class="pizarra-admin">
-    <table class="tabla-admin">
+    <div class="tabla-admin-wrapper">
+    <table class="tabla-admin tabla-admin-listado">
         <thead>
             <tr>
                 <th>Equipo</th>
@@ -55,17 +56,17 @@
         <tbody>
             @forelse($estadisticas as $estadistica)
                 <tr>
-                    <td>
+                    <td data-label="Equipo" class="tabla-admin-principal">
                         <strong>{{ $estadistica->equipo->nombre ?? 'Sin equipo' }}</strong><br>
                         <span style="color: #777; font-size: 0.9em;">{{ $estadistica->equipo->categoria ?? 'Sin categoría' }}</span>
                     </td>
-                    <td>{{ $estadistica->temporada }}</td>
-                    <td>{{ $estadistica->puntos_totales }}</td>
-                    <td>{{ $estadistica->rebotes }}</td>
-                    <td>{{ $estadistica->asistencias }}</td>
-                    <td>{{ $estadistica->victorias }}V - {{ $estadistica->derrotas }}D</td>
-                    <td style="padding: 25px 15px; vertical-align: middle;">
-                        <div style="display: flex; gap: 8px; align-items: center; justify-content: flex-start;">
+                    <td data-label="Temporada">{{ $estadistica->temporada }}</td>
+                    <td data-label="Puntos">{{ $estadistica->puntos_totales }}</td>
+                    <td data-label="Rebotes">{{ $estadistica->rebotes }}</td>
+                    <td data-label="Asistencias">{{ $estadistica->asistencias }}</td>
+                    <td data-label="Balance">{{ $estadistica->victorias }}V - {{ $estadistica->derrotas }}D</td>
+                    <td data-label="Acciones" class="tabla-admin-celda-acciones">
+                        <div class="tabla-admin-acciones">
                             <a href="{{ route('estadisticas.show', $estadistica->id) }}" class="btn-accion" title="Ver detalle" style="background-color: #00b4d8; color: white;">
                                 <i class="fas fa-eye"></i>
                             </a>
@@ -86,11 +87,12 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" style="text-align: center; padding: 30px; color: #777;">Todavía no hay estadísticas registradas.</td>
+                    <td colspan="7" class="tabla-admin-vacia">Todavía no hay estadísticas registradas.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
+    </div>
 
     <div class="contenedor-paginacion">
         {{ $estadisticas->links() }}

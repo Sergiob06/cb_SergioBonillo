@@ -43,7 +43,8 @@
 @endif
 
 <div class="pizarra-admin">
-    <table class="tabla-admin">
+    <div class="tabla-admin-wrapper">
+    <table class="tabla-admin tabla-admin-listado">
         <thead>
             <tr>
                 <th>Escudo</th>
@@ -57,18 +58,18 @@
             {{-- BUCLE: Repite la fila por cada equipo que haya en la base de datos --}}
             @foreach($equipos as $equipo)
             <tr>
-                <td>
+                <td data-label="Escudo" class="tabla-admin-imagen">
                     <div class="contenedor-escudo">
                         {{-- Muestra la foto guardada en la carpeta public/escudos --}}
                         <img src="{{ $equipo->image_url }}" alt="Escudo" width="60" height="60" style="object-fit: contain;">
                     </div> {{-- DIV cerrado correctamente --}}
                 </td>
-                <td><strong>{{ $equipo->nombre }}</strong></td>
-                <td>{{ $equipo->category->name ?? $equipo->categoria }}</td>
-                <td>{{ $equipo->jugadores_count }}</td>
-                <td style="padding: 25px 15px; vertical-align: middle;">
+                <td data-label="Nombre Equipo" class="tabla-admin-principal"><strong>{{ $equipo->nombre }}</strong></td>
+                <td data-label="Categoría">{{ $equipo->category->name ?? $equipo->categoria }}</td>
+                <td data-label="Nº Jugadores">{{ $equipo->jugadores_count }}</td>
+                <td data-label="Acciones" class="tabla-admin-celda-acciones">
                     {{-- Contenedor de los botones Editar y Borrar --}}
-                    <div style="display: flex; gap: 8px; align-items: center; justify-content: flex-start;">
+                    <div class="tabla-admin-acciones">
                         
                         <a href="{{ route('equipos.show', $equipo->id) }}" class="btn-accion" title="Ver Detalle" style="background-color: #00b4d8; color: white;">
                             <i class="fas fa-eye"></i>
@@ -94,6 +95,7 @@
             @endforeach
         </tbody>
     </table>
+    </div>
 
     {{--Esto es la paginación--}}
     <div class="contenedor-paginacion">

@@ -53,7 +53,7 @@
                 <div class="seccion-form-ficha seccion-deportiva">
                     <h3><i class="fas fa-basketball-ball"></i> Datos Deportivos</h3>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="admin-form-inline-grid">
                         <div class="campo-ficha">
                             <label>Dorsal</label>
                             <input type="number" name="dorsal" value="{{ old('dorsal') }}" placeholder="00" class="input-ficha">
@@ -83,14 +83,14 @@
                 </div>
 
                 <div class="seccion-foto-ficha">
-                    <div style="text-align: center;">
+                    <div class="admin-form-upload-media" style="text-align: center;">
                         <label>Imagen</label>
                         <div class="preview-foto">
                             <img src="{{ asset('img/basket.jpeg') }}" alt="Imagen por defecto">
                         </div>
                     </div>
                     
-                    <div style="flex: 1;">
+                    <div class="admin-form-upload-field" style="flex: 1;">
                         <label>Subir fotografía del jugador</label>
                         <input type="file" name="imagen_jugador" class="input-ficha" style="background: white;">
                         <p style="margin: 10px 0 0; font-size: 0.8em; color: #718096;">Formatos: JPG o PNG. La foto se guardará en public/jugadores.</p>

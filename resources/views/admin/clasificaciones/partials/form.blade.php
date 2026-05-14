@@ -36,7 +36,7 @@
     <div class="seccion-form-ficha seccion-personal">
         <h3><i class="fas fa-list-ol"></i> Posición y Balance</h3>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div class="admin-form-inline-grid">
             <div class="campo-ficha"><label>Posición</label><input type="number" min="1" name="posicion" value="{{ old('posicion', $clasificacion?->posicion ?? 1) }}" required class="input-ficha"></div>
             <div class="campo-ficha"><label>Puntos</label><input type="number" min="0" name="puntos" value="{{ old('puntos', $clasificacion?->puntos ?? 0) }}" required class="input-ficha"></div>
             <div class="campo-ficha"><label>Partidos Jugados</label><input type="number" min="0" name="partidos_jugados" value="{{ old('partidos_jugados', $clasificacion?->partidos_jugados ?? 0) }}" required class="input-ficha"></div>

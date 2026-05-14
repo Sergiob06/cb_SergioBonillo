@@ -31,7 +31,8 @@
 @endif
 
 <div class="pizarra-admin">
-    <table class="tabla-admin">
+    <div class="tabla-admin-wrapper">
+    <table class="tabla-admin tabla-admin-listado">
         <thead>
             <tr>
                 <th>Imagen</th>
@@ -45,13 +46,13 @@
         <tbody>
             @forelse($galerias as $galeria)
                 <tr>
-                    <td><img src="{{ $galeria->image_url }}" alt="{{ $galeria->titulo }}" width="80" height="60" style="object-fit: cover; border-radius: 6px;"></td>
-                    <td><strong>{{ $galeria->titulo }}</strong></td>
-                    <td>{{ $galeria->categoria }}</td>
-                    <td>{{ $galeria->fecha_imagen ? $galeria->fecha_imagen->format('d/m/Y') : '-' }}</td>
-                    <td>{{ \Illuminate\Support\Str::limit($galeria->descripcion, 80) }}</td>
-                    <td style="padding: 25px 15px; vertical-align: middle;">
-                        <div style="display: flex; gap: 8px; align-items: center;">
+                    <td data-label="Imagen" class="tabla-admin-imagen"><img src="{{ $galeria->image_url }}" alt="{{ $galeria->titulo }}" width="80" height="60" style="object-fit: cover; border-radius: 6px;"></td>
+                    <td data-label="Título" class="tabla-admin-principal"><strong>{{ $galeria->titulo }}</strong></td>
+                    <td data-label="Categoría">{{ $galeria->categoria }}</td>
+                    <td data-label="Fecha">{{ $galeria->fecha_imagen ? $galeria->fecha_imagen->format('d/m/Y') : '-' }}</td>
+                    <td data-label="Descripción">{{ \Illuminate\Support\Str::limit($galeria->descripcion, 80) }}</td>
+                    <td data-label="Acciones" class="tabla-admin-celda-acciones">
+                        <div class="tabla-admin-acciones">
                             <a href="{{ route('galerias.show', $galeria->id) }}" class="btn-accion" title="Ver detalle" style="background-color: #00b4d8; color: white;"><i class="fas fa-eye"></i></a>
                             <a href="{{ route('galerias.edit', $galeria->id) }}" class="btn-accion editar" title="Editar" style="margin: 0;"><i class="fas fa-pen"></i></a>
                             <form action="{{ route('galerias.destroy', $galeria->id) }}" method="POST" onsubmit="return confirm('¿Eliminar foto?')" style="margin: 0; display: flex; align-items: center;">
@@ -64,11 +65,12 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" style="text-align: center; padding: 30px; color: #777;">Todavía no hay fotos registradas en la galería.</td>
+                    <td colspan="6" class="tabla-admin-vacia">Todavía no hay fotos registradas en la galería.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
+    </div>
 
     <div class="contenedor-paginacion">
         {{ $galerias->links() }}
