@@ -10,12 +10,10 @@
     <section class="seccion-hero">
         <div class="hero-texto">
             <h1>Bellreguard Club de Basket</h1>
-           <p style="background:yellow;padding:10px;">
-DEPLOY AUTOMÁTICO FUNCIONANDO
-</p>
- <p>Pasión, dedicación y excelencia en cada partido. Únete a nuestra familia basketbolística.</p>
+            <p>Pasión, dedicación y excelencia en cada partido. Únete a nuestra familia basketbolística.</p>
             <div class="botones-hero">
-                <a href="{{ route('basket.partidos') }}" class="boton-principal" style="text-decoration: none;">Ver Próximos Partidos</a>
+                <a href="{{ route('basket.partidos') }}" class="boton-principal" style="text-decoration: none;">Ver Próximos
+                    Partidos</a>
                 <a href="{{ route('basket.equipos') }}" class="boton-secundario" style="text-decoration: none;">Ver Equipos</a>
             </div>
         </div>
@@ -63,7 +61,7 @@ DEPLOY AUTOMÁTICO FUNCIONANDO
                 <div class="home-section-header home-section-header-table">
                     <h2>Clasificación</h2>
                     <p class="subtitulo">
-                        @if($categoriaClasificacion || $temporadaClasificacion)
+                        @if ($categoriaClasificacion || $temporadaClasificacion)
                             {{ $categoriaClasificacion ?? 'Categoría' }}{{ $temporadaClasificacion ? ' · ' . $temporadaClasificacion : '' }}
                         @else
                             Posición actual de los equipos del club
@@ -71,7 +69,7 @@ DEPLOY AUTOMÁTICO FUNCIONANDO
                     </p>
                 </div>
 
-                @if($clasificacion->isNotEmpty())
+                @if ($clasificacion->isNotEmpty())
                     <div class="tabla-scroll">
                         <table class="tabla-clasificacion">
                             <thead>
@@ -105,7 +103,7 @@ DEPLOY AUTOMÁTICO FUNCIONANDO
         </div>
     </section>
 
-    @if($ultimasFotos->isNotEmpty())
+    @if ($ultimasFotos->isNotEmpty())
         <section class="home-section">
             <div class="home-section-shell">
                 <div class="home-section-box">
@@ -119,7 +117,8 @@ DEPLOY AUTOMÁTICO FUNCIONANDO
                             <div class="home-card">
                                 <img src="{{ $foto->image_url }}" alt="{{ $foto->titulo }}" />
                                 <div class="home-card-content">
-                                    <span class="fecha">{{ $foto->fecha_imagen ? $foto->fecha_imagen->translatedFormat('d F Y') : 'Sin fecha' }}</span>
+                                    <span
+                                        class="fecha">{{ $foto->fecha_imagen ? $foto->fecha_imagen->translatedFormat('d F Y') : 'Sin fecha' }}</span>
                                     <h3>{{ $foto->titulo }}</h3>
                                     <p>{{ \Illuminate\Support\Str::limit($foto->descripcion, 90) }}</p>
                                     <a href="{{ route('basket.galeria') }}">Ver galería →</a>
