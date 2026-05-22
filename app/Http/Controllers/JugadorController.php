@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Equipo;
 use App\Models\Jugador;
-use App\Models\Equipo; // Importamos el modelo Equipo para el desplegable
 use App\Models\Posicion;
 use App\Support\ImagePath;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class JugadorController extends Controller
@@ -22,8 +24,8 @@ class JugadorController extends Controller
             ->deEquiposLocales()
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($searchQuery) use ($search) {
-                    $searchQuery->where('nombre', 'like', '%' . $search . '%')
-                        ->orWhere('apellido', 'like', '%' . $search . '%');
+                    $searchQuery->where('nombre', 'like', '%'.$search.'%')
+                        ->orWhere('apellido', 'like', '%'.$search.'%');
                 });
             })
             ->when($equipoSeleccionado, function ($query) use ($equipoSeleccionado) {
@@ -50,24 +52,24 @@ class JugadorController extends Controller
     public function store(Request $request)
     {
         $datosValidados = $request->validate([
-            'nombre'           => 'required|string|max:255',
-            'apellido'         => 'required|string|max:255',
-            'dorsal'           => 'nullable|integer|min:0|max:99',
-            'posicion_id'      => 'required|exists:posiciones,id',
+            'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
+            'dorsal' => 'nullable|integer|min:0|max:99',
+            'posicion_id' => 'required|exists:posiciones,id',
             'fecha_nacimiento' => 'nullable|date',
-            'equipo_id'        => ['required', Rule::exists('equipos', 'id')->where('es_local', true)],
-            'imagen_jugador'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'equipo_id' => ['required', Rule::exists('equipos', 'id')->where('es_local', true)],
+            'imagen_jugador' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
         ], [
-            'nombre.required'           => 'El nombre es obligatorio.',
-            'apellido.required'         => 'El apellido es obligatorio.',
-            'dorsal.integer'            => 'El dorsal debe ser un número.',
-            'posicion_id.required'      => 'Debes seleccionar una posición.',
-            'posicion_id.exists'        => 'La posición seleccionada no es válida.',
-            'equipo_id.required'        => 'Debes asignar al jugador a un equipo.',
-            'equipo_id.exists'          => 'El jugador solo puede pertenecer a un equipo local.',
-            'imagen_jugador.image'      => 'El archivo debe ser una imagen.',
-            'imagen_jugador.mimes'      => 'La foto debe ser JPG, PNG o WEBP.',
-            'imagen_jugador.max'        => 'La foto es demasiado pesada (máximo 4MB).',
+            'nombre.required' => 'El nombre es obligatorio.',
+            'apellido.required' => 'El apellido es obligatorio.',
+            'dorsal.integer' => 'El dorsal debe ser un número.',
+            'posicion_id.required' => 'Debes seleccionar una posición.',
+            'posicion_id.exists' => 'La posición seleccionada no es válida.',
+            'equipo_id.required' => 'Debes asignar al jugador a un equipo.',
+            'equipo_id.exists' => 'El jugador solo puede pertenecer a un equipo local.',
+            'imagen_jugador.image' => 'El archivo debe ser una imagen.',
+            'imagen_jugador.mimes' => 'La foto debe ser JPG, PNG o WEBP.',
+            'imagen_jugador.max' => 'La foto es demasiado pesada (máximo 4MB).',
         ]);
 
         $posicion = Posicion::findOrFail($datosValidados['posicion_id']);
@@ -83,12 +85,15 @@ class JugadorController extends Controller
         ];
 
         if ($request->hasFile('imagen_jugador')) {
-            $datosJugador['imagen_jugador'] = $this->normalizarRutaImagen(
-                $request->file('imagen_jugador')->store('jugadores', 'public')
+            $datosJugador['imagen_jugador'] = $this->guardarImagenJugador(
+                $request->file('imagen_jugador'),
+                $datosValidados['nombre'],
+                $datosValidados['apellido']
             );
         }
 
         Jugador::create($datosJugador);
+
         return redirect()->route('jugadores.index')->with('mensaje', 'Jugador creado con éxito');
     }
 
@@ -105,24 +110,24 @@ class JugadorController extends Controller
     {
 
         $datosValidados = $request->validate([
-            'nombre'           => 'required|string|max:255',
-            'apellido'         => 'required|string|max:255',
-            'dorsal'           => 'nullable|integer|min:0|max:99',
-            'posicion_id'      => 'required|exists:posiciones,id',
+            'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
+            'dorsal' => 'nullable|integer|min:0|max:99',
+            'posicion_id' => 'required|exists:posiciones,id',
             'fecha_nacimiento' => 'nullable|date',
-            'equipo_id'        => ['required', Rule::exists('equipos', 'id')->where('es_local', true)],
-            'imagen_jugador'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'equipo_id' => ['required', Rule::exists('equipos', 'id')->where('es_local', true)],
+            'imagen_jugador' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
         ], [
-            'nombre.required'           => 'El nombre es obligatorio.',
-            'apellido.required'         => 'El apellido es obligatorio.',
-            'dorsal.integer'            => 'El dorsal debe ser un número.',
-            'posicion_id.required'      => 'Debes seleccionar una posición.',
-            'posicion_id.exists'        => 'La posición seleccionada no es válida.',
-            'equipo_id.required'        => 'Debes asignar al jugador a un equipo.',
-            'equipo_id.exists'          => 'El jugador solo puede pertenecer a un equipo local.',
-            'imagen_jugador.image'      => 'El archivo debe ser una imagen.',
-            'imagen_jugador.mimes'      => 'La foto debe ser JPG, PNG o WEBP.',
-            'imagen_jugador.max'        => 'La foto es demasiado pesada (máximo 4MB).',
+            'nombre.required' => 'El nombre es obligatorio.',
+            'apellido.required' => 'El apellido es obligatorio.',
+            'dorsal.integer' => 'El dorsal debe ser un número.',
+            'posicion_id.required' => 'Debes seleccionar una posición.',
+            'posicion_id.exists' => 'La posición seleccionada no es válida.',
+            'equipo_id.required' => 'Debes asignar al jugador a un equipo.',
+            'equipo_id.exists' => 'El jugador solo puede pertenecer a un equipo local.',
+            'imagen_jugador.image' => 'El archivo debe ser una imagen.',
+            'imagen_jugador.mimes' => 'La foto debe ser JPG, PNG o WEBP.',
+            'imagen_jugador.max' => 'La foto es demasiado pesada (máximo 4MB).',
         ]);
 
         $jugador = Jugador::deEquiposLocales()->findOrFail($id);
@@ -141,18 +146,20 @@ class JugadorController extends Controller
 
         if ($request->hasFile('imagen_jugador')) {
             if ($jugador->imagen_jugador) {
-                $this->eliminarImagenSiExiste($jugador->imagen_jugador);
+                $this->eliminarImagenSiExiste($jugador->imagen_jugador, $jugador->id);
             }
 
-            $datosJugador['imagen_jugador'] = $this->normalizarRutaImagen(
-                $request->file('imagen_jugador')->store('jugadores', 'public')
+            $datosJugador['imagen_jugador'] = $this->guardarImagenJugador(
+                $request->file('imagen_jugador'),
+                $datosValidados['nombre'],
+                $datosValidados['apellido']
             );
         }
 
         $jugador->update($datosJugador);
+
         return redirect()->route('jugadores.index')->with('mensaje', 'Jugador actualizado correctamente');
     }
-
 
     public function destroy($id)
     {
@@ -161,7 +168,7 @@ class JugadorController extends Controller
 
         // 2. Definimos la ruta de su imagen
         if ($jugador->imagen_jugador) {
-            $this->eliminarImagenSiExiste($jugador->imagen_jugador);
+            $this->eliminarImagenSiExiste($jugador->imagen_jugador, $jugador->id);
         }
 
         // 4. Borramos el registro de la base de datos
@@ -175,12 +182,13 @@ class JugadorController extends Controller
     {
         // Usamos with('equipo') para traer también los datos del equipo al que pertenece
         $jugador = Jugador::with(['equipo.category', 'posicion'])->deEquiposLocales()->findOrFail($id);
+
         return view('admin.jugadores.show', compact('jugador'));
     }
 
-    ///////////////
+    // /////////////
     // BUSCADOR //
-    /////////////
+    // ///////////
     public function search(Request $request)
     {
         return $this->index($request);
@@ -190,16 +198,50 @@ class JugadorController extends Controller
     {
         $equipoId = $request->integer('equipo_id') ?: $request->integer('equipo');
 
-        if (!$equipoId) {
+        if (! $equipoId) {
             return null;
         }
 
         return $equiposLocales->contains('id', $equipoId) ? $equipoId : null;
     }
 
-    private function eliminarImagenSiExiste(?string $rutaImagen): void
+    private function guardarImagenJugador(UploadedFile $imagen, string $nombre, string $apellido): string
     {
-        ImagePath::deleteFromPublicDisk($rutaImagen, 'jugadores');
+        $directorio = public_path('jugadores');
+
+        if (! is_dir($directorio)) {
+            mkdir($directorio, 0755, true);
+        }
+
+        $extension = strtolower($imagen->getClientOriginalExtension() ?: $imagen->extension());
+        $base = Str::slug($nombre.' '.$apellido) ?: 'jugador';
+        $nombreArchivo = $base.'-'.now()->format('YmdHis').'-'.Str::lower(Str::random(8)).'.'.$extension;
+
+        $imagen->move($directorio, $nombreArchivo);
+
+        return 'jugadores/'.$nombreArchivo;
+    }
+
+    private function eliminarImagenSiExiste(?string $rutaImagen, ?int $jugadorId = null): void
+    {
+        $rutaNormalizada = $this->normalizarRutaImagen($rutaImagen);
+
+        if (! $rutaNormalizada || $rutaNormalizada === ImagePath::DEFAULT_IMAGE) {
+            return;
+        }
+
+        $imagenUsadaPorOtroJugador = Jugador::query()
+            ->when($jugadorId, fn ($query) => $query->whereKeyNot($jugadorId))
+            ->whereIn('imagen_jugador', [
+                $rutaNormalizada,
+                'public/'.$rutaNormalizada,
+                'storage/'.$rutaNormalizada,
+            ])
+            ->exists();
+
+        if (! $imagenUsadaPorOtroJugador) {
+            ImagePath::deleteFromPublicPath($rutaNormalizada, 'jugadores');
+        }
     }
 
     private function normalizarRutaImagen(?string $rutaImagen): ?string

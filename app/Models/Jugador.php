@@ -2,22 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Support\ImagePath;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Jugador extends Model
 {
     use HasFactory; // IMPORTANTE PARA EL FACTORY
 
     protected $table = 'jugadores';
-    
+
     protected $fillable = [
-        'nombre', 
-        'apellido', 
-        'dorsal', 
-        'fecha_nacimiento', 
-        'posicion', 
+        'nombre',
+        'apellido',
+        'dorsal',
+        'fecha_nacimiento',
+        'posicion',
         'posicion_id',
         'imagen_jugador',
         'equipo_id',
@@ -56,11 +56,11 @@ class Jugador extends Model
 
     public function getImageAttribute(): ?string
     {
-        return ImagePath::normalize($this->imagen_jugador, 'jugadores');
+        return ImagePath::publicPath($this->imagen_jugador, 'jugadores');
     }
 
     public function getImageUrlAttribute(): string
     {
-        return ImagePath::url($this->imagen_jugador, 'jugadores');
+        return ImagePath::publicUrl($this->imagen_jugador, 'jugadores');
     }
 }

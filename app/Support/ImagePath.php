@@ -8,11 +8,12 @@ use Illuminate\Support\Str;
 class ImagePath
 {
     public const DEFAULT_IMAGE = 'img/basket.jpeg';
+
     public const DEFAULT_TEAM_IMAGE = 'img/equipo-default.svg';
 
     public static function normalize(?string $path, ?string $defaultDirectory = null): ?string
     {
-        if (!$path) {
+        if (! $path) {
             return null;
         }
 
@@ -30,8 +31,8 @@ class ImagePath
         $normalized = preg_replace('#^/?public/#', '', $normalized);
         $normalized = ltrim($normalized, '/');
 
-        if ($defaultDirectory && !Str::contains($normalized, '/')) {
-            return trim($defaultDirectory, '/') . '/' . $normalized;
+        if ($defaultDirectory && ! Str::contains($normalized, '/')) {
+            return trim($defaultDirectory, '/').'/'.$normalized;
         }
 
         return $normalized;
@@ -41,7 +42,7 @@ class ImagePath
     {
         $normalized = self::normalize($path, $defaultDirectory);
 
-        if (!$normalized) {
+        if (! $normalized) {
             return asset($fallback);
         }
 
@@ -50,7 +51,7 @@ class ImagePath
         }
 
         if (Storage::disk('public')->exists($normalized)) {
-            return asset('storage/' . $normalized);
+            return asset('storage/'.$normalized);
         }
 
         if (is_file(public_path($normalized))) {
@@ -60,16 +61,34 @@ class ImagePath
         return asset($fallback);
     }
 
+    public static function publicUrl(?string $path, ?string $defaultDirectory = null, string $fallback = self::DEFAULT_IMAGE): string
+    {
+        $normalized = self::publicPath($path, $defaultDirectory);
+
+        return asset($normalized ?? $fallback);
+    }
+
+    public static function publicPath(?string $path, ?string $defaultDirectory = null): ?string
+    {
+        $normalized = self::normalize($path, $defaultDirectory);
+
+        if (! $normalized || Str::startsWith($normalized, ['http://', 'https://'])) {
+            return null;
+        }
+
+        return is_file(public_path($normalized)) ? $normalized : null;
+    }
+
     /**
      * Resolve a path that may be a full storage path or just a filename from one of several folders.
      *
-     * @param array<int, string> $directories
+     * @param  array<int, string>  $directories
      */
     public static function normalizeFromDirectories(?string $path, array $directories): ?string
     {
         $normalized = self::normalize($path);
 
-        if (!$normalized) {
+        if (! $normalized) {
             return null;
         }
 
@@ -79,17 +98,17 @@ class ImagePath
 
         $firstDirectory = $directories[0] ?? null;
 
-        return $firstDirectory ? trim($firstDirectory, '/') . '/' . $normalized : $normalized;
+        return $firstDirectory ? trim($firstDirectory, '/').'/'.$normalized : $normalized;
     }
 
     /**
-     * @param array<int, string> $directories
+     * @param  array<int, string>  $directories
      */
     public static function urlFromDirectories(?string $path, array $directories, string $fallback = self::DEFAULT_IMAGE): string
     {
         $normalized = self::normalize($path);
 
-        if (!$normalized) {
+        if (! $normalized) {
             return asset($fallback);
         }
 
@@ -100,7 +119,7 @@ class ImagePath
         $candidates = Str::contains($normalized, '/')
             ? [$normalized]
             : collect($directories)
-                ->map(fn (string $directory) => trim($directory, '/') . '/' . $normalized)
+                ->map(fn (string $directory) => trim($directory, '/').'/'.$normalized)
                 ->push($normalized)
                 ->unique()
                 ->values()
@@ -108,7 +127,7 @@ class ImagePath
 
         foreach ($candidates as $candidate) {
             if (Storage::disk('public')->exists($candidate)) {
-                return asset('storage/' . $candidate);
+                return asset('storage/'.$candidate);
             }
 
             if (is_file(public_path($candidate))) {
@@ -123,29 +142,45 @@ class ImagePath
     {
         $normalized = self::normalize($path, $defaultDirectory);
 
-        if ($normalized && !Str::startsWith($normalized, ['http://', 'https://'])) {
+        if ($normalized && ! Str::startsWith($normalized, ['http://', 'https://'])) {
             Storage::disk('public')->delete($normalized);
         }
     }
 
+    public static function deleteFromPublicPath(?string $path, ?string $defaultDirectory = null): void
+    {
+        $normalized = self::publicPath($path, $defaultDirectory);
+
+        if (! $normalized) {
+            return;
+        }
+
+        $absolutePath = public_path($normalized);
+
+        if (is_file($absolutePath)) {
+            @unlink($absolutePath);
+        }
+    }
+
     /**
-     * @param array<int, string> $directories
+     * @param  array<int, string>  $directories
      */
     public static function deleteFromDirectories(?string $path, array $directories): void
     {
         $normalized = self::normalize($path);
 
-        if (!$normalized || Str::startsWith($normalized, ['http://', 'https://'])) {
+        if (! $normalized || Str::startsWith($normalized, ['http://', 'https://'])) {
             return;
         }
 
         if (Str::contains($normalized, '/')) {
             Storage::disk('public')->delete($normalized);
+
             return;
         }
 
         foreach ($directories as $directory) {
-            Storage::disk('public')->delete(trim($directory, '/') . '/' . $normalized);
+            Storage::disk('public')->delete(trim($directory, '/').'/'.$normalized);
         }
     }
 }
