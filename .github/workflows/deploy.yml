@@ -28,12 +28,10 @@ jobs:
             git pull origin main
 
             rm -rf vendor
-            composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+            composer install --optimize-autoloader --no-interaction
 
             php artisan optimize:clear
-
             php artisan migrate --force
-
             php artisan db:seed --force
 
             php artisan config:cache
