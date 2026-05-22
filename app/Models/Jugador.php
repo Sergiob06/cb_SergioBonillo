@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Str;
+use App\Support\ImagePath;
 
 class Jugador extends Model
 {
@@ -18,6 +18,7 @@ class Jugador extends Model
         'dorsal', 
         'fecha_nacimiento', 
         'posicion', 
+        'posicion_id',
         'imagen_jugador',
         'equipo_id',
     ];
@@ -27,43 +28,39 @@ class Jugador extends Model
         'image_url',
     ];
 
-    public function equipo() {
+    protected $casts = [
+        'fecha_nacimiento' => 'date',
+    ];
+
+    public function equipo()
+    {
         return $this->belongsTo(Equipo::class);
+    }
+
+    public function posicion()
+    {
+        return $this->belongsTo(Posicion::class);
+    }
+
+    public function getPosicionNombreAttribute(): string
+    {
+        return $this->posicion?->nombre ?? $this->posicion ?? 'Sin posición';
+    }
+
+    public function scopeDeEquiposLocales($query)
+    {
+        return $query->whereHas('equipo', function ($equipoQuery) {
+            $equipoQuery->locales();
+        });
     }
 
     public function getImageAttribute(): ?string
     {
-        if (!$this->imagen_jugador) {
-            return null;
-        }
-
-        $normalized = str_replace('\\', '/', trim($this->imagen_jugador));
-
-        if ($normalized === '') {
-            return null;
-        }
-
-        if (Str::startsWith($normalized, ['http://', 'https://', 'storage/', '/storage/'])) {
-            return ltrim($normalized, '/');
-        }
-
-        if (Str::startsWith($normalized, 'jugadores/')) {
-            return $normalized;
-        }
-
-        return 'jugadores/' . ltrim($normalized, '/');
+        return ImagePath::normalize($this->imagen_jugador, 'jugadores');
     }
 
     public function getImageUrlAttribute(): string
     {
-        if (!$this->image) {
-            return asset('img/basket.jpeg');
-        }
-
-        if (Str::startsWith($this->image, ['http://', 'https://'])) {
-            return $this->image;
-        }
-
-        return asset('storage/' . ltrim($this->image, '/'));
+        return ImagePath::url($this->imagen_jugador, 'jugadores');
     }
 }

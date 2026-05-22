@@ -488,6 +488,220 @@ img {
     border-bottom: 1px solid #eee;
 }
 
+.public-filters,
+.public-filters-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto 30px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid #e7ebef;
+    border-radius: 14px;
+    box-shadow: 0 10px 26px rgba(17, 17, 17, 0.08);
+    box-sizing: border-box;
+}
+
+.public-filter-group {
+    min-width: 0;
+}
+
+.public-filter-group--search {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    width: 320px;
+    max-width: 100%;
+    height: 44px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #dfe5eb;
+    border-radius: 10px;
+}
+
+.public-filter-control {
+    height: 44px;
+    border: 1px solid #dfe5eb;
+    border-radius: 10px;
+    background: #fff;
+    color: #222;
+    font-size: 15px;
+    line-height: 1;
+    outline: none;
+    box-shadow: none;
+}
+
+.public-search-input .public-filter-control {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    padding: 0 14px;
+}
+
+.public-search-button {
+    width: 46px;
+    height: 44px;
+    flex: 0 0 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: #cf1515;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.public-search-button:hover,
+.public-search-button:focus {
+    background: #a91111;
+}
+
+.public-filter-select {
+    flex: 0 0 auto;
+    width: 205px;
+    max-width: 100%;
+    padding: 0 34px 0 13px;
+    cursor: pointer;
+    appearance: auto;
+}
+
+.public-filter-control:focus,
+.public-filter-group--search:focus-within {
+    border-color: #cf1515;
+    box-shadow: 0 0 0 3px rgba(207, 21, 21, 0.12);
+}
+
+.public-filter-button {
+    flex: 0 0 auto;
+    min-height: 44px;
+    white-space: nowrap;
+}
+
+.btn-public {
+    min-height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: 9px;
+    border: 1px solid transparent;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-public--primary {
+    background: #cf1515;
+    border-color: #cf1515;
+    color: #fff !important;
+    box-shadow: 0 8px 18px rgba(207, 21, 21, 0.2);
+}
+
+.btn-public--primary:hover,
+.btn-public--primary:focus {
+    background: #a91111;
+    border-color: #a91111;
+    color: #fff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(207, 21, 21, 0.28);
+}
+
+.btn-public--secondary {
+    background: #fff;
+    border-color: #e1e5ea;
+    color: #333 !important;
+}
+
+.btn-public--secondary:hover,
+.btn-public--secondary:focus {
+    border-color: #cf1515;
+    color: #cf1515 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(17, 17, 17, 0.08);
+}
+
+.btn-public--sm {
+    min-height: 34px;
+    padding: 8px 12px;
+    border-radius: 7px;
+    font-size: 13px;
+}
+
+.estado-partido {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: fit-content;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.estado-partido--jugado {
+    background: #e8f7ee;
+    color: #177245;
+}
+
+.estado-partido--proximo {
+    background: #fff1f1;
+    color: #cf1515;
+}
+
+.admin-help-text {
+    display: block;
+    margin-top: 6px;
+    color: #718096;
+    font-size: 0.85em;
+    line-height: 1.35;
+}
+
+.admin-fixed-match {
+    display: grid;
+    gap: 6px;
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #dfe5eb;
+    border-radius: 10px;
+    background: #f8fafc;
+    color: #1f2937;
+}
+
+.admin-fixed-match strong {
+    font-size: 16px;
+    line-height: 1.3;
+}
+
+.admin-fixed-match span {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.js-puntos-partido:disabled {
+    background: #f1f5f9 !important;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+.card-public-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 18px;
+}
+
 .botones-categoria {
     display: flex;
     justify-content: center;
@@ -519,6 +733,50 @@ img {
 .equipo-jugadores {
     padding: 50px 40px;
     background: #f9f9f9; /* Un gris casi blanco para que las tarjetas resalten */
+}
+
+.equipo-detalle-main {
+    padding-top: 64px;
+    padding-bottom: 80px;
+    overflow: visible;
+}
+
+.equipo-detalle-card {
+    max-width: 1180px;
+    margin: 0 auto 34px;
+    overflow: visible;
+}
+
+.equipo-detalle-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+    justify-content: center;
+}
+
+.equipo-detalle-section-title {
+    margin-top: 8px;
+}
+
+.equipo-detalle-rejilla {
+    margin-top: 10px;
+    margin-bottom: 44px;
+    align-items: stretch;
+}
+
+.equipo-detalle-partidos {
+    margin-top: 44px;
+    margin-bottom: 0;
+}
+
+.equipo-partido-row {
+    gap: 16px;
+}
+
+.equipo-partido-row .valor {
+    display: grid;
+    gap: 4px;
 }
 
 .rejilla-jugadores {
@@ -559,10 +817,45 @@ img {
     height: 100%;
     object-fit: cover;
     transition: transform 0.6s ease;
+    display: block;
+}
+
+.foto-jugador--logo {
+    height: 220px;
+    padding: 24px;
+    display: grid;
+    place-items: center;
+    background: #f8fafc;
+}
+
+.foto-jugador--logo img {
+    width: 100%;
+    height: 100%;
+    max-width: 220px;
+    object-fit: contain;
+}
+
+.foto-jugador--player img {
+    object-fit: cover;
 }
 
 .tarjeta-jugador:hover .foto-jugador img {
     transform: scale(1.1); /* Zoom suave al pasar el ratón */
+}
+
+.tarjeta-jugador:hover .foto-jugador--logo img {
+    transform: scale(1.04);
+}
+
+.equipo-detalle-logo {
+    width: 72px;
+    height: 72px;
+    flex: 0 0 72px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #edf0f3;
+    padding: 6px;
 }
 
 /* El Badge del dorsal sobre la foto */
@@ -726,6 +1019,10 @@ img {
     display: block;
 }
 
+.media-producto > img {
+    object-position: center;
+}
+
 .info-producto {
     padding: 15px 15px 20px;
     display: flex;
@@ -884,6 +1181,26 @@ img {
     background: #eee;
 }
 
+.alerta-compra {
+    max-width: 720px;
+    margin: 20px auto;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: left;
+}
+
+.alerta-compra--ok {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alerta-compra--error {
+    background: #fee2e2;
+    border: 1px solid #ef4444;
+    color: #b91c1c;
+}
+
 .boton-contacto i {
     margin-right: 8px;
 }
@@ -978,6 +1295,16 @@ img {
     padding: 15px;
     position: relative;
     text-align: center;
+    color: inherit;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.tarjeta-partido:hover,
+.tarjeta-partido:focus {
+    border-color: rgba(207, 21, 21, 0.35);
+    box-shadow: 0 10px 24px rgba(17, 17, 17, 0.08);
+    transform: translateY(-2px);
 }
 
 .etiqueta-proximo {
@@ -1015,6 +1342,10 @@ img {
     width: 40px;
     height: 40px;
     margin-bottom: 5px;
+    object-fit: contain;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .equipo p {
@@ -1034,6 +1365,123 @@ img {
     color: #e60000;
     padding: 0 10px;
     font-size: 18px;
+}
+
+.partido-detalle-header {
+    padding: 48px 24px 86px;
+}
+
+.partido-detalle-header .header-texto h1 {
+    max-width: 980px;
+    margin: 0 auto 18px;
+    line-height: 1.15;
+}
+
+.partido-detalle-meta {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.partido-detalle-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.partido-detalle-contenido {
+    padding-top: 0;
+}
+
+.partido-score-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 28px;
+    margin: -52px auto 32px;
+    padding: 28px;
+    max-width: 980px;
+    background: #fff;
+    border: 1px solid #edf0f3;
+    border-radius: 14px;
+    box-shadow: 0 18px 36px rgba(17, 17, 17, 0.14);
+    position: relative;
+    z-index: 2;
+}
+
+.partido-equipo {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    text-align: center;
+    min-width: 0;
+}
+
+.partido-logo-wrap {
+    width: 88px;
+    height: 88px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #edf0f3;
+    border-radius: 12px;
+    background: #f8fafc;
+}
+
+.partido-logo {
+    width: 74px;
+    height: 74px;
+    object-fit: contain;
+    display: block;
+}
+
+.partido-rol {
+    color: #7a8794;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.partido-equipo h2 {
+    margin: 0;
+    max-width: 100%;
+    color: #222;
+    font-size: 20px;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.partido-marcador {
+    min-width: 150px;
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    padding: 18px 22px;
+    border-radius: 12px;
+    background: #111;
+    color: #fff;
+}
+
+.partido-marcador strong {
+    font-size: 30px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.partido-estado {
+    color: #ffcdcd;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
 .info-adicional {
@@ -1120,14 +1568,22 @@ img {
     transition: 0.3s;
 }
 
+.btn-temp:hover,
+.btn-temp:focus {
+    background: rgba(207, 21, 21, 0.08);
+    color: #cf1515;
+    outline: none;
+}
+
 .btn-temp.activo {
     background: #cf1515;
     color: white;
 }
 
 .equipo-select {
-    width: 100%;
-    max-width: 400px;
+    flex: 0 1 220px;
+    width: auto;
+    max-width: 240px;
     min-height: 48px;
     padding: 12px 16px;
     font-size: 16px;
@@ -1163,6 +1619,41 @@ img {
     gap: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     border-left: 4px solid transparent;
+}
+
+.estadistica-card {
+    margin-bottom: 24px;
+    border: 1px solid #edf0f3;
+    overflow: hidden;
+}
+
+.estadistica-card .detalle-header {
+    align-items: flex-start;
+}
+
+.estadistica-card .detalle-header h4 {
+    margin: 0;
+    color: #222;
+    line-height: 1.25;
+}
+
+.estadistica-card-meta {
+    margin: 6px 0 0;
+    color: #666;
+    line-height: 1.45;
+}
+
+.estadistica-card-stats {
+    margin-top: 18px;
+    margin-bottom: 24px;
+}
+
+.estadistica-card-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid #f0f2f5;
 }
 
 .card-stat:nth-child(1) {
@@ -1291,84 +1782,6 @@ img {
     opacity: 0.9;
 }
 
-
-/*******************************************************************************
- * *
- * 8. CLASIFICACIÓN                                                            *
- * *
- *******************************************************************************/
-
-.seccion-clasificacion-header {
-    background: #cf1515;
-    color: white;
-    text-align: center;
-    padding: 60px 20px;
-}
-
-.seccion-clasificacion-header h1 {
-    font-size: 42px;
-    margin-bottom: 10px;
-}
-
-.seccion-clasificacion-header p {
-    opacity: 0.9;
-    font-size: 18px;
-    margin-bottom: 25px;
-}
-
-.icono-trofeo {
-    font-size: 50px;
-    color: #f1c40f;
-    /* Color dorado para el trofeo */
-}
-
-.contenedor-clasificacion {
-    max-width: 1100px;
-    margin: -30px auto 60px auto;
-    padding: 0 20px;
-}
-
-/* Selector de Categorías */
-.selector-categorias {
-    background: white;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
-
-.btn-cat {
-    padding: 10px 25px;
-    border: none;
-    background: #f1f1f1;
-    color: #444;
-    font-weight: 600;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: 0.3s;
-}
-
-.btn-cat.activo {
-    background: #cf1515;
-    color: white;
-}
-
-.btn-cat:hover:not(.activo) {
-    background: #e5e5e5;
-}
-
-/* Tabla Estilizada */
-.tabla-contenedor {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
-
 .home-table-box {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
@@ -1392,56 +1805,6 @@ img {
     display: flex;
     align-items: center;
     gap: 12px;
-}
-
-.tabla-scroll {
-    overflow-x: auto;
-    /* Para que sea responsive en móviles */
-}
-
-.tabla-clasificacion {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-}
-
-.tabla-clasificacion th {
-    background: #fdfdfd;
-    padding: 15px 25px;
-    color: #666;
-    font-weight: 600;
-    font-size: 14px;
-    border-bottom: 1px solid #eee;
-}
-
-.tabla-clasificacion td {
-    padding: 15px 25px;
-    border-bottom: 1px solid #f5f5f5;
-    color: #333;
-    font-size: 15px;
-}
-
-/* Fila de Bellreguard CB (Nuestro Equipo) */
-.fila-destacada td {
-    background-color: #fff1f1;
-    color: #cf1515;
-}
-
-.fila-destacada td:first-child {
-    border-left: 4px solid #cf1515;
-}
-
-/* Estilos de puntos y posición */
-.tabla-clasificacion tr:hover td {
-    background-color: #fafafa;
-}
-
-.tabla-clasificacion td strong {
-    color: #111;
-}
-
-.fila-destacada td strong {
-    color: #cf1515;
 }
 
 .home-empty-state {
@@ -2887,6 +3250,87 @@ BUSCADOR DE INDEX EQUIPO Y JUGADORES
         height: 240px;
     }
 
+    .foto-jugador--logo {
+        height: 190px;
+        padding: 20px;
+    }
+
+    .navegacion-categorias,
+    .equipo-jugadores {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .selector-temporadas {
+        align-items: stretch;
+    }
+
+    .public-filters,
+    .public-filters-form {
+        width: 100%;
+        max-width: none;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .public-filter-group--search {
+        flex-basis: 100%;
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+    }
+
+    .public-filters .public-filter-select,
+    .public-filters .public-filter-button,
+    .public-filters-form .public-filter-select,
+    .public-filters-form .public-filter-button {
+        width: 100%;
+        max-width: none;
+    }
+
+    .card-public-actions,
+    .estadistica-card-actions {
+        justify-content: stretch;
+    }
+
+    .card-public-actions .btn-public,
+    .estadistica-card-actions .btn-public {
+        width: 100%;
+    }
+
+    .equipo-detalle-main {
+        padding-top: 34px;
+        padding-bottom: 56px;
+    }
+
+    .equipo-detalle-card {
+        margin-bottom: 24px;
+    }
+
+    .equipo-detalle-rejilla {
+        gap: 24px;
+        margin-bottom: 30px;
+    }
+
+    .equipo-detalle-partidos {
+        margin-top: 30px;
+    }
+
+    .equipo-partido-row {
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .titulo-equipo {
+        align-items: flex-start;
+    }
+
+    .equipo-detalle-logo {
+        width: 58px;
+        height: 58px;
+        flex-basis: 58px;
+    }
+
     /* ---------- MERCHANDISING ---------- */
     .rejilla-productos {
         grid-template-columns: 1fr;
@@ -2923,6 +3367,41 @@ BUSCADOR DE INDEX EQUIPO Y JUGADORES
         padding: 5px 0;
     }
 
+    .partido-detalle-header {
+        padding: 36px 18px 72px;
+    }
+
+    .partido-detalle-header .header-texto h1 {
+        font-size: 26px;
+    }
+
+    .partido-score-card {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-top: -44px;
+        padding: 22px;
+    }
+
+    .partido-marcador {
+        order: 2;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .partido-equipo-visitante {
+        order: 3;
+    }
+
+    .partido-logo-wrap {
+        width: 76px;
+        height: 76px;
+    }
+
+    .partido-logo {
+        width: 64px;
+        height: 64px;
+    }
+
     /* ---------- ESTADÍSTICAS ---------- */
     .seccion-estadisticas-header h1 {
         font-size: 28px;
@@ -2939,21 +3418,6 @@ BUSCADOR DE INDEX EQUIPO Y JUGADORES
 
     .footer-col {
         min-width: 0;
-    }
-
-    /* ---------- CLASIFICACIÓN ---------- */
-    .seccion-clasificacion-header h1 {
-        font-size: 30px;
-    }
-
-    .tabla-scroll {
-        overflow-x: auto;
-    }
-
-    .tabla-clasificacion th,
-    .tabla-clasificacion td {
-        padding: 12px 15px;
-        font-size: 14px;
     }
 
     /* ---------- GALERÍA ---------- */
@@ -3009,6 +3473,13 @@ BUSCADOR DE INDEX EQUIPO Y JUGADORES
     .logo-footer,
     .redes-iconos {
         justify-content: center;
+    }
+}
+
+@media (max-width: 640px) {
+    .public-filter-group--search {
+        flex-basis: 100%;
+        width: 100%;
     }
 }
 
@@ -4149,6 +4620,21 @@ body.admin-panel *::after {
     white-space: nowrap;
 }
 
+.admin-panel .tabla-admin-dorsal {
+    position: static;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: #1a1a1a;
+    color: #fff;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: none;
+}
+
 .admin-panel .tabla-admin-principal strong,
 .admin-panel .tabla-admin-listado td strong {
     overflow-wrap: anywhere;
@@ -4157,6 +4643,552 @@ body.admin-panel *::after {
 .admin-panel .tabla-admin-imagen {
     width: 1%;
     white-space: nowrap;
+}
+
+.admin-panel .admin-table-media {
+    width: 60px;
+    height: 60px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid #dde3ea;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.admin-panel .admin-table-media--wide {
+    width: 82px;
+    height: 62px;
+}
+
+.admin-panel .admin-table-media img {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.admin-panel .admin-table-media--logo {
+    padding: 6px;
+}
+
+.admin-panel .admin-table-media--logo img {
+    object-fit: contain;
+}
+
+.admin-panel .admin-table-media--photo img {
+    object-fit: cover;
+}
+
+.admin-panel .admin-detail-logo {
+    width: min(250px, 100%);
+    aspect-ratio: 1;
+    object-fit: contain;
+    border-radius: 12px;
+    border: 1px solid #edf0f3;
+    background: #f8fafc;
+    padding: 18px;
+    display: block;
+    margin: 0 auto;
+}
+
+.admin-panel .admin-detail-product-img {
+    width: min(420px, 100%);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 10px;
+    border: 1px solid #edf0f3;
+    background: #f8fafc;
+    display: block;
+    margin: 0 auto;
+}
+
+.admin-panel .admin-section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.admin-panel .admin-section-header h3 {
+    margin: 0 0 4px;
+    color: #222;
+}
+
+.admin-panel .admin-section-header p {
+    margin: 0;
+    color: #777;
+}
+
+.admin-panel .admin-solicitudes-link {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 3px;
+    color: #1f2937;
+    text-decoration: none;
+    line-height: 1.2;
+}
+
+.admin-panel .admin-solicitudes-link strong {
+    color: #c2410c;
+    font-size: 13px;
+}
+
+.admin-panel .admin-solicitudes-link small {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.admin-panel .producto-con-pendientes {
+    background: #fffbeb;
+}
+
+.admin-panel .producto-con-pendientes td:first-child {
+    box-shadow: inset 4px 0 0 #f59e0b;
+}
+
+.admin-panel .solicitud-estado {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.admin-panel .solicitud-estado--pendiente {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.admin-panel .solicitud-estado--en_proceso {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.admin-panel .solicitud-estado--completada {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.admin-panel .solicitud-estado--cancelada {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.admin-panel .solicitud-admin-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.admin-panel .solicitud-admin-card {
+    background: #fff;
+    border: 1px solid #edf0f3;
+    border-radius: 10px;
+    padding: 18px;
+}
+
+.admin-panel .solicitud-admin-card--full {
+    margin-top: 18px;
+}
+
+.admin-panel .solicitud-admin-card h3 {
+    margin: 0 0 14px;
+    color: #222;
+}
+
+.admin-panel .solicitud-admin-card p {
+    margin: 0 0 10px;
+    color: #374151;
+}
+
+.admin-panel .solicitud-producto-resumen {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.admin-panel .solicitud-producto-resumen img {
+    width: 88px;
+    height: 70px;
+    object-fit: cover;
+    border: 1px solid #edf0f3;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.admin-panel .solicitud-estado-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.admin-panel .solicitud-estado-form select {
+    max-width: 260px;
+}
+
+.admin-panel .admin-analysis-subtitle {
+    margin: 6px 0 0;
+    color: #64748b;
+}
+
+.admin-panel .admin-analysis-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.admin-panel .admin-analysis-action {
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+}
+
+.admin-panel .admin-analysis-action--team {
+    background-color: #0ea5e9;
+}
+
+.admin-panel .admin-analysis-action--back {
+    background-color: #64748b;
+}
+
+.admin-panel .admin-analysis-panel {
+    background:
+        radial-gradient(circle at top left, rgba(207, 21, 21, 0.08), transparent 34%),
+        #ffffff;
+}
+
+.admin-panel .admin-analysis-empty {
+    display: grid;
+    place-items: center;
+    gap: 12px;
+    min-height: 300px;
+    padding: 36px 18px;
+    text-align: center;
+    color: #64748b;
+    background: linear-gradient(180deg, #ffffff, #f8fafc);
+    border: 1px dashed #cbd5e1;
+    border-radius: 18px;
+}
+
+.admin-panel .admin-analysis-empty i {
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    color: #cf1515;
+    background: rgba(207, 21, 21, 0.1);
+    border-radius: 999px;
+    font-size: 24px;
+}
+
+.admin-panel .admin-analysis-empty h3,
+.admin-panel .admin-analysis-empty p {
+    margin: 0;
+}
+
+.admin-panel .admin-analysis-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 22px;
+    padding: 22px;
+    color: #ffffff;
+    background:
+        linear-gradient(135deg, rgba(17, 24, 39, 0.94), rgba(207, 21, 21, 0.9)),
+        #111827;
+    border-radius: 18px;
+    box-shadow: 0 18px 38px rgba(15, 23, 42, 0.18);
+}
+
+.admin-panel .admin-analysis-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.admin-panel .admin-analysis-hero h3 {
+    margin: 0 0 6px;
+    color: #ffffff;
+    font-size: clamp(24px, 3vw, 38px);
+}
+
+.admin-panel .admin-analysis-hero p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.admin-panel .admin-analysis-record {
+    min-width: 150px;
+    padding: 16px 18px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 16px;
+    backdrop-filter: blur(8px);
+}
+
+.admin-panel .admin-analysis-record strong {
+    display: block;
+    color: #ffffff;
+    font-size: 34px;
+    line-height: 1;
+}
+
+.admin-panel .admin-analysis-record span {
+    display: block;
+    margin-top: 8px;
+    color: rgba(255, 255, 255, 0.82);
+    font-weight: 700;
+}
+
+.admin-panel .admin-analysis-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.admin-panel .admin-kpi-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 140px;
+    padding: 18px;
+    background: linear-gradient(180deg, #ffffff, #f8fafc);
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.07);
+}
+
+.admin-panel .admin-kpi-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 5px;
+    background: #cf1515;
+}
+
+.admin-panel .admin-kpi-card--dark::before {
+    background: #1f2937;
+}
+
+.admin-panel .admin-kpi-card--green::before {
+    background: #16a34a;
+}
+
+.admin-panel .admin-kpi-card--gold::before {
+    background: #f59e0b;
+}
+
+.admin-panel .admin-kpi-card span {
+    display: block;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.admin-panel .admin-kpi-card strong {
+    display: block;
+    margin: 10px 0 8px;
+    color: #111827;
+    font-size: clamp(30px, 3vw, 44px);
+    line-height: 1;
+}
+
+.admin-panel .admin-kpi-card small {
+    color: #64748b;
+    font-weight: 700;
+}
+
+.admin-panel .admin-analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.admin-panel .admin-analysis-grid--charts {
+    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.85fr);
+    gap: 22px;
+    align-items: stretch;
+}
+
+.admin-panel .admin-chart-card {
+    min-height: 390px;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
+}
+
+.admin-panel .admin-chart-card--wide {
+    grid-column: 1 / -1;
+}
+
+.admin-panel .admin-chart-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 22px 0;
+}
+
+.admin-panel .admin-chart-header h3 {
+    margin: 0;
+    color: #111827;
+    font-size: 20px;
+}
+
+.admin-panel .admin-chart-header p {
+    margin: 6px 0 0;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.admin-panel .admin-chart-badge {
+    flex: 0 0 auto;
+    padding: 8px 12px;
+    color: #a91111;
+    background: rgba(207, 21, 21, 0.1);
+    border: 1px solid rgba(207, 21, 21, 0.16);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.admin-panel .admin-chart-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 16px 22px 0;
+}
+
+.admin-panel .admin-chart-summary span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 34px;
+    padding: 7px 10px;
+    color: #475569;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.admin-panel .admin-chart-summary strong {
+    color: #111827;
+}
+
+.admin-panel .admin-chart-summary--compact {
+    padding-top: 14px;
+}
+
+.admin-panel .admin-chart-canvas {
+    height: 330px;
+    padding: 18px 18px 20px;
+}
+
+.admin-panel .admin-chart-canvas--small {
+    height: 280px;
+}
+
+.admin-panel .admin-chart-card canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.admin-panel .admin-chart-empty {
+    display: grid;
+    place-items: center;
+    min-height: 220px;
+    margin: 18px 22px 22px;
+    padding: 22px;
+    color: #9a3412;
+    text-align: center;
+    font-weight: 700;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 14px;
+}
+
+.admin-panel .admin-analysis-highlights {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.admin-panel .admin-highlight-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+}
+
+.admin-panel .admin-highlight-icon {
+    display: grid;
+    flex: 0 0 48px;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    color: #ffffff;
+    border-radius: 14px;
+}
+
+.admin-panel .admin-highlight-icon--red {
+    background: #cf1515;
+}
+
+.admin-panel .admin-highlight-icon--dark {
+    background: #1f2937;
+}
+
+.admin-panel .admin-highlight-card h4 {
+    margin: 0 0 8px;
+    color: #111827;
+}
+
+.admin-panel .admin-highlight-card p {
+    margin: 0 0 8px;
+    color: #64748b;
+}
+
+.admin-panel .admin-highlight-card strong {
+    color: #111827;
+}
+
+.admin-panel .solicitud-estado-inline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-panel .solicitud-estado-inline select {
+    width: 160px;
+    min-height: 38px;
+    padding: 8px 10px;
+    font-size: 13px;
 }
 
 .admin-panel .tabla-admin-celda-acciones {
@@ -4184,6 +5216,19 @@ body.admin-panel *::after {
     flex: 0 0 44px;
 }
 
+.admin-panel .btn-accion-deshabilitada {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    border: none;
+    border-radius: 6px;
+    background: #e9ecef;
+    color: #8a94a0;
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+
 .admin-panel .contenedor-paginacion .pagination {
     flex-wrap: wrap;
     justify-content: center;
@@ -4209,6 +5254,30 @@ body.admin-panel *::after {
         width: 46px;
         height: 46px;
         flex-basis: 46px;
+    }
+
+    .admin-panel .solicitud-admin-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-panel .solicitud-estado-form,
+    .admin-panel .solicitud-estado-form select,
+    .admin-panel .solicitud-estado-form button {
+        width: 100%;
+        max-width: none;
+    }
+
+    .admin-panel .admin-analysis-grid--charts {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-panel .admin-analysis-kpis,
+    .admin-panel .admin-analysis-highlights {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-panel .admin-chart-card--wide {
+        grid-column: auto;
     }
 }
 
@@ -4266,6 +5335,61 @@ body.admin-panel *::after {
 }
 
 @media (max-width: 640px) {
+    .admin-panel .admin-analysis-actions,
+    .admin-panel .admin-analysis-action {
+        width: 100%;
+    }
+
+    .admin-panel .admin-analysis-hero {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 18px;
+        border-radius: 14px;
+    }
+
+    .admin-panel .admin-analysis-record {
+        width: 100%;
+    }
+
+    .admin-panel .admin-analysis-kpis,
+    .admin-panel .admin-analysis-highlights {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-panel .admin-chart-card {
+        min-height: auto;
+        border-radius: 14px;
+    }
+
+    .admin-panel .admin-chart-header {
+        flex-direction: column;
+        padding: 18px 18px 0;
+    }
+
+    .admin-panel .admin-chart-badge {
+        align-self: flex-start;
+    }
+
+    .admin-panel .admin-chart-summary {
+        padding-inline: 18px;
+    }
+
+    .admin-panel .admin-chart-summary span {
+        width: 100%;
+        justify-content: space-between;
+        border-radius: 10px;
+    }
+
+    .admin-panel .admin-chart-canvas,
+    .admin-panel .admin-chart-canvas--small {
+        height: 250px;
+        padding: 16px 10px 18px;
+    }
+
+    .admin-panel .admin-highlight-card {
+        flex-direction: column;
+    }
+
     .admin-panel .tabla-admin-wrapper {
         overflow: visible;
         margin-inline: 0;
@@ -4339,6 +5463,10 @@ body.admin-panel *::after {
 
     .admin-panel .tabla-admin-listado .tabla-admin-imagen img,
     .admin-panel .tabla-admin-listado .tabla-admin-imagen .contenedor-escudo {
+        margin: 0;
+    }
+
+    .admin-panel .tabla-admin-listado .tabla-admin-imagen .admin-table-media {
         margin: 0;
     }
 
@@ -4506,6 +5634,75 @@ body.admin-panel *::after {
     padding-inline: 14px;
 }
 
+.admin-panel .admin-partidos-filter-wrap {
+    justify-content: flex-start;
+    margin-bottom: 24px;
+}
+
+.admin-panel .admin-partidos-filter-form {
+    width: 100%;
+    max-width: 1180px;
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 14px;
+    background: #ffffff;
+    border: 1px solid #e7ebef;
+    border-radius: 14px;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+}
+
+.admin-panel .admin-partidos-search-group {
+    flex: 1 1 520px;
+    min-width: 360px;
+    min-height: 50px;
+    border-width: 1px;
+    border-color: #dfe5eb;
+    border-radius: 10px;
+}
+
+.admin-panel .admin-partidos-search-group:focus-within {
+    border-color: #cf1515;
+    box-shadow: 0 0 0 3px rgba(207, 21, 21, 0.12);
+}
+
+.admin-panel .admin-partidos-search-input {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    padding-inline: 16px;
+}
+
+.admin-panel .admin-partidos-filter-select {
+    flex: 0 1 230px;
+    width: 230px;
+    min-height: 50px;
+    padding: 0 14px;
+    border: 1px solid #dfe5eb;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.admin-panel .admin-partidos-filter-select--categoria {
+    flex-basis: 280px;
+    width: 280px;
+}
+
+.admin-panel .admin-partidos-filter-select--estado {
+    flex-basis: 190px;
+    width: 190px;
+}
+
+.admin-panel .admin-partidos-filter-form .btn-limpiar {
+    min-width: 50px;
+    min-height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
 .admin-form-inline-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4571,6 +5768,22 @@ body.admin-panel *::after {
         width: 100%;
         max-width: 100%;
     }
+
+    .admin-panel .admin-partidos-filter-form {
+        max-width: none;
+    }
+
+    .admin-panel .admin-partidos-search-group {
+        flex-basis: 100%;
+        min-width: 0;
+    }
+
+    .admin-panel .admin-partidos-filter-select,
+    .admin-panel .admin-partidos-filter-select--categoria,
+    .admin-panel .admin-partidos-filter-select--estado {
+        flex: 1 1 220px;
+        width: auto;
+    }
 }
 
 @media (max-width: 640px) {
@@ -4590,6 +5803,17 @@ body.admin-panel *::after {
 
     .admin-panel .input-search {
         font-size: 16px;
+    }
+
+    .admin-panel .admin-partidos-filter-form {
+        padding: 12px;
+    }
+
+    .admin-panel .admin-partidos-search-group,
+    .admin-panel .admin-partidos-filter-select,
+    .admin-panel .admin-partidos-filter-form .btn-limpiar {
+        width: 100%;
+        flex-basis: 100%;
     }
 
     .admin-panel .header-ficha,

@@ -5,7 +5,7 @@
     <header class="header-ficha">
         <div>
             <h2>Editar Estadística</h2>
-            <p>Actualizando los datos de <strong>{{ $estadistica->equipo->nombre ?? 'equipo' }}</strong> en {{ $estadistica->temporada }}</p>
+            <p>Actualizando los datos del partido <strong>{{ $estadistica->partido?->equipo_local }} vs {{ $estadistica->partido?->equipo_visitante }}</strong></p>
         </div>
         <a href="{{ route('estadisticas.index') }}" class="btn-volver-link">
             <i class="fas fa-chevron-left"></i> Volver al listado
@@ -28,7 +28,7 @@
             @csrf
             @method('PUT')
 
-            @include('admin.estadisticas.partials.form', ['estadistica' => $estadistica])
+            @include('admin.estadisticas.partials.form', ['estadistica' => $estadistica, 'bloquearPartido' => true])
 
             <div class="form-acciones-ficha">
                 <a href="{{ route('estadisticas.index') }}" class="btn-cancelar-ficha">Cancelar</a>

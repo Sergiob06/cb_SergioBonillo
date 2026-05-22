@@ -62,7 +62,7 @@
                     <div class="campo-ficha" style="flex: 2;">
                         <label>Posición</label>
                         <p class="ficha-dato-destacado">
-                            <i class="fas fa-basketball-ball"></i> {{ $jugador->posicion }}
+                            <i class="fas fa-basketball-ball"></i> {{ $jugador->posicion_nombre }}
                         </p>
                     </div>
                 </div>

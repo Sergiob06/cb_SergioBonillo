@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Support\ImagePath;
 
 class Product extends Model
 {
     use HasFactory;
+
+    private const IMAGE_DIRECTORIES = ['productos', 'products'];
 
     protected $fillable = [
         'name',
@@ -28,39 +30,16 @@ class Product extends Model
 
     public function getImagePathAttribute(): ?string
     {
-        if (!$this->image) {
-            return null;
-        }
-
-        $path = trim($this->image);
-
-        if ($path === '') {
-            return null;
-        }
-
-        if (Str::startsWith($path, ['http://', 'https://'])) {
-            return $path;
-        }
-
-        $normalized = str_replace('\\', '/', $path);
-        $normalized = preg_replace('#^/?storage/#', '', $normalized);
-        $normalized = preg_replace('#^/?public/#', '', $normalized);
-
-        return ltrim($normalized, '/');
+        return ImagePath::normalizeFromDirectories($this->image, self::IMAGE_DIRECTORIES);
     }
 
     public function getImageUrlAttribute(): ?string
     {
-        $path = $this->image_path;
+        return ImagePath::urlFromDirectories($this->image, self::IMAGE_DIRECTORIES);
+    }
 
-        if (!$path) {
-            return null;
-        }
-
-        if (Str::startsWith($path, ['http://', 'https://'])) {
-            return $path;
-        }
-
-        return Storage::url($path);
+    public function solicitudes(): HasMany
+    {
+        return $this->hasMany(ProductoSolicitud::class);
     }
 }

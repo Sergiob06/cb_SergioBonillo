@@ -15,7 +15,7 @@
 <div class="contenedor-buscador">
     <form action="{{ route('galerias.search') }}" method="GET" class="form-buscador">
         <div class="input-grupal">
-            <input type="text" name="search" placeholder="Buscar por título, descripción o categoría..." value="{{ $search ?? '' }}" class="input-search">
+            <input type="text" name="search" placeholder="Buscar por título o descripción..." value="{{ $search ?? '' }}" class="input-search">
             <button type="submit" class="btn-buscar"><i class="fas fa-search"></i></button>
         </div>
         @if(isset($search) && $search != '')
@@ -37,7 +37,6 @@
             <tr>
                 <th>Imagen</th>
                 <th>Título</th>
-                <th>Categoría</th>
                 <th>Fecha</th>
                 <th>Descripción</th>
                 <th>Acciones</th>
@@ -46,9 +45,12 @@
         <tbody>
             @forelse($galerias as $galeria)
                 <tr>
-                    <td data-label="Imagen" class="tabla-admin-imagen"><img src="{{ $galeria->image_url }}" alt="{{ $galeria->titulo }}" width="80" height="60" style="object-fit: cover; border-radius: 6px;"></td>
+                    <td data-label="Imagen" class="tabla-admin-imagen">
+                        <div class="admin-table-media admin-table-media--wide admin-table-media--photo">
+                            <img src="{{ $galeria->image_url }}" alt="{{ $galeria->titulo }}">
+                        </div>
+                    </td>
                     <td data-label="Título" class="tabla-admin-principal"><strong>{{ $galeria->titulo }}</strong></td>
-                    <td data-label="Categoría">{{ $galeria->categoria }}</td>
                     <td data-label="Fecha">{{ $galeria->fecha_imagen ? $galeria->fecha_imagen->format('d/m/Y') : '-' }}</td>
                     <td data-label="Descripción">{{ \Illuminate\Support\Str::limit($galeria->descripcion, 80) }}</td>
                     <td data-label="Acciones" class="tabla-admin-celda-acciones">
@@ -65,7 +67,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="tabla-admin-vacia">Todavía no hay fotos registradas en la galería.</td>
+                    <td colspan="5" class="tabla-admin-vacia">Todavía no hay fotos registradas en la galería.</td>
                 </tr>
             @endforelse
         </tbody>

@@ -20,6 +20,12 @@
     <h2>Productos Oficiales</h2>
     <p class="subtitulo"></p>
 
+    @if(session('mensaje'))
+        <div class="alerta-compra alerta-compra--ok">
+            <i class="fas fa-check-circle"></i> {{ session('mensaje') }}
+        </div>
+    @endif
+
     <div class="rejilla-productos">
         @forelse($products as $product)
             <article class="tarjeta-producto tarjeta-producto-merch">
@@ -50,17 +56,4 @@
     </div>
 </section>
 
-<section class="contacto-pedido">
-    <h2>¿Te gusta algun producto?</h2>
-    <p>Haz clic en Comprar para enviar tu solicitud y el club te respondera por email.</p>
-    @if($products->isNotEmpty())
-        <a href="{{ route('basket.merchandising.buy', $products->first()) }}" class="boton-contacto">
-            <i class="fa-solid fa-envelope"></i> Solicitar un producto
-        </a>
-    @else
-        <a href="{{ route('basket.contacto') }}" class="boton-contacto">
-            <i class="fa-solid fa-envelope"></i> Contactar con el club
-        </a>
-    @endif
-</section>
 @endsection

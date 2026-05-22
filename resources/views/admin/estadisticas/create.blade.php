@@ -5,7 +5,7 @@
     <header class="header-ficha">
         <div>
             <h2>Añadir Estadística</h2>
-            <p>Introduce los datos de rendimiento del equipo</p>
+            <p>Introduce los totales asociados a un partido</p>
         </div>
         <a href="{{ route('estadisticas.index') }}" class="btn-nuevo" style="background-color: #777;">
             <i class="fas fa-arrow-left"></i> Volver al listado
@@ -27,7 +27,7 @@
         <form action="{{ route('estadisticas.store') }}" method="POST">
             @csrf
 
-            @include('admin.estadisticas.partials.form', ['estadistica' => null])
+            @include('admin.estadisticas.partials.form', ['estadistica' => null, 'partidos' => $partidos, 'partidoSeleccionado' => $partidoSeleccionado])
 
             <div class="form-acciones-ficha">
                 <a href="{{ route('estadisticas.index') }}" class="btn-cancelar-ficha">Cancelar</a>

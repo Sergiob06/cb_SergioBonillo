@@ -39,25 +39,35 @@
                 <th>Producto</th>
                 <th>Descripcion</th>
                 <th>Precio</th>
+                <th>Solicitudes</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             @forelse($products as $product)
-                <tr>
+                <tr class="{{ $product->solicitudes_pendientes_count > 0 ? 'producto-con-pendientes' : '' }}">
                     <td data-label="Imagen" class="tabla-admin-imagen">
-                        @if($product->image_url)
-                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" width="80" height="60" style="object-fit: cover; border-radius: 6px;">
-                        @else
-                            <img src="{{ asset('img/basket.jpeg') }}" alt="Sin imagen" width="80" height="60" style="object-fit: cover; border-radius: 6px;">
-                        @endif
+                        <div class="admin-table-media admin-table-media--wide admin-table-media--photo">
+                            <img src="{{ $product->image_url ?: asset('img/basket.jpeg') }}" alt="{{ $product->name }}">
+                        </div>
                     </td>
                     <td data-label="Producto" class="tabla-admin-principal"><strong>{{ $product->name }}</strong></td>
                     <td data-label="Descripción">{{ \Illuminate\Support\Str::limit($product->description, 80) ?: 'Sin descripcion' }}</td>
                     <td data-label="Precio">{{ number_format((float) $product->price, 2, ',', '.') }} EUR</td>
+                    <td data-label="Solicitudes">
+                        <a href="{{ route('productos.solicitudes.index', $product) }}" class="admin-solicitudes-link">
+                            <span>{{ $product->solicitudes_count }} solicitudes</span>
+                            @if($product->solicitudes_pendientes_count > 0)
+                                <strong>{{ $product->solicitudes_pendientes_count }} pendientes</strong>
+                            @else
+                                <small>Sin pendientes</small>
+                            @endif
+                        </a>
+                    </td>
                     <td data-label="Acciones" class="tabla-admin-celda-acciones">
                         <div class="tabla-admin-acciones">
                             <a href="{{ route('productos.show', $product->id) }}" class="btn-accion" title="Ver detalle" style="background-color: #00b4d8; color: white;"><i class="fas fa-eye"></i></a>
+                            <a href="{{ route('productos.solicitudes.index', $product) }}" class="btn-accion" title="Ver solicitudes" style="background-color: #f59e0b; color: white;"><i class="fas fa-inbox"></i></a>
                             <a href="{{ route('productos.edit', $product->id) }}" class="btn-accion editar" title="Editar" style="margin: 0;"><i class="fas fa-pen"></i></a>
                             <form action="{{ route('productos.destroy', $product->id) }}" method="POST" onsubmit="return confirm('¿Eliminar producto?')" style="margin: 0; display: flex; align-items: center;">
                                 @csrf
@@ -69,7 +79,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="tabla-admin-vacia">Todavía no hay productos registrados.</td>
+                    <td colspan="6" class="tabla-admin-vacia">Todavía no hay productos registrados.</td>
                 </tr>
             @endforelse
         </tbody>

@@ -10,13 +10,45 @@
 <section class="seccion-partidos-header">
     <div class="header-contenido">
         <div class="header-texto">
-            <h1>Próximos Partidos</h1>
-            <p>Consulta el calendario real de todos nuestros equipos</p>
+            <h1>Partidos</h1>
+            <p>Consulta calendario, resultados y estadísticas por equipo local</p>
         </div>
     </div>
 </section>
 
 <section class="seccion-calendario">
+    <form action="{{ route('basket.partidos') }}" method="GET" class="public-filters public-filters-form">
+        <div class="public-filter-group public-filter-group--search public-search-input">
+            <input type="text"
+                   name="search"
+                   placeholder="Buscar por equipo, categoría o fecha..."
+                   value="{{ $search ?? '' }}"
+                   class="public-filter-control">
+            <button type="submit" class="public-search-button" aria-label="Buscar partidos">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+        <select name="equipo" class="public-filter-control public-filter-select" aria-label="Filtrar por equipo local" onchange="this.form.submit()">
+            <option value="">Todos los equipos locales</option>
+            @foreach($equiposLocales as $equipo)
+                <option value="{{ $equipo->id }}" {{ (int) $equipoSeleccionado === (int) $equipo->id ? 'selected' : '' }}>
+                    {{ $equipo->nombre }}
+                </option>
+            @endforeach
+        </select>
+        <select name="categoria" class="public-filter-control public-filter-select" aria-label="Filtrar por categoría" onchange="this.form.submit()">
+            <option value="">Todas las categorías</option>
+            @foreach($categories as $category)
+                <option value="{{ $category->id }}" {{ (int) $categoriaSeleccionada === (int) $category->id ? 'selected' : '' }}>
+                    {{ $category->name }}
+                </option>
+            @endforeach
+        </select>
+        @if(($search ?? '') !== '' || $equipoSeleccionado || $categoriaSeleccionada)
+            <a href="{{ route('basket.partidos') }}" class="btn-public btn-public--secondary public-filter-button">Limpiar filtro</a>
+        @endif
+    </form>
+
     <div class="rejilla-partidos">
         @forelse($partidosAgrupados as $nombreEquipo => $partidosEquipo)
             @php
@@ -28,7 +60,7 @@
                     <i class="fa-solid fa-trophy"></i>
                     <div>
                         <h3>{{ $nombreEquipo }}</h3>
-                        <p>{{ $equipoClub?->category?->name ?? $equipoClub?->categoria ?? 'Calendario del equipo' }}</p>
+                        <p>{{ $partidosEquipo->first()?->category?->name ?? $equipoClub?->category?->name ?? $equipoClub?->categoria ?? 'Calendario del equipo' }}</p>
                     </div>
                 </div>
 
@@ -37,27 +69,19 @@
                         @php
                             $nombreLocal = $partido->equipoLocal->nombre ?? $partido->equipo_local;
                             $nombreVisitante = $partido->equipoVisitante->nombre ?? $partido->equipo_visitante;
-                            $logoLocal = $partido->equipoLocal && $partido->equipoLocal->imagen_club
-                                ? $partido->equipoLocal->image_url
-                                : ($equipoClub && $nombreLocal === $equipoClub->nombre && $equipoClub->imagen_club
-                                ? $equipoClub->image_url
-                                : asset('img/basket.jpeg'));
-                            $logoVisitante = $partido->equipoVisitante && $partido->equipoVisitante->imagen_club
-                                ? $partido->equipoVisitante->image_url
-                                : ($equipoClub && $nombreVisitante === $equipoClub->nombre && $equipoClub->imagen_club
-                                ? $equipoClub->image_url
-                                : asset('img/basket.jpeg'));
+                            $logoLocal = $partido->equipoLocal?->image_url ?? asset(\App\Support\ImagePath::DEFAULT_TEAM_IMAGE);
+                            $logoVisitante = $partido->equipoVisitante?->image_url ?? asset(\App\Support\ImagePath::DEFAULT_TEAM_IMAGE);
                         @endphp
 
-                        <div class="tarjeta-partido">
-                            <span class="etiqueta-proximo activo">Próximo</span>
+                        <a class="tarjeta-partido" href="{{ route('basket.partidos.show', $partido) }}">
+                            <span class="etiqueta-proximo estado-partido estado-partido--{{ $partido->estado }}">{{ $partido->estado_nombre }}</span>
                             <div class="enfrentamiento">
                                 <div class="equipo local">
                                     <img src="{{ $logoLocal }}" alt="{{ $nombreLocal }}">
                                     <p>{{ $nombreLocal }}</p>
                                 </div>
 
-                                <span class="vs">VS</span>
+                                <span class="vs">{{ $partido->es_jugado ? $partido->resultado : 'Por jugar' }}</span>
 
                                 <div class="equipo visitante">
                                     <img src="{{ $logoVisitante }}" alt="{{ $nombreVisitante }}">
@@ -78,8 +102,19 @@
                                     <i class="fa-solid fa-location-dot"></i>
                                     {{ $partido->lugar }}
                                 </div>
+                                @if($partido->es_jugado && $partido->tiene_estadisticas_equipo)
+                                    <div class="dato-horario">
+                                        <i class="fa-solid fa-chart-line"></i>
+                                        {{ $partido->puntos_anotados }} anotados · {{ $partido->rebotes }} reb · {{ $partido->asistencias }} ast
+                                    </div>
+                                @elseif(!$partido->es_jugado)
+                                    <div class="dato-horario">
+                                        <i class="fa-solid fa-hourglass-half"></i>
+                                        Estadísticas pendientes
+                                    </div>
+                                @endif
                             </div>
-                        </div>
+                        </a>
                     @endforeach
                 </div>
             </div>

@@ -15,7 +15,6 @@
             <h4>Enlaces Rápidos</h4>
             <ul class="lista-footer">
                 <li><a href="<?php echo e(route('basket.equipos')); ?>">Equipos</a></li>
-                <li><a href="<?php echo e(route('basket.clasificacion')); ?>">Clasificación</a></li>
                 <li><a href="<?php echo e(route('basket.estadisticas')); ?>">Estadísticas</a></li>
                 <li><a href="<?php echo e(route('basket.partidos')); ?>">Partidos</a></li>
             </ul>

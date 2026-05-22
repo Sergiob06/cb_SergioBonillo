@@ -16,6 +16,13 @@
     <h2>Productos Oficiales</h2>
     <p class="subtitulo"></p>
 
+    <?php if(session('mensaje')): ?>
+        <div class="alerta-compra alerta-compra--ok">
+            <i class="fas fa-check-circle"></i> <?php echo e(session('mensaje')); ?>
+
+        </div>
+    <?php endif; ?>
+
     <div class="rejilla-productos">
         <?php $__empty_1 = true; $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
             <article class="tarjeta-producto tarjeta-producto-merch">
@@ -46,19 +53,6 @@
     </div>
 </section>
 
-<section class="contacto-pedido">
-    <h2>¿Te gusta algun producto?</h2>
-    <p>Haz clic en Comprar para enviar tu solicitud y el club te respondera por email.</p>
-    <?php if($products->isNotEmpty()): ?>
-        <a href="<?php echo e(route('basket.merchandising.buy', $products->first())); ?>" class="boton-contacto">
-            <i class="fa-solid fa-envelope"></i> Solicitar un producto
-        </a>
-    <?php else: ?>
-        <a href="<?php echo e(route('basket.contacto')); ?>" class="boton-contacto">
-            <i class="fa-solid fa-envelope"></i> Contactar con el club
-        </a>
-    <?php endif; ?>
-</section>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /var/www/html/resources/views/basket/merchandising.blade.php ENDPATH**/ ?>

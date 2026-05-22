@@ -61,12 +61,13 @@
                         </div>
                         <div class="campo-ficha">
                             <label>Posición</label>
-                            <input type="text" name="posicion" list="lista-posiciones" value="{{ old('posicion', $jugador->posicion) }}" class="input-ficha">
-                            <datalist id="lista-posiciones">
-                                @foreach($posicionesDisponibles as $posicion)
-                                    <option value="{{ $posicion }}">
+                            <select name="posicion_id" required class="input-ficha" style="background: white;">
+                                @foreach($posiciones as $posicion)
+                                    <option value="{{ $posicion->id }}" {{ (int) old('posicion_id', $jugador->posicion_id) === (int) $posicion->id ? 'selected' : '' }}>
+                                        {{ $posicion->nombre }}
+                                    </option>
                                 @endforeach
-                            </datalist>
+                            </select>
                         </div>
                     </div>
 
@@ -96,8 +97,8 @@
                     
                     <div class="admin-form-upload-field" style="flex: 1;">
                         <label>Subir nueva fotografía</label>
-                        <input type="file" name="imagen_jugador" class="input-ficha" style="background: white;">
-                        <p style="margin: 10px 0 0; font-size: 0.8em; color: #718096;">Formatos admitidos: JPG o PNG. Se recomienda tamaño cuadrado.</p>
+                        <input type="file" name="imagen_jugador" class="input-ficha" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" style="background: white;">
+                        <p style="margin: 10px 0 0; font-size: 0.8em; color: #718096;">Formatos admitidos: JPG, PNG o WEBP. Se recomienda tamaño cuadrado.</p>
                     </div>
                 </div>
             </div>

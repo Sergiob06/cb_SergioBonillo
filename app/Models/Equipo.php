@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Str;
+use App\Support\ImagePath;
 
 class Equipo extends Model
 {
     use HasFactory; // IMPORTANTE PARA EL FACTORY
+
+    public const IMAGE_DIRECTORIES = ['escudos', 'fotos/equipos', 'fotos'];
 
     protected $fillable = [
         'nombre', 
@@ -25,8 +27,23 @@ class Equipo extends Model
         'image_url',
     ];
 
-    public function jugadores() {
+    protected $casts = [
+        'es_local' => 'boolean',
+    ];
+
+    public function jugadores()
+    {
         return $this->hasMany(Jugador::class);
+    }
+
+    public function scopeLocales($query)
+    {
+        return $query->where('es_local', true);
+    }
+
+    public function scopeExternos($query)
+    {
+        return $query->where('es_local', false);
     }
 
     public function category()
@@ -36,66 +53,35 @@ class Equipo extends Model
 
     public function partidos()
     {
-        return $this->hasMany(Partido::class);
+        return $this->hasMany(Partido::class, 'equipo_local_id');
     }
 
-    public function estadisticas()
+    public function partidosComoLocal()
     {
-        return $this->hasMany(Estadistica::class);
+        return $this->hasMany(Partido::class, 'equipo_local_id');
     }
 
-    public function clasificaciones()
+    public function partidosComoVisitante()
     {
-        return $this->hasMany(Clasificacion::class);
+        return $this->hasMany(Partido::class, 'equipo_visitante_id');
+    }
+
+    public function partidosConEstadisticas()
+    {
+        return $this->hasMany(Partido::class, 'estadisticas_equipo_id');
     }
 
     public function getImageUrlAttribute(): string
     {
-        $image = $this->image;
-
-        if (!$image) {
-            return asset('img/basket.jpeg');
-        }
-
-        if (Str::startsWith($image, ['http://', 'https://'])) {
-            return $image;
-        }
-
-        if (Str::startsWith($image, ['storage/', '/storage/'])) {
-            return asset(ltrim($image, '/'));
-        }
-
-        if (Str::startsWith($image, ['escudos/', 'jugadores/', 'products/', 'galeria/'])) {
-            return asset('storage/' . ltrim($image, '/'));
-        }
-
-        return asset('storage/' . ltrim($image, '/'));
+        return ImagePath::urlFromDirectories(
+            $this->imagen_club,
+            self::IMAGE_DIRECTORIES,
+            ImagePath::DEFAULT_TEAM_IMAGE
+        );
     }
 
     public function getImageAttribute(): ?string
     {
-        if (!$this->imagen_club) {
-            return null;
-        }
-
-        $normalized = str_replace('\\', '/', trim($this->imagen_club));
-
-        if ($normalized === '') {
-            return null;
-        }
-
-        if (Str::startsWith($normalized, ['http://', 'https://', 'storage/', '/storage/'])) {
-            return ltrim($normalized, '/');
-        }
-
-        if (Str::contains($normalized, '/')) {
-            return ltrim($normalized, '/');
-        }
-
-        if (Str::startsWith($normalized, 'escudos/')) {
-            return $normalized;
-        }
-
-        return 'escudos/' . ltrim($normalized, '/');
+        return ImagePath::normalizeFromDirectories($this->imagen_club, self::IMAGE_DIRECTORIES);
     }
 }

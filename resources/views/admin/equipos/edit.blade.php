@@ -65,11 +65,20 @@
                 <label>Escudo Actual</label>
                 <div class="admin-form-inline-row">
                     {{-- Mostramos la imagen que tiene el equipo ahora mismo --}}
-                    <img src="{{ $equipo->image_url }}" alt="Escudo" width="60" height="60" style="object-fit: contain;">
+                    <div class="admin-table-media admin-table-media--logo">
+                        <img src="{{ $equipo->image_url }}" alt="Escudo de {{ $equipo->nombre }}">
+                    </div>
                     
                     {{-- Input para subir una foto nueva si el usuario quiere cambiarla --}}
-                    <input type="file" name="imagen_club" id="imagen_club">
+                    <input type="file" name="imagen_club" id="imagen_club" accept=".jpg,.jpeg,.png,.webp,.svg,image/jpeg,image/png,image/webp,image/svg+xml">
                 </div>
+                <p style="margin: 8px 0 0; font-size: 0.85em; color: #718096;">Formatos: JPG, PNG, WEBP o SVG. Si subes una nueva imagen, reemplazará la anterior.</p>
+            </div>
+
+            <div class="campo">
+                <label>Usar imagen existente</label>
+                <input type="text" name="imagen_existente" value="{{ old('imagen_existente') }}" placeholder="Ej: escudos/logo-equipo.png o logo-equipo.png">
+                <p style="margin: 8px 0 0; font-size: 0.85em; color: #718096;">Opcional. Si subes un archivo, tendrá prioridad sobre esta ruta.</p>
             </div>
         </div>
 

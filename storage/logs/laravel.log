@@ -13730,3 +13730,482 @@ Did you mean one of these?
 #36 /home/sergio/proyecto2DAW_SergioBonillo_PauVila/BellreguardBasket/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
 #37 {main}
 "} 
+[2026-05-19 21:14:11] local.ERROR: SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Name or service not known (Connection: mysql, SQL: delete from `cache`) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 2002): SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Name or service not known (Connection: mysql, SQL: delete from `cache`) at /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php:826)
+[stacktrace]
+#0 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(980): Illuminate\\Database\\Connection->runQueryCallback()
+#1 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(959): Illuminate\\Database\\Connection->tryAgainIfCausedByLostConnection()
+#2 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(782): Illuminate\\Database\\Connection->handleQueryException()
+#3 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(583): Illuminate\\Database\\Connection->run()
+#4 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(547): Illuminate\\Database\\Connection->affectingStatement()
+#5 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(4109): Illuminate\\Database\\Connection->delete()
+#6 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(423): Illuminate\\Database\\Query\\Builder->delete()
+#7 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Cache/Repository.php(807): Illuminate\\Cache\\DatabaseStore->flush()
+#8 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Cache/Console/ClearCommand.php(68): Illuminate\\Cache\\Repository->__call()
+#9 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Cache\\Console\\ClearCommand->handle()
+#10 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#11 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure()
+#12 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#13 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate\\Container\\BoundMethod::call()
+#14 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#15 /home/sergio/BellreguardBasket/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute()
+#16 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#17 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Concerns/CallsCommands.php(68): Illuminate\\Console\\Command->run()
+#18 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Concerns/CallsCommands.php(41): Illuminate\\Console\\Command->runCommand()
+#19 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Concerns/CallsCommands.php(53): Illuminate\\Console\\Command->callSilent()
+#20 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Console/OptimizeClearCommand.php(48): Illuminate\\Console\\Command->callSilently()
+#21 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(41): Illuminate\\Foundation\\Console\\OptimizeClearCommand->{closure:Illuminate\\Foundation\\Console\\OptimizeClearCommand::handle():48}()
+#22 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/View/Components/Factory.php(59): Illuminate\\Console\\View\\Components\\Task->render()
+#23 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Console/OptimizeClearCommand.php(48): Illuminate\\Console\\View\\Components\\Factory->__call()
+#24 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Foundation\\Console\\OptimizeClearCommand->handle()
+#25 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#26 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure()
+#27 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#28 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate\\Container\\BoundMethod::call()
+#29 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#30 /home/sergio/BellreguardBasket/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute()
+#31 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#32 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(1102): Illuminate\\Console\\Command->run()
+#33 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand()
+#34 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun()
+#35 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#36 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle()
+#37 /home/sergio/BellreguardBasket/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
+#38 {main}
+
+[previous exception] [object] (PDOException(code: 2002): SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Name or service not known at /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:67)
+[stacktrace]
+#0 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(67): PDO::connect()
+#1 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(85): Illuminate\\Database\\Connectors\\Connector->createPdoConnection()
+#2 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(48): Illuminate\\Database\\Connectors\\Connector->tryAgainIfCausedByLostConnection()
+#3 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\\Database\\Connectors\\Connector->createConnection()
+#4 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(184): Illuminate\\Database\\Connectors\\MySqlConnector->connect()
+#5 [internal function]: Illuminate\\Database\\Connectors\\ConnectionFactory->{closure:Illuminate\\Database\\Connectors\\ConnectionFactory::createPdoResolverWithHosts():179}()
+#6 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(1236): call_user_func()
+#7 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(591): Illuminate\\Database\\Connection->getPdo()
+#8 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(813): Illuminate\\Database\\Connection->{closure:Illuminate\\Database\\Connection::affectingStatement():583}()
+#9 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(980): Illuminate\\Database\\Connection->runQueryCallback()
+#10 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(959): Illuminate\\Database\\Connection->tryAgainIfCausedByLostConnection()
+#11 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(782): Illuminate\\Database\\Connection->handleQueryException()
+#12 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(583): Illuminate\\Database\\Connection->run()
+#13 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(547): Illuminate\\Database\\Connection->affectingStatement()
+#14 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(4109): Illuminate\\Database\\Connection->delete()
+#15 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(423): Illuminate\\Database\\Query\\Builder->delete()
+#16 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Cache/Repository.php(807): Illuminate\\Cache\\DatabaseStore->flush()
+#17 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Cache/Console/ClearCommand.php(68): Illuminate\\Cache\\Repository->__call()
+#18 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Cache\\Console\\ClearCommand->handle()
+#19 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#20 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure()
+#21 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#22 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate\\Container\\BoundMethod::call()
+#23 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#24 /home/sergio/BellreguardBasket/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute()
+#25 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#26 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Concerns/CallsCommands.php(68): Illuminate\\Console\\Command->run()
+#27 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Concerns/CallsCommands.php(41): Illuminate\\Console\\Command->runCommand()
+#28 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Concerns/CallsCommands.php(53): Illuminate\\Console\\Command->callSilent()
+#29 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Console/OptimizeClearCommand.php(48): Illuminate\\Console\\Command->callSilently()
+#30 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(41): Illuminate\\Foundation\\Console\\OptimizeClearCommand->{closure:Illuminate\\Foundation\\Console\\OptimizeClearCommand::handle():48}()
+#31 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/View/Components/Factory.php(59): Illuminate\\Console\\View\\Components\\Task->render()
+#32 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Console/OptimizeClearCommand.php(48): Illuminate\\Console\\View\\Components\\Factory->__call()
+#33 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Foundation\\Console\\OptimizeClearCommand->handle()
+#34 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#35 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure()
+#36 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#37 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate\\Container\\BoundMethod::call()
+#38 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#39 /home/sergio/BellreguardBasket/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute()
+#40 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#41 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(1102): Illuminate\\Console\\Command->run()
+#42 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand()
+#43 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun()
+#44 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#45 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle()
+#46 /home/sergio/BellreguardBasket/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
+#47 {main}
+
+[previous exception] [object] (PDOException(code: 0): PDO::connect(): php_network_getaddresses: getaddrinfo for mysql failed: Name or service not known at /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:67)
+[stacktrace]
+#0 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(67): PDO::connect()
+#1 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(85): Illuminate\\Database\\Connectors\\Connector->createPdoConnection()
+#2 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(48): Illuminate\\Database\\Connectors\\Connector->tryAgainIfCausedByLostConnection()
+#3 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connectors/MySqlConnector.php(24): Illuminate\\Database\\Connectors\\Connector->createConnection()
+#4 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(184): Illuminate\\Database\\Connectors\\MySqlConnector->connect()
+#5 [internal function]: Illuminate\\Database\\Connectors\\ConnectionFactory->{closure:Illuminate\\Database\\Connectors\\ConnectionFactory::createPdoResolverWithHosts():179}()
+#6 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(1236): call_user_func()
+#7 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(591): Illuminate\\Database\\Connection->getPdo()
+#8 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(813): Illuminate\\Database\\Connection->{closure:Illuminate\\Database\\Connection::affectingStatement():583}()
+#9 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(980): Illuminate\\Database\\Connection->runQueryCallback()
+#10 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(959): Illuminate\\Database\\Connection->tryAgainIfCausedByLostConnection()
+#11 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(782): Illuminate\\Database\\Connection->handleQueryException()
+#12 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(583): Illuminate\\Database\\Connection->run()
+#13 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Connection.php(547): Illuminate\\Database\\Connection->affectingStatement()
+#14 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(4109): Illuminate\\Database\\Connection->delete()
+#15 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Cache/DatabaseStore.php(423): Illuminate\\Database\\Query\\Builder->delete()
+#16 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Cache/Repository.php(807): Illuminate\\Cache\\DatabaseStore->flush()
+#17 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Cache/Console/ClearCommand.php(68): Illuminate\\Cache\\Repository->__call()
+#18 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Cache\\Console\\ClearCommand->handle()
+#19 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#20 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure()
+#21 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#22 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate\\Container\\BoundMethod::call()
+#23 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#24 /home/sergio/BellreguardBasket/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute()
+#25 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#26 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Concerns/CallsCommands.php(68): Illuminate\\Console\\Command->run()
+#27 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Concerns/CallsCommands.php(41): Illuminate\\Console\\Command->runCommand()
+#28 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Concerns/CallsCommands.php(53): Illuminate\\Console\\Command->callSilent()
+#29 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Console/OptimizeClearCommand.php(48): Illuminate\\Console\\Command->callSilently()
+#30 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(41): Illuminate\\Foundation\\Console\\OptimizeClearCommand->{closure:Illuminate\\Foundation\\Console\\OptimizeClearCommand::handle():48}()
+#31 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/View/Components/Factory.php(59): Illuminate\\Console\\View\\Components\\Task->render()
+#32 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Console/OptimizeClearCommand.php(48): Illuminate\\Console\\View\\Components\\Factory->__call()
+#33 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Foundation\\Console\\OptimizeClearCommand->handle()
+#34 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#35 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure()
+#36 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#37 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate\\Container\\BoundMethod::call()
+#38 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#39 /home/sergio/BellreguardBasket/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute()
+#40 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#41 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(1102): Illuminate\\Console\\Command->run()
+#42 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand()
+#43 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun()
+#44 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#45 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle()
+#46 /home/sergio/BellreguardBasket/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
+#47 {main}
+"} 
+[2026-05-19 21:15:28] local.ERROR: PHP Parse error: Syntax error, unexpected T_OBJECT_OPERATOR on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_OBJECT_OPERATOR on line 1 at /var/www/html/vendor/psy/psysh/src/Exception/ParseErrorException.php:44)
+[stacktrace]
+#0 /var/www/html/vendor/psy/psysh/src/CodeCleaner.php(488): Psy\\Exception\\ParseErrorException::fromParseError()
+#1 /var/www/html/vendor/psy/psysh/src/CodeCleaner.php(269): Psy\\CodeCleaner->parse()
+#2 /var/www/html/vendor/psy/psysh/src/Shell.php(985): Psy\\CodeCleaner->clean()
+#3 /var/www/html/vendor/psy/psysh/src/Shell.php(1018): Psy\\Shell->addCode()
+#4 /var/www/html/vendor/psy/psysh/src/Shell.php(1562): Psy\\Shell->setCode()
+#5 /var/www/html/vendor/laravel/tinker/src/Console/TinkerCommand.php(76): Psy\\Shell->execute()
+#6 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure()
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate\\Container\\BoundMethod::call()
+#11 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#12 /var/www/html/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute()
+#13 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#14 /var/www/html/vendor/symfony/console/Application.php(1102): Illuminate\\Console\\Command->run()
+#15 /var/www/html/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand()
+#16 /var/www/html/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun()
+#17 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#18 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle()
+#19 /var/www/html/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
+#20 {main}
+"} 
+[2026-05-19 21:15:28] local.ERROR: PHP Parse error: Syntax error, unexpected T_OBJECT_OPERATOR on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_OBJECT_OPERATOR on line 1 at /var/www/html/vendor/psy/psysh/src/Exception/ParseErrorException.php:44)
+[stacktrace]
+#0 /var/www/html/vendor/psy/psysh/src/CodeCleaner.php(488): Psy\\Exception\\ParseErrorException::fromParseError()
+#1 /var/www/html/vendor/psy/psysh/src/CodeCleaner.php(269): Psy\\CodeCleaner->parse()
+#2 /var/www/html/vendor/psy/psysh/src/Shell.php(985): Psy\\CodeCleaner->clean()
+#3 /var/www/html/vendor/psy/psysh/src/Shell.php(1018): Psy\\Shell->addCode()
+#4 /var/www/html/vendor/psy/psysh/src/Shell.php(1562): Psy\\Shell->setCode()
+#5 /var/www/html/vendor/laravel/tinker/src/Console/TinkerCommand.php(76): Psy\\Shell->execute()
+#6 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure()
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate\\Container\\BoundMethod::call()
+#11 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#12 /var/www/html/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute()
+#13 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#14 /var/www/html/vendor/symfony/console/Application.php(1102): Illuminate\\Console\\Command->run()
+#15 /var/www/html/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand()
+#16 /var/www/html/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun()
+#17 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#18 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle()
+#19 /var/www/html/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
+#20 {main}
+"} 
+[2026-05-21 21:25:37] local.ERROR: Writing to /home/sergio/.config/psysh/psysh_history is not allowed. {"exception":"[object] (ErrorException(code: 0): Writing to /home/sergio/.config/psysh/psysh_history is not allowed. at /home/sergio/BellreguardBasket/vendor/psy/psysh/src/ConfigPaths.php:419)
+[stacktrace]
+#0 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(258): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError()
+#1 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->{closure:Illuminate\\Foundation\\Bootstrap\\HandleExceptions::forwardsTo():257}()
+#2 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/ConfigPaths.php(419): trigger_error()
+#3 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/Configuration.php(683): Psy\\ConfigPaths::touchFileWithMkdir()
+#4 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/Configuration.php(707): Psy\\Configuration->setHistoryFile()
+#5 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/Configuration.php(852): Psy\\Configuration->getHistoryFile()
+#6 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/Shell.php(95): Psy\\Configuration->getReadline()
+#7 /home/sergio/BellreguardBasket/vendor/laravel/tinker/src/Console/TinkerCommand.php(59): Psy\\Shell->__construct()
+#8 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#9 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#10 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure()
+#11 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#12 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate\\Container\\BoundMethod::call()
+#13 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#14 /home/sergio/BellreguardBasket/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute()
+#15 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#16 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(1102): Illuminate\\Console\\Command->run()
+#17 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand()
+#18 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun()
+#19 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#20 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle()
+#21 /home/sergio/BellreguardBasket/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
+#22 {main}
+"} 
+[2026-05-21 21:25:43] local.ERROR: PHP Parse error: Syntax error, unexpected T_OBJECT_OPERATOR on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_OBJECT_OPERATOR on line 1 at /home/sergio/BellreguardBasket/vendor/psy/psysh/src/Exception/ParseErrorException.php:44)
+[stacktrace]
+#0 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/CodeCleaner.php(488): Psy\\Exception\\ParseErrorException::fromParseError()
+#1 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/CodeCleaner.php(269): Psy\\CodeCleaner->parse()
+#2 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/Shell.php(985): Psy\\CodeCleaner->clean()
+#3 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/Shell.php(1018): Psy\\Shell->addCode()
+#4 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/Shell.php(1562): Psy\\Shell->setCode()
+#5 /home/sergio/BellreguardBasket/vendor/laravel/tinker/src/Console/TinkerCommand.php(76): Psy\\Shell->execute()
+#6 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#8 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure()
+#9 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#10 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate\\Container\\BoundMethod::call()
+#11 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#12 /home/sergio/BellreguardBasket/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute()
+#13 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#14 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(1102): Illuminate\\Console\\Command->run()
+#15 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand()
+#16 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun()
+#17 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#18 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle()
+#19 /home/sergio/BellreguardBasket/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
+#20 {main}
+"} 
+[2026-05-21 21:26:10] local.ERROR: PHP Parse error: Syntax error, unexpected T_OBJECT_OPERATOR on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_OBJECT_OPERATOR on line 1 at /var/www/html/vendor/psy/psysh/src/Exception/ParseErrorException.php:44)
+[stacktrace]
+#0 /var/www/html/vendor/psy/psysh/src/CodeCleaner.php(488): Psy\\Exception\\ParseErrorException::fromParseError()
+#1 /var/www/html/vendor/psy/psysh/src/CodeCleaner.php(269): Psy\\CodeCleaner->parse()
+#2 /var/www/html/vendor/psy/psysh/src/Shell.php(985): Psy\\CodeCleaner->clean()
+#3 /var/www/html/vendor/psy/psysh/src/Shell.php(1018): Psy\\Shell->addCode()
+#4 /var/www/html/vendor/psy/psysh/src/Shell.php(1562): Psy\\Shell->setCode()
+#5 /var/www/html/vendor/laravel/tinker/src/Console/TinkerCommand.php(76): Psy\\Shell->execute()
+#6 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure()
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate\\Container\\BoundMethod::call()
+#11 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#12 /var/www/html/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute()
+#13 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#14 /var/www/html/vendor/symfony/console/Application.php(1102): Illuminate\\Console\\Command->run()
+#15 /var/www/html/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand()
+#16 /var/www/html/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun()
+#17 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#18 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle()
+#19 /var/www/html/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
+#20 {main}
+"} 
+[2026-05-21 21:28:15] production.DEBUG: From: Example <hello@example.com>
+To: info@bellreguard.com
+Reply-To: Sergio <sbonillot@gmail.com>
+Subject: Nueva solicitud de compra: Pack entrenamiento
+MIME-Version: 1.0
+Date: Thu, 21 May 2026 21:28:15 +0000
+Message-ID: <e9ab64157c4ae6ae4612cad1a1352acd@example.com>
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<h2>Nueva solicitud de compra</h2>
+
+<p><strong>Producto:</strong> Pack entrenamiento</p>
+<p><strong>Precio:</strong> 49,90 EUR</p>
+<p><strong>Nombre:</strong> Sergio</p>
+<p><strong>Email:</strong> sbonillot@gmail.com</p>
+<p><strong>Mensaje:</strong> Sin mensaje adicional.</p>
+  
+[2026-05-21 21:36:47] local.DEBUG: From: Example <hello@example.com>
+To: info@bellreguard.com
+Reply-To: Prueba Solicitud <prueba@example.com>
+Subject: Nueva solicitud de compra: Camiseta oficial Bellreguard CB
+MIME-Version: 1.0
+Date: Thu, 21 May 2026 21:36:47 +0000
+Message-ID: <7c068faa780ae0dafba53722b8ec32f7@example.com>
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<h2>Nueva solicitud de compra</h2>
+
+<p><strong>Producto:</strong> Camiseta oficial Bellreguard CB</p>
+<p><strong>Precio:</strong> 24,95 EUR</p>
+<p><strong>Nombre:</strong> Prueba Solicitud</p>
+<p><strong>Email:</strong> prueba@example.com</p>
+<p><strong>Telefono:</strong> 600123123</p>
+<p><strong>Mensaje:</strong> Solicitud de prueba automatizada</p>
+  
+[2026-05-21 21:40:02] production.DEBUG: From: Example <hello@example.com>
+To: info@bellreguard.com
+Reply-To: Sergio <correo@gmail.com>
+Subject: Nueva solicitud de compra: Mochila deportiva
+MIME-Version: 1.0
+Date: Thu, 21 May 2026 21:40:02 +0000
+Message-ID: <1b256046214bbc120c334eba5135e1d6@example.com>
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<h2>Nueva solicitud de compra</h2>
+
+<p><strong>Producto:</strong> Mochila deportiva</p>
+<p><strong>Precio:</strong> 32,00 EUR</p>
+<p><strong>Nombre:</strong> Sergio</p>
+<p><strong>Email:</strong> correo@gmail.com</p>
+<p><strong>Telefono:</strong> No indicado.</p>
+<p><strong>Mensaje:</strong> Sin mensaje adicional.</p>
+  
+[2026-05-21 21:45:51] local.DEBUG: From: Example <hello@example.com>
+To: info@bellreguard.com
+Reply-To: Prueba Redireccion <redireccion@example.com>
+Subject: Nueva solicitud de compra: Camiseta oficial Bellreguard CB
+MIME-Version: 1.0
+Date: Thu, 21 May 2026 21:45:51 +0000
+Message-ID: <984d3c0bce25fad07afe4cbadf18e841@example.com>
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<h2>Nueva solicitud de compra</h2>
+
+<p><strong>Producto:</strong> Camiseta oficial Bellreguard CB</p>
+<p><strong>Precio:</strong> 24,95 EUR</p>
+<p><strong>Nombre:</strong> Prueba Redireccion</p>
+<p><strong>Email:</strong> redireccion@example.com</p>
+<p><strong>Telefono:</strong> 600000000</p>
+<p><strong>Mensaje:</strong> Prueba temporal</p>
+  
+[2026-05-21 21:50:48] production.DEBUG: From: Example <hello@example.com>
+To: info@bellreguard.com
+Reply-To: sergio <prueba@gmail.com>
+Subject: Nueva solicitud de compra: Pantalon corto entrenamiento
+MIME-Version: 1.0
+Date: Thu, 21 May 2026 21:50:48 +0000
+Message-ID: <2011368ffc673486f3d33c05d79f4bf0@example.com>
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<h2>Nueva solicitud de compra</h2>
+
+<p><strong>Producto:</strong> Pantalon corto entrenamiento</p>
+<p><strong>Precio:</strong> 18,50 EUR</p>
+<p><strong>Nombre:</strong> sergio</p>
+<p><strong>Email:</strong> prueba@gmail.com</p>
+<p><strong>Telefono:</strong> No indicado.</p>
+<p><strong>Mensaje:</strong> Sin mensaje adicional.</p>
+  
+[2026-05-22 10:37:42] local.ERROR: PHP Parse error: Syntax error, unexpected '=' on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected '=' on line 1 at /var/www/html/vendor/psy/psysh/src/Exception/ParseErrorException.php:44)
+[stacktrace]
+#0 /var/www/html/vendor/psy/psysh/src/CodeCleaner.php(488): Psy\\Exception\\ParseErrorException::fromParseError()
+#1 /var/www/html/vendor/psy/psysh/src/CodeCleaner.php(269): Psy\\CodeCleaner->parse()
+#2 /var/www/html/vendor/psy/psysh/src/Shell.php(985): Psy\\CodeCleaner->clean()
+#3 /var/www/html/vendor/psy/psysh/src/Shell.php(1018): Psy\\Shell->addCode()
+#4 /var/www/html/vendor/psy/psysh/src/Shell.php(1562): Psy\\Shell->setCode()
+#5 /var/www/html/vendor/laravel/tinker/src/Console/TinkerCommand.php(76): Psy\\Shell->execute()
+#6 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure()
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate\\Container\\BoundMethod::call()
+#11 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#12 /var/www/html/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute()
+#13 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#14 /var/www/html/vendor/symfony/console/Application.php(1102): Illuminate\\Console\\Command->run()
+#15 /var/www/html/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand()
+#16 /var/www/html/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun()
+#17 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#18 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle()
+#19 /var/www/html/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
+#20 {main}
+"} 
+[2026-05-22 10:37:52] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR on line 1 at /var/www/html/vendor/psy/psysh/src/Exception/ParseErrorException.php:44)
+[stacktrace]
+#0 /var/www/html/vendor/psy/psysh/src/CodeCleaner.php(488): Psy\\Exception\\ParseErrorException::fromParseError()
+#1 /var/www/html/vendor/psy/psysh/src/CodeCleaner.php(269): Psy\\CodeCleaner->parse()
+#2 /var/www/html/vendor/psy/psysh/src/Shell.php(985): Psy\\CodeCleaner->clean()
+#3 /var/www/html/vendor/psy/psysh/src/Shell.php(1018): Psy\\Shell->addCode()
+#4 /var/www/html/vendor/psy/psysh/src/Shell.php(1562): Psy\\Shell->setCode()
+#5 /var/www/html/vendor/laravel/tinker/src/Console/TinkerCommand.php(76): Psy\\Shell->execute()
+#6 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure()
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate\\Container\\BoundMethod::call()
+#11 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#12 /var/www/html/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute()
+#13 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#14 /var/www/html/vendor/symfony/console/Application.php(1102): Illuminate\\Console\\Command->run()
+#15 /var/www/html/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand()
+#16 /var/www/html/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun()
+#17 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#18 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle()
+#19 /var/www/html/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
+#20 {main}
+"} 
+[2026-05-22 11:08:19] production.DEBUG: From: Example <hello@example.com>
+To: info@bellreguard.com
+Reply-To: Sergio <prueba@gmail.com>
+Subject: Nueva solicitud de compra: Chandal del club
+MIME-Version: 1.0
+Date: Fri, 22 May 2026 11:08:19 +0000
+Message-ID: <7e7e40d127bb73639c19047502e84874@example.com>
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<h2>Nueva solicitud de compra</h2>
+
+<p><strong>Producto:</strong> Chandal del club</p>
+<p><strong>Precio:</strong> 59,90 EUR</p>
+<p><strong>Nombre:</strong> Sergio</p>
+<p><strong>Email:</strong> prueba@gmail.com</p>
+<p><strong>Telefono:</strong> No indicado.</p>
+<p><strong>Mensaje:</strong> Sin mensaje adicional.</p>
+  
+[2026-05-22 11:22:18] local.ERROR: Writing to /home/sergio/.config/psysh/psysh_history is not allowed. {"exception":"[object] (ErrorException(code: 0): Writing to /home/sergio/.config/psysh/psysh_history is not allowed. at /home/sergio/BellreguardBasket/vendor/psy/psysh/src/ConfigPaths.php:419)
+[stacktrace]
+#0 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(258): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError()
+#1 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->{closure:Illuminate\\Foundation\\Bootstrap\\HandleExceptions::forwardsTo():257}()
+#2 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/ConfigPaths.php(419): trigger_error()
+#3 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/Configuration.php(683): Psy\\ConfigPaths::touchFileWithMkdir()
+#4 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/Configuration.php(707): Psy\\Configuration->setHistoryFile()
+#5 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/Configuration.php(852): Psy\\Configuration->getHistoryFile()
+#6 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/Shell.php(95): Psy\\Configuration->getReadline()
+#7 /home/sergio/BellreguardBasket/vendor/laravel/tinker/src/Console/TinkerCommand.php(59): Psy\\Shell->__construct()
+#8 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#9 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#10 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure()
+#11 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#12 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate\\Container\\BoundMethod::call()
+#13 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#14 /home/sergio/BellreguardBasket/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute()
+#15 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#16 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(1102): Illuminate\\Console\\Command->run()
+#17 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand()
+#18 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun()
+#19 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#20 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle()
+#21 /home/sergio/BellreguardBasket/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
+#22 {main}
+"} 
+[2026-05-22 11:22:25] local.ERROR: Writing to /home/sergio/.config/psysh/psysh_history is not allowed. {"exception":"[object] (ErrorException(code: 0): Writing to /home/sergio/.config/psysh/psysh_history is not allowed. at /home/sergio/BellreguardBasket/vendor/psy/psysh/src/ConfigPaths.php:419)
+[stacktrace]
+#0 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(258): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError()
+#1 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->{closure:Illuminate\\Foundation\\Bootstrap\\HandleExceptions::forwardsTo():257}()
+#2 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/ConfigPaths.php(419): trigger_error()
+#3 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/Configuration.php(683): Psy\\ConfigPaths::touchFileWithMkdir()
+#4 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/Configuration.php(707): Psy\\Configuration->setHistoryFile()
+#5 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/Configuration.php(852): Psy\\Configuration->getHistoryFile()
+#6 /home/sergio/BellreguardBasket/vendor/psy/psysh/src/Shell.php(95): Psy\\Configuration->getReadline()
+#7 /home/sergio/BellreguardBasket/vendor/laravel/tinker/src/Console/TinkerCommand.php(59): Psy\\Shell->__construct()
+#8 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#9 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#10 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure()
+#11 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#12 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate\\Container\\BoundMethod::call()
+#13 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#14 /home/sergio/BellreguardBasket/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute()
+#15 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#16 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(1102): Illuminate\\Console\\Command->run()
+#17 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand()
+#18 /home/sergio/BellreguardBasket/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun()
+#19 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#20 /home/sergio/BellreguardBasket/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle()
+#21 /home/sergio/BellreguardBasket/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
+#22 {main}
+"} 

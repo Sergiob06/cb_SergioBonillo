@@ -30,7 +30,6 @@
             <li><a href="<?php echo e(url('/')); ?>">Inicio</a></li>
             <li><a href="<?php echo e(route('basket.equipos')); ?>">Equipos</a></li>
             <li><a href="<?php echo e(route('basket.merchandising')); ?>">Merchandising</a></li>
-            <li><a href="<?php echo e(route('basket.clasificacion')); ?>">Clasificación</a></li>
             <li><a href="<?php echo e(route('basket.estadisticas')); ?>">Estadísticas</a></li>
             <li><a href="<?php echo e(route('basket.partidos')); ?>">Partidos</a></li>
             <li><a href="<?php echo e(route('basket.galeria')); ?>">Galería</a></li>

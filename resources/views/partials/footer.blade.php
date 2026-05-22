@@ -15,7 +15,6 @@
             <h4>Enlaces Rápidos</h4>
             <ul class="lista-footer">
                 <li><a href="{{ route('basket.equipos') }}">Equipos</a></li>
-                <li><a href="{{ route('basket.clasificacion') }}">Clasificación</a></li>
                 <li><a href="{{ route('basket.estadisticas') }}">Estadísticas</a></li>
                 <li><a href="{{ route('basket.partidos') }}">Partidos</a></li>
             </ul>

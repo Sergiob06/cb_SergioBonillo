@@ -13,21 +13,12 @@
         <p>Revive los mejores momentos de nuestro equipo</p>
         <div class="stats-galeria">
             <span><i class="fas fa-camera"></i> {{ $galerias->count() }} Fotos</span>
-            <span><i class="fas fa-calendar-alt"></i> {{ $categoriaSeleccionada && $categoriaSeleccionada !== 'Todos' ? $categoriaSeleccionada : 'Todas las categorías' }}</span>
+            <span><i class="fas fa-images"></i> Galería del club</span>
         </div>
     </div>
 </section>
 
 <section class="contenedor-galeria">
-    <div class="filtros-galeria" style="display: flex; flex-wrap: wrap; gap: 10px;">
-        <a href="{{ route('basket.galeria') }}" class="btn-filtro {{ !$categoriaSeleccionada || $categoriaSeleccionada === 'Todos' ? 'activo' : '' }}" style="text-decoration: none;">Todos</a>
-        @foreach($categoriasGaleria as $categoria)
-            <a href="{{ route('basket.galeria', ['categoria' => $categoria]) }}" class="btn-filtro {{ $categoriaSeleccionada === $categoria ? 'activo' : '' }}" style="text-decoration: none;">
-                {{ $categoria }}
-            </a>
-        @endforeach
-    </div>
-
     <div class="rejilla-albumes">
         @forelse($galerias as $foto)
             <div class="tarjeta-album">
@@ -37,7 +28,6 @@
                     @else
                         <img src="{{ asset('img/basket.jpeg') }}" alt="{{ $foto->titulo }}">
                     @endif
-                    <span class="badge-fotos">{{ $foto->categoria }}</span>
                 </div>
                 <div class="info-album">
                     <h3>{{ $foto->titulo }}</h3>

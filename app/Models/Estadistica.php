@@ -12,6 +12,7 @@ class Estadistica extends Model
     protected $table = 'estadisticas';
 
     protected $fillable = [
+        'partido_id',
         'equipo_id',
         'temporada',
         'puntos_totales',
@@ -29,5 +30,10 @@ class Estadistica extends Model
     public function equipo()
     {
         return $this->belongsTo(Equipo::class);
+    }
+
+    public function partido()
+    {
+        return $this->belongsTo(Partido::class);
     }
 }

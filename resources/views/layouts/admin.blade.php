@@ -48,10 +48,6 @@
                     <i class="fas fa-chart-line"></i> Estadísticas
                 </a>
 
-                <a href="{{ route('clasificaciones.index') }}" class="item-admin {{ request()->is('admin/clasificaciones*') ? 'activo' : '' }}">
-                    <i class="fas fa-trophy"></i> Clasificación
-                </a>
-
                 <a href="{{ route('galerias.index') }}" class="item-admin {{ request()->is('admin/galerias*') ? 'activo' : '' }}">
                     <i class="fas fa-camera"></i> Galería
                 </a>

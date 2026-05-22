@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600" role="img" aria-label="Logo de equipo por defecto">
+  <rect width="600" height="600" fill="#f4f6f8"/>
+  <circle cx="300" cy="300" r="190" fill="#ffffff" stroke="#d9dee7" stroke-width="12"/>
+  <path d="M300 110a190 190 0 0 1 0 380M300 110a190 190 0 0 0 0 380M110 300h380M178 166c42 54 67 99 67 134s-25 80-67 134M422 166c-42 54-67 99-67 134s25 80 67 134" fill="none" stroke="#cf1515" stroke-width="14" stroke-linecap="round"/>
+  <text x="300" y="548" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#1f2937">BELLREGUARD CB</text>
+</svg>

@@ -53,8 +53,15 @@
             </div>
 
             <div class="campo">
-                <label>Escudo/Imagen del Club</label>
-                <input type="file" name="imagen_club">
+                <label>Logo/Imagen del Equipo</label>
+                <input type="file" name="imagen_club" accept=".jpg,.jpeg,.png,.webp,.svg,image/jpeg,image/png,image/webp,image/svg+xml">
+                <p style="margin: 8px 0 0; font-size: 0.85em; color: #718096;">Formatos: JPG, PNG, WEBP o SVG.</p>
+            </div>
+
+            <div class="campo">
+                <label>Usar imagen existente</label>
+                <input type="text" name="imagen_existente" value="{{ old('imagen_existente') }}" placeholder="Ej: escudos/logo-equipo.png o logo-equipo.png">
+                <p style="margin: 8px 0 0; font-size: 0.85em; color: #718096;">Opcional. Si subes un archivo, tendrá prioridad sobre esta ruta.</p>
             </div>
         </div>
         <div class="form-acciones">

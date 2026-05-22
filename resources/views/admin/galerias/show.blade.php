@@ -16,7 +16,6 @@
         </div>
         <div class="admin-detail-content">
             <h3 style="margin-top: 0;">{{ $galeria->titulo }}</h3>
-            <p><strong>Categoría:</strong> {{ $galeria->categoria }}</p>
             <p><strong>Fecha:</strong> {{ $galeria->fecha_imagen ? $galeria->fecha_imagen->format('d/m/Y') : 'Sin fecha' }}</p>
             <p><strong>Descripción:</strong> {{ $galeria->descripcion }}</p>
         </div>

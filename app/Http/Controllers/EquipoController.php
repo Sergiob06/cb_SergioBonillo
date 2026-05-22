@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Equipo;
+use App\Models\Partido;
+use App\Support\ImagePath;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class EquipoController extends Controller
 {
@@ -16,16 +17,32 @@ class EquipoController extends Controller
         if ($request->is('admin/*')) {
             $equipos = Equipo::with(['category'])
                 ->withCount('jugadores')
+                ->when($request->boolean('locales'), fn ($query) => $query->locales())
                 ->orderBy('nombre', 'asc')
-                ->paginate(10);
+                ->paginate(10)
+                ->withQueryString();
 
-            return view('admin.equipos.index', compact('equipos'));
+            $mostrarLocales = $request->boolean('locales');
+
+            return view('admin.equipos.index', compact('equipos', 'mostrarLocales'));
         }
 
         $categories = Category::orderBy('name')->get();
         $selectedCategory = $request->integer('category');
+        $search = trim((string) $request->get('search', ''));
 
-        $query = Equipo::with('category')->orderBy('nombre');
+        $query = Equipo::with('category')
+            ->withCount('jugadores')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($searchQuery) use ($search) {
+                    $searchQuery->where('nombre', 'like', '%' . $search . '%')
+                        ->orWhere('categoria', 'like', '%' . $search . '%')
+                        ->orWhereHas('category', function ($categoryQuery) use ($search) {
+                            $categoryQuery->where('name', 'like', '%' . $search . '%');
+                        });
+                });
+            })
+            ->orderBy('nombre');
 
         if ($selectedCategory) {
             $query->where('category_id', $selectedCategory);
@@ -33,7 +50,7 @@ class EquipoController extends Controller
 
         $equipos = $query->get();
 
-        return view('equipos.index', compact('equipos', 'categories', 'selectedCategory'));
+        return view('equipos.index', compact('equipos', 'categories', 'selectedCategory', 'search'));
     }
 
     // Muestra el formulario para crear un equipo nuevo
@@ -51,15 +68,16 @@ class EquipoController extends Controller
             'nombre'      => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'descripcion' => 'nullable|string|max:2000',
-            'imagen_club' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'imagen_club' => 'nullable|file|mimes:jpg,jpeg,png,webp,svg|max:4096',
+            'imagen_existente' => 'nullable|string|max:255',
             'es_local'    => 'nullable|boolean',
         ], [
             'nombre.required'    => 'El nombre del equipo es obligatorio.',
             'category_id.required' => 'La categoría es obligatoria.',
             'category_id.exists' => 'La categoría seleccionada no existe.',
-            'imagen_club.image'  => 'El archivo debe ser una imagen.',
-            'imagen_club.mimes'  => 'Solo se permiten formatos: jpg, jpeg, png.',
-            'imagen_club.max'  => 'La imagen no puede superar 2MB.',
+            'imagen_club.file'  => 'El archivo debe ser una imagen.',
+            'imagen_club.mimes'  => 'Solo se permiten formatos: jpg, jpeg, png, webp o svg.',
+            'imagen_club.max'  => 'La imagen no puede superar 4MB.',
         ]);
 
         $category = Category::findOrFail($datosValidados['category_id']);
@@ -72,10 +90,14 @@ class EquipoController extends Controller
             'es_local' => $request->boolean('es_local'),
         ];
 
+        if (!empty($datosValidados['imagen_existente'])) {
+            $datosEquipo['imagen_club'] = $this->normalizarRutaImagen($datosValidados['imagen_existente']);
+        }
+
         // Si el usuario ha subido una foto...
         if ($request->hasFile('imagen_club')) {
             $datosEquipo['imagen_club'] = $this->normalizarRutaImagen(
-                $request->file('imagen_club')->store('escudos', 'public')
+                $request->file('imagen_club')->store('fotos/equipos', 'public')
             );
         }
 
@@ -115,15 +137,16 @@ class EquipoController extends Controller
             'nombre'      => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'descripcion' => 'nullable|string|max:2000',
-            'imagen_club' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'imagen_club' => 'nullable|file|mimes:jpg,jpeg,png,webp,svg|max:4096',
+            'imagen_existente' => 'nullable|string|max:255',
             'es_local'    => 'nullable|boolean',
         ], [
             'nombre.required'    => 'El nombre del equipo es obligatorio.',
             'category_id.required' => 'La categoría es obligatoria.',
             'category_id.exists' => 'La categoría seleccionada no existe.',
-            'imagen_club.image'  => 'El archivo debe ser una imagen.',
-            'imagen_club.mimes'  => 'Solo se permiten formatos: jpg, jpeg, png.',
-            'imagen_club.max'  => 'La imagen no puede superar 2MB.',
+            'imagen_club.file'  => 'El archivo debe ser una imagen.',
+            'imagen_club.mimes'  => 'Solo se permiten formatos: jpg, jpeg, png, webp o svg.',
+            'imagen_club.max'  => 'La imagen no puede superar 4MB.',
         ]);
 
         $category = Category::findOrFail($datosValidados['category_id']);
@@ -136,6 +159,16 @@ class EquipoController extends Controller
             'es_local' => $request->boolean('es_local'),
         ];
 
+        if (!$datosEquipo['es_local'] && $equipo->es_local && $equipo->jugadores()->exists()) {
+            throw ValidationException::withMessages([
+                'es_local' => 'No puedes marcar este equipo como externo mientras tenga jugadores asignados.',
+            ]);
+        }
+
+        if (!empty($datosValidados['imagen_existente'])) {
+            $datosEquipo['imagen_club'] = $this->normalizarRutaImagen($datosValidados['imagen_existente']);
+        }
+
         // Si has subido una foto NUEVA...
         if ($request->hasFile('imagen_club')) {
             if ($equipo->imagen_club) {
@@ -143,7 +176,7 @@ class EquipoController extends Controller
             }
 
             $datosEquipo['imagen_club'] = $this->normalizarRutaImagen(
-                $request->file('imagen_club')->store('escudos', 'public')
+                $request->file('imagen_club')->store('fotos/equipos', 'public')
             );
         }
 
@@ -156,10 +189,62 @@ class EquipoController extends Controller
     public function show($id)
     {
         // Buscamos el equipo o lanzamos error 404 si no existe
-        $equipo = Equipo::with('category')->findOrFail($id);
+        $equipo = Equipo::with(['category', 'jugadores.posicion', 'jugadores' => function ($query) {
+                $query->orderBy('dorsal')->orderBy('apellido')->orderBy('nombre');
+            }])
+            ->withCount('jugadores')
+            ->findOrFail($id);
+
+        if (!request()->is('admin/*')) {
+            $partidos = $equipo->partidosComoLocal()
+                ->with(['equipoLocal', 'equipoVisitante', 'category'])
+                ->orderByDesc('fecha_partido')
+                ->get()
+                ->merge(
+                    $equipo->partidosComoVisitante()
+                        ->with(['equipoLocal', 'equipoVisitante', 'category'])
+                        ->orderByDesc('fecha_partido')
+                        ->get()
+                )
+                ->sortByDesc('fecha_partido')
+                ->values();
+
+            $analisisEquipo = $equipo->es_local
+                ? $this->calcularAnalisisEquipo($this->partidosAnalisisEquipo($equipo)->get())
+                : null;
+
+            return view('equipos.show', compact('equipo', 'partidos', 'analisisEquipo'));
+        }
 
         // Retornamos la vista 'show' pasando los datos del equipo
         return view('admin.equipos.show', compact('equipo'));
+    }
+
+    public function analisis(Equipo $equipo)
+    {
+        abort_unless($equipo->es_local, 404);
+
+        $partidos = $this->partidosAnalisisEquipo($equipo)
+            ->with(['equipoLocal', 'equipoVisitante', 'equipoEstadisticas', 'category'])
+            ->get();
+
+        $analisisEquipo = $this->calcularAnalisisEquipo($partidos);
+        $chartData = [
+            'labels' => $partidos->map(function (Partido $partido) use ($equipo) {
+                $rival = (int) $partido->equipo_local_id === (int) $equipo->id
+                    ? ($partido->equipoVisitante?->nombre ?? $partido->equipo_visitante)
+                    : ($partido->equipoLocal?->nombre ?? $partido->equipo_local);
+
+                return $partido->fecha_partido->format('d/m') . ' vs ' . $rival;
+            })->values(),
+            'puntosAnotados' => $partidos->pluck('puntos_anotados')->values(),
+            'puntosRecibidos' => $partidos->pluck('puntos_recibidos')->values(),
+            'diferencias' => $partidos->pluck('diferencia_puntos')->values(),
+            'victorias' => $analisisEquipo['victorias'],
+            'derrotas' => $analisisEquipo['derrotas'],
+        ];
+
+        return view('admin.equipos.analisis', compact('equipo', 'partidos', 'analisisEquipo', 'chartData'));
     }
 
     ////////////////
@@ -170,44 +255,67 @@ class EquipoController extends Controller
         $search = $request->get('search');
 
         $equipos = Equipo::with('category')
+            ->withCount('jugadores')
             ->where('nombre', 'like', '%' . $search . '%')
+            ->when($request->boolean('locales'), fn ($query) => $query->locales())
             ->orderBy('nombre', 'ASC')
             ->paginate(10); 
 
         // Importante para que al cambiar de página no se pierda la búsqueda
-        $equipos->appends(['search' => $search]);
+        $equipos->appends($request->only(['search', 'locales']));
+        $mostrarLocales = $request->boolean('locales');
 
-        return view('admin.equipos.index', compact('equipos', 'search'));
+        return view('admin.equipos.index', compact('equipos', 'search', 'mostrarLocales'));
     }
 
     private function eliminarImagenSiExiste(?string $rutaImagen): void
     {
-        $rutaNormalizada = $this->normalizarRutaImagen($rutaImagen);
-
-        if ($rutaNormalizada && !Str::startsWith($rutaNormalizada, ['http://', 'https://'])) {
-            Storage::disk('public')->delete($rutaNormalizada);
-        }
+        ImagePath::deleteFromDirectories($rutaImagen, Equipo::IMAGE_DIRECTORIES);
     }
 
     private function normalizarRutaImagen(?string $rutaImagen): ?string
     {
-        if (!$rutaImagen) {
-            return null;
+        return ImagePath::normalizeFromDirectories($rutaImagen, Equipo::IMAGE_DIRECTORIES);
+    }
+
+    private function calcularAnalisisEquipo($partidos): array
+    {
+        $partidosConResultado = $partidos
+            ->filter(fn (Partido $partido) => $partido->puntos_anotados !== null && $partido->puntos_recibidos !== null)
+            ->values();
+
+        $partidosJugados = $partidosConResultado->count();
+
+        if ($partidosJugados === 0) {
+            return [
+                'partidos_jugados' => 0,
+                'victorias' => 0,
+                'derrotas' => 0,
+                'media_puntos_anotados' => null,
+                'media_puntos_recibidos' => null,
+                'diferencia_media' => null,
+                'mejor_partido_ofensivo' => null,
+                'peor_partido_defensivo' => null,
+            ];
         }
 
-        $rutaNormalizada = trim(str_replace('\\', '/', $rutaImagen));
+        return [
+            'partidos_jugados' => $partidosJugados,
+            'victorias' => $partidosConResultado->filter(fn (Partido $partido) => $partido->diferencia_puntos > 0)->count(),
+            'derrotas' => $partidosConResultado->filter(fn (Partido $partido) => $partido->diferencia_puntos < 0)->count(),
+            'media_puntos_anotados' => round($partidosConResultado->avg('puntos_anotados'), 1),
+            'media_puntos_recibidos' => round($partidosConResultado->avg('puntos_recibidos'), 1),
+            'diferencia_media' => round($partidosConResultado->avg('diferencia_puntos'), 1),
+            'mejor_partido_ofensivo' => $partidosConResultado->sortByDesc('puntos_anotados')->first(),
+            'peor_partido_defensivo' => $partidosConResultado->sortByDesc('puntos_recibidos')->first(),
+        ];
+    }
 
-        if ($rutaNormalizada === '') {
-            return null;
-        }
-
-        if (Str::startsWith($rutaNormalizada, ['http://', 'https://'])) {
-            return $rutaNormalizada;
-        }
-
-        $rutaNormalizada = preg_replace('#^/?storage/#', '', $rutaNormalizada);
-        $rutaNormalizada = preg_replace('#^/?public/#', '', $rutaNormalizada);
-
-        return ltrim($rutaNormalizada, '/');
+    private function partidosAnalisisEquipo(Equipo $equipo)
+    {
+        return Partido::query()
+            ->where('estadisticas_equipo_id', $equipo->id)
+            ->jugados()
+            ->orderBy('fecha_partido');
     }
 }

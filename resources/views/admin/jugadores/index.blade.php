@@ -13,9 +13,9 @@
 </header>
 
 
-{{-- Buscador de Equipos --}}
+{{-- Buscador y filtro de equipos locales --}}
 <div class="contenedor-buscador">
-    <form action="{{ route('jugadores.search') }}" method="GET" class="form-buscador">
+    <form action="{{ route('jugadores.index') }}" method="GET" class="form-buscador">
         <div class="input-grupal">
             <input type="text" 
                    name="search" 
@@ -26,8 +26,16 @@
                 <i class="fas fa-search"></i>
             </button>
         </div>
+        <select name="equipo_id" class="input-search" style="max-width: 260px;" onchange="this.form.submit()">
+            <option value="">Todos los equipos locales</option>
+            @foreach(($equiposLocales ?? collect()) as $equipo)
+                <option value="{{ $equipo->id }}" {{ (int) ($equipoSeleccionado ?? 0) === (int) $equipo->id ? 'selected' : '' }}>
+                    {{ $equipo->nombre }}
+                </option>
+            @endforeach
+        </select>
         {{-- Si hay una búsqueda activa, mostramos un botón para limpiar --}}
-        @if(isset($search) && $search != '')
+        @if((isset($search) && $search != '') || !empty($equipoSeleccionado))
             <a href="{{ route('jugadores.index') }}" class="btn-limpiar" title="Limpiar búsqueda">
                 <i class="fas fa-times"></i>
             </a>
@@ -59,21 +67,17 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($jugadores as $jugador)
+            @forelse($jugadores as $jugador)
             <tr>
                 {{-- 1. FOTO --}}
                 <td data-label="Foto" class="tabla-admin-imagen">
-                    <div class="contenedor-escudo" style="width: 60px; height: 60px; overflow: hidden; border: 1px solid #ddd; border-radius: 4px;">
-                        @if($jugador->image)
-                            <img src="{{ $jugador->image_url }}" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;">
-                        @else
-                            <img src="{{ asset('img/basket.jpeg') }}" alt="Sin foto" style="width: 100%; height: 100%; object-fit: cover;">
-                        @endif
+                    <div class="admin-table-media admin-table-media--photo">
+                        <img src="{{ $jugador->image_url }}" alt="Foto de {{ $jugador->nombre }} {{ $jugador->apellido }}">
                     </div>
                 </td>
                 {{-- 2. DORSAL --}}
                 <td data-label="Dorsal">
-                    <span class="dorsal-badge">#{{ $jugador->dorsal }}</span>
+                    <span class="tabla-admin-dorsal">{{ $jugador->dorsal !== null ? '#' . $jugador->dorsal : '-' }}</span>
                 </td>            
                 {{-- 3. NOMBRE --}}
                 <td data-label="Nombre" class="tabla-admin-principal"><strong>{{ $jugador->nombre }}</strong></td>
@@ -89,12 +93,12 @@
                 {{-- 5. CATEGORÍA (Sacada del modelo Equipo) --}}
                 <td data-label="Categoría">
                     <span style="background: #e3f2fd; color: #0d47a1; padding: 4px 10px; border-radius: 12px; font-size: 0.85em; font-weight: bold;">
-                        {{ $jugador->equipo->categoria ?? '-' }}
+                        {{ $jugador->equipo->category?->name ?? $jugador->equipo->categoria ?? '-' }}
                     </span>
                 </td>
 
                 {{-- 6. POSICIÓN --}}
-                <td data-label="Posición">{{ $jugador->posicion }}</td>
+                <td data-label="Posición">{{ $jugador->posicion_nombre }}</td>
 
                 {{-- 4. FECHA DE NACIMIENTO --}}
                 <td data-label="Fecha Nacimiento">
@@ -128,7 +132,11 @@
                     </div>
                 </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="9" class="tabla-admin-vacia">No hay jugadores que coincidan con los filtros aplicados.</td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
     </div>

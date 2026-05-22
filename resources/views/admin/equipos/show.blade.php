@@ -12,7 +12,7 @@
     <div class="admin-detail-layout admin-detail-layout--media">
         
         <div class="admin-detail-media admin-detail-panel">
-            <img src="{{ $equipo->image_url }}" alt="Escudo" style="max-width: 250px; height: auto; border-radius: 8px;">
+            <img src="{{ $equipo->image_url }}" alt="Escudo de {{ $equipo->nombre }}" class="admin-detail-logo">
         </div>
 
         <div class="admin-detail-content">
@@ -34,6 +34,16 @@
                 <strong>Fecha de Registro:</strong> {{ $equipo->created_at->format('d/m/Y') }}
             </p>
 
+            <p style="font-size: 1.2rem; margin: 15px 0;">
+                <strong>Tipo:</strong> {{ $equipo->es_local ? 'Equipo local del club' : 'Equipo externo/rival' }}
+            </p>
+
+            @if($equipo->es_local)
+                <p style="font-size: 1.2rem; margin: 15px 0;">
+                    <strong>Jugadores:</strong> {{ $equipo->jugadores_count }}
+                </p>
+            @endif
+
             <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
 
             <div class="admin-detail-actions">
@@ -42,6 +52,12 @@
                 <a href="{{ route('equipos.edit', $equipo->id) }}" class="btn-accion editar" title="Editar" style="margin: 0;">
                     <i class="fas fa-pen"></i>
                 </a>
+
+                @if($equipo->es_local)
+                    <a href="{{ route('equipos.analisis', $equipo) }}" class="btn-accion" title="Análisis del equipo" style="background-color: #6f42c1; color: white;">
+                        <i class="fas fa-chart-line"></i>
+                    </a>
+                @endif
                         
                 {{-- Formulario para Borrar: Es un formulario porque usa el método DELETE --}}
                 <form action="{{ route('equipos.destroy', $equipo->id) }}" method="POST" onsubmit="return confirm('¿Eliminar equipo?')" class="admin-detail-inline-form" style="margin: 0; display: flex; align-items: center;">
@@ -54,5 +70,23 @@
             </div>
         </div>
     </div>
+
+    @if($equipo->es_local)
+        <div class="admin-detail-body" style="margin-top: 25px;">
+            <h3 style="margin-top: 0;">Plantilla</h3>
+
+            @forelse($equipo->jugadores as $jugador)
+                <div class="fila-detalle">
+                    <span>#{{ $jugador->dorsal ?? '00' }} · {{ $jugador->nombre }} {{ $jugador->apellido }}</span>
+                    <div class="valor">
+                        <strong>{{ $jugador->posicion_nombre }}</strong>
+                        <a href="{{ route('jugadores.show', $jugador->id) }}">Ver ficha</a>
+                    </div>
+                </div>
+            @empty
+                <p style="color: #777;">Este equipo local todavía no tiene jugadores.</p>
+            @endforelse
+        </div>
+    @endif
 </div>
 @endsection

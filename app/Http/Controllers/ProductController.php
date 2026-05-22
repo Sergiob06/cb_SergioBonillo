@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductoSolicitud;
+use App\Support\ImagePath;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::orderBy('created_at', 'desc')->paginate(10);
+        $products = $this->consultaProductosConSolicitudes()
+            ->paginate(10);
 
         return view('admin.productos.index', compact('products'));
     }
@@ -33,9 +37,18 @@ class ProductController extends Controller
 
     public function show(string $id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::withCount([
+                'solicitudes',
+                'solicitudes as solicitudes_pendientes_count' => fn ($query) => $query->where('estado', ProductoSolicitud::ESTADO_PENDIENTE),
+            ])
+            ->findOrFail($id);
 
-        return view('admin.productos.show', compact('product'));
+        $solicitudesRecientes = $product->solicitudes()
+            ->latest()
+            ->limit(10)
+            ->get();
+
+        return view('admin.productos.show', compact('product', 'solicitudesRecientes'));
     }
 
     public function edit(string $id)
@@ -73,10 +86,11 @@ class ProductController extends Controller
     {
         $search = $request->get('search');
 
-        $products = Product::query()
-            ->where('name', 'like', '%' . $search . '%')
-            ->orWhere('description', 'like', '%' . $search . '%')
-            ->orderBy('created_at', 'desc')
+        $products = $this->consultaProductosConSolicitudes()
+            ->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%');
+            })
             ->paginate(10);
 
         $products->appends(['search' => $search]);
@@ -87,8 +101,8 @@ class ProductController extends Controller
     private function validarProducto(Request $request, bool $imagenObligatoria): array
     {
         $reglaImagen = $imagenObligatoria
-            ? 'required|image|mimes:jpg,jpeg,png|max:2048'
-            : 'nullable|image|mimes:jpg,jpeg,png|max:2048';
+            ? 'required|file|mimes:jpg,jpeg,png,webp,svg|max:4096'
+            : 'nullable|file|mimes:jpg,jpeg,png,webp,svg|max:4096';
 
         return $request->validate([
             'name' => 'required|string|max:255',
@@ -100,8 +114,24 @@ class ProductController extends Controller
             'price.required' => 'El precio es obligatorio.',
             'price.numeric' => 'El precio debe ser un valor numérico.',
             'image.required' => 'Debes subir una imagen del producto.',
-            'image.max' => 'La imagen no puede superar 2MB.',
+            'image.mimes' => 'La imagen debe ser JPG, PNG, WEBP o SVG.',
+            'image.max' => 'La imagen no puede superar 4MB.',
         ]);
+    }
+
+    private function consultaProductosConSolicitudes(): Builder
+    {
+        return Product::query()
+            ->withCount([
+                'solicitudes',
+                'solicitudes as solicitudes_pendientes_count' => fn ($query) => $query->where('estado', ProductoSolicitud::ESTADO_PENDIENTE),
+            ])
+            ->withMax([
+                'solicitudes as ultima_solicitud_pendiente_at' => fn ($query) => $query->where('estado', ProductoSolicitud::ESTADO_PENDIENTE),
+            ], 'created_at')
+            ->orderByDesc('solicitudes_pendientes_count')
+            ->orderByDesc('ultima_solicitud_pendiente_at')
+            ->orderByDesc('created_at');
     }
 
     private function prepararDatosProducto(array $datosValidados, Request $request, ?Product $product = null): array
@@ -117,9 +147,7 @@ class ProductController extends Controller
                 $this->eliminarImagenSiExiste($product->image);
             }
 
-            $datosProducto['image'] = $this->normalizarRutaImagen(
-                $request->file('image')->store('products', 'public')
-            );
+            $datosProducto['image'] = $this->guardarImagenProducto($request->file('image'));
         }
 
         return $datosProducto;
@@ -129,30 +157,36 @@ class ProductController extends Controller
     {
         $rutaNormalizada = $this->normalizarRutaImagen($rutaImagen);
 
-        if ($rutaNormalizada && !Str::startsWith($rutaNormalizada, ['http://', 'https://'])) {
-            Storage::disk('public')->delete($rutaNormalizada);
+        if ($rutaNormalizada && Str::startsWith($rutaNormalizada, 'productos/producto_')) {
+            $rutaPublica = public_path($rutaNormalizada);
+
+            if (is_file($rutaPublica)) {
+                @unlink($rutaPublica);
+                return;
+            }
         }
+
+        ImagePath::deleteFromDirectories($rutaImagen, ['productos', 'products']);
     }
 
     private function normalizarRutaImagen(?string $rutaImagen): ?string
     {
-        if (!$rutaImagen) {
-            return null;
+        return ImagePath::normalizeFromDirectories($rutaImagen, ['productos', 'products']);
+    }
+
+    private function guardarImagenProducto(UploadedFile $imagen): string
+    {
+        $directorio = public_path('productos');
+
+        if (!is_dir($directorio)) {
+            mkdir($directorio, 0775, true);
         }
 
-        $rutaNormalizada = trim(str_replace('\\', '/', $rutaImagen));
+        $extension = strtolower($imagen->getClientOriginalExtension() ?: $imagen->extension());
+        $nombreArchivo = 'producto_' . now()->format('YmdHis') . '_' . Str::random(8) . '.' . $extension;
 
-        if ($rutaNormalizada === '') {
-            return null;
-        }
+        $imagen->move($directorio, $nombreArchivo);
 
-        if (Str::startsWith($rutaNormalizada, ['http://', 'https://'])) {
-            return $rutaNormalizada;
-        }
-
-        $rutaNormalizada = preg_replace('#^/?storage/#', '', $rutaNormalizada);
-        $rutaNormalizada = preg_replace('#^/?public/#', '', $rutaNormalizada);
-
-        return ltrim($rutaNormalizada, '/');
+        return 'productos/' . $nombreArchivo;
     }
 }

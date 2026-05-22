@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Equipo;
 use Database\Seeders\Support\LocalLeagueCatalog;
+use Database\Seeders\Support\PublicImageCatalog;
 use Illuminate\Database\Seeder;
 
 class EquipoSeeder extends Seeder
@@ -17,11 +18,13 @@ class EquipoSeeder extends Seeder
         foreach (LocalLeagueCatalog::clubs() as $club) {
             $category = $categorias->firstWhere('name', $club['categoria']);
 
-            Equipo::factory()->create([
+            Equipo::updateOrCreate([
+                'nombre' => $club['name'],
+            ], [
                 'nombre' => $club['name'],
                 'categoria' => $category->name,
                 'category_id' => $category->id,
-                'imagen_club' => 'https://placehold.co/600x600/e63946/ffffff?text=' . urlencode($club['name']),
+                'imagen_club' => PublicImageCatalog::teamImageFor($club['name']),
                 'descripcion' => 'Equipo de ' . $club['ciudad'] . ' que compite en categoria ' . strtolower($category->name) . ' dentro de una simulacion de liga local.',
                 'es_local' => $club['es_local'],
             ]);

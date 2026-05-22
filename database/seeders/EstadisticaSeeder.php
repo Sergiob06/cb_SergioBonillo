@@ -2,32 +2,39 @@
 
 namespace Database\Seeders;
 
-use App\Models\Equipo;
 use App\Models\Estadistica;
-use Database\Seeders\Support\SeasonSimulationStore;
+use App\Models\Partido;
 use Illuminate\Database\Seeder;
 
 class EstadisticaSeeder extends Seeder
 {
     public function run(): void
     {
-        $simulation = SeasonSimulationStore::getOrBuild(Equipo::query()->get());
+        $faker = fake('es_ES');
 
-        foreach ($simulation['statistics'] as $fila) {
+        Estadistica::whereNotNull('partido_id')->delete();
+
+        Partido::with('equipoEstadisticas')
+            ->whereHas('equipoEstadisticas', fn ($query) => $query->where('es_local', true))
+            ->each(function (Partido $partido) use ($faker) {
+            $rebotesDefensivos = $faker->numberBetween(22, 42);
+            $rebotesOfensivos = $faker->numberBetween(8, 18);
+
             Estadistica::create([
-                'equipo_id' => $fila['equipo_id'],
-                'temporada' => $simulation['temporada'],
-                'puntos_totales' => $fila['puntos_totales'],
-                'rebotes' => $fila['rebotes'],
-                'asistencias' => $fila['asistencias'],
-                'robos' => $fila['robos'],
-                'rebotes_defensivos' => $fila['rebotes_defensivos'],
-                'rebotes_ofensivos' => $fila['rebotes_ofensivos'],
-                'tapones' => $fila['tapones'],
-                'partidos_jugados' => $fila['partidos_jugados'],
-                'victorias' => $fila['partidos_ganados'],
-                'derrotas' => $fila['partidos_perdidos'],
+                'partido_id' => $partido->id,
+                'equipo_id' => $partido->estadisticas_equipo_id,
+                'temporada' => '2025/2026',
+                'puntos_totales' => (int) ($partido->puntos_anotados ?? 0),
+                'rebotes' => $rebotesDefensivos + $rebotesOfensivos,
+                'asistencias' => $faker->numberBetween(18, 45),
+                'robos' => $faker->numberBetween(6, 18),
+                'rebotes_defensivos' => $rebotesDefensivos,
+                'rebotes_ofensivos' => $rebotesOfensivos,
+                'tapones' => $faker->numberBetween(1, 10),
+                'partidos_jugados' => 1,
+                'victorias' => ($partido->diferencia_puntos ?? 0) > 0 ? 1 : 0,
+                'derrotas' => ($partido->diferencia_puntos ?? 0) < 0 ? 1 : 0,
             ]);
-        }
+        });
     }
 }

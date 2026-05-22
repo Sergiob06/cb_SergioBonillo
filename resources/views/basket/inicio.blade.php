@@ -10,7 +10,9 @@
     <section class="seccion-hero">
         <div class="hero-texto">
             <h1>Bellreguard Club de Basket</h1>
-            <p>Pasión, dedicación y excelencia en cada partido. Únete a nuestra familia basketbolística.</p>
+            <p>En Club Bàsquet Bellreguard vivimos el baloncesto con pasión, esfuerzo y compromiso. Cada partido y entrenamiento refleja nuestros valores: compañerismo, superación y dedicación dentro y fuera de la pista.
+
+Más que un club, somos una familia unida por la ilusión de crecer, competir y disfrutar del baloncesto. Únete a nuestro proyecto y forma parte de esta pasión.</p>
             <div class="botones-hero">
                 <a href="{{ route('basket.partidos') }}" class="boton-principal" style="text-decoration: none;">Ver Próximos
                     Partidos</a>
@@ -27,7 +29,7 @@
             <div class="home-section-box">
                 <div class="home-section-header">
                     <h2>Próximos Partidos</h2>
-                    <p class="subtitulo">Información cargada directamente desde la base de datos</p>
+                    <p class="subtitulo">Entérate de los próximos partidos</p>
                 </div>
 
                 <div class="home-card-grid home-grid">
@@ -45,60 +47,12 @@
                             <div class="home-card-content">
                                 <span class="fecha">Agenda vacía</span>
                                 <h3>No hay partidos programados</h3>
-                                <p>Cuando el admin añada partidos, aparecerán aquí automáticamente.</p>
+                                <p></p>
                                 <a href="{{ route('basket.partidos') }}">Ir a partidos →</a>
                             </div>
                         </div>
                     @endforelse
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="home-section">
-        <div class="home-section-shell">
-            <div class="home-section-box tabla-contenedor home-table-box">
-                <div class="home-section-header home-section-header-table">
-                    <h2>Clasificación</h2>
-                    <p class="subtitulo">
-                        @if ($categoriaClasificacion || $temporadaClasificacion)
-                            {{ $categoriaClasificacion ?? 'Categoría' }}{{ $temporadaClasificacion ? ' · ' . $temporadaClasificacion : '' }}
-                        @else
-                            Posición actual de los equipos del club
-                        @endif
-                    </p>
-                </div>
-
-                @if ($clasificacion->isNotEmpty())
-                    <div class="tabla-scroll">
-                        <table class="tabla-clasificacion">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Equipo</th>
-                                    <th>PJ</th>
-                                    <th>V</th>
-                                    <th>D</th>
-                                    <th>Puntos</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($clasificacion as $fila)
-                                    <tr class="{{ $fila->equipo_id ? 'fila-destacada' : '' }}">
-                                        <td>{{ $fila->posicion }}</td>
-                                        <td>{{ $fila->equipo_nombre }}</td>
-                                        <td>{{ $fila->partidos_jugados }}</td>
-                                        <td>{{ $fila->partidos_ganados }}</td>
-                                        <td>{{ $fila->partidos_perdidos }}</td>
-                                        <td><strong>{{ $fila->puntos }}</strong></td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                @else
-                    <div class="home-empty-state">No hay datos de clasificación disponibles</div>
-                @endif
             </div>
         </div>
     </section>

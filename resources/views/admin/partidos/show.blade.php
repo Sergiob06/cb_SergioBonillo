@@ -34,8 +34,38 @@
             </p>
 
             <p style="font-size: 1.1rem; margin: 15px 0;">
+                <strong>Estado:</strong> <span class="estado-partido estado-partido--{{ $partido->estado }}">{{ $partido->estado_nombre }}</span>
+            </p>
+
+            <p style="font-size: 1.1rem; margin: 15px 0;">
                 <strong>Lugar:</strong> {{ $partido->lugar }}
             </p>
+
+            <p style="font-size: 1.1rem; margin: 15px 0;">
+                <strong>Resultado:</strong> {{ $partido->resultado }}
+            </p>
+
+            @if(!$partido->es_jugado)
+                <p style="font-size: 1.1rem; margin: 15px 0;">
+                    <strong>Estadísticas:</strong> disponibles cuando el partido esté marcado como jugado.
+                </p>
+            @elseif($partido->tiene_estadisticas_equipo)
+                <p style="font-size: 1.1rem; margin: 15px 0;">
+                    <strong>Estadísticas:</strong>
+                    registradas para {{ $partido->equipo_estadisticas_resuelto?->nombre ?? 'equipo Bellreguard' }}.
+                </p>
+                <div class="rejilla-stats-top estadistica-card-stats">
+                    <div class="card-stat"><div class="stat-info"><h3>{{ $partido->puntos_anotados }}</h3><p>Puntos anotados</p></div></div>
+                    <div class="card-stat"><div class="stat-info"><h3>{{ $partido->puntos_recibidos }}</h3><p>Puntos recibidos</p></div></div>
+                    <div class="card-stat"><div class="stat-info"><h3>{{ $partido->rebotes }}</h3><p>Rebotes</p></div></div>
+                    <div class="card-stat"><div class="stat-info"><h3>{{ $partido->asistencias }}</h3><p>Asistencias</p></div></div>
+                </div>
+            @else
+                <p style="font-size: 1.1rem; margin: 15px 0;">
+                    <strong>Estadísticas:</strong>
+                    pendientes de completar desde la edición del partido.
+                </p>
+            @endif
 
             <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
 

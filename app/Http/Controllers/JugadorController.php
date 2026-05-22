@@ -4,63 +4,82 @@ namespace App\Http\Controllers;
 
 use App\Models\Jugador;
 use App\Models\Equipo; // Importamos el modelo Equipo para el desplegable
+use App\Models\Posicion;
+use App\Support\ImagePath;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class JugadorController extends Controller
 {
     // Muestra la lista de jugadores
-    public function index()
+    public function index(Request $request)
     {
-        $jugadores = Jugador::with('equipo')->orderBy('nombre', 'asc')->paginate(10);
-        return view('admin.jugadores.index', compact('jugadores'));
+        $equiposLocales = Equipo::locales()->orderBy('nombre')->get();
+        $equipoSeleccionado = $this->equipoLocalSeleccionado($request, $equiposLocales);
+        $search = trim((string) $request->get('search', ''));
+
+        $jugadores = Jugador::with(['equipo.category', 'posicion'])
+            ->deEquiposLocales()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($searchQuery) use ($search) {
+                    $searchQuery->where('nombre', 'like', '%' . $search . '%')
+                        ->orWhere('apellido', 'like', '%' . $search . '%');
+                });
+            })
+            ->when($equipoSeleccionado, function ($query) use ($equipoSeleccionado) {
+                $query->where('equipo_id', $equipoSeleccionado);
+            })
+            ->orderBy('apellido')
+            ->orderBy('nombre')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('admin.jugadores.index', compact('jugadores', 'equiposLocales', 'equipoSeleccionado', 'search'));
     }
 
     // Muestra el formulario (pasando los equipos)
     public function create()
     {
-        $equipos = Equipo::orderBy('nombre')->get(); // Necesitamos los equipos para el <select>
-        $posicionesDisponibles = Jugador::query()
-            ->select('posicion')
-            ->distinct()
-            ->whereNotNull('posicion')
-            ->orderBy('posicion')
-            ->pluck('posicion');
+        $equipos = Equipo::locales()->orderBy('nombre')->get();
+        $posiciones = Posicion::orderBy('nombre')->get();
 
-        return view('admin.jugadores.create', compact('equipos', 'posicionesDisponibles'));
+        return view('admin.jugadores.create', compact('equipos', 'posiciones'));
     }
 
     // Guarda el jugador en la base de datos
     public function store(Request $request)
     {
-        $request->validate([
+        $datosValidados = $request->validate([
             'nombre'           => 'required|string|max:255',
             'apellido'         => 'required|string|max:255',
-            'dorsal'           => 'required|integer|min:0|max:99',
-            'posicion'         => 'required|string',
-            'fecha_nacimiento' => 'required|date',
-            'equipo_id'        => 'required|exists:equipos,id',
-            'imagen_jugador'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'dorsal'           => 'nullable|integer|min:0|max:99',
+            'posicion_id'      => 'required|exists:posiciones,id',
+            'fecha_nacimiento' => 'nullable|date',
+            'equipo_id'        => ['required', Rule::exists('equipos', 'id')->where('es_local', true)],
+            'imagen_jugador'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
         ], [
             'nombre.required'           => 'El nombre es obligatorio.',
             'apellido.required'         => 'El apellido es obligatorio.',
-            'dorsal.required'           => 'El dorsal es obligatorio.',
             'dorsal.integer'            => 'El dorsal debe ser un número.',
+            'posicion_id.required'      => 'Debes seleccionar una posición.',
+            'posicion_id.exists'        => 'La posición seleccionada no es válida.',
             'equipo_id.required'        => 'Debes asignar al jugador a un equipo.',
-            'equipo_id.exists'          => 'El equipo seleccionado no es válido.',
+            'equipo_id.exists'          => 'El jugador solo puede pertenecer a un equipo local.',
             'imagen_jugador.image'      => 'El archivo debe ser una imagen.',
-            'imagen_jugador.mimes'      => 'La foto debe ser JPG o PNG.',
-            'imagen_jugador.max'        => 'La foto es demasiado pesada (máximo 2MB).',
+            'imagen_jugador.mimes'      => 'La foto debe ser JPG, PNG o WEBP.',
+            'imagen_jugador.max'        => 'La foto es demasiado pesada (máximo 4MB).',
         ]);
 
+        $posicion = Posicion::findOrFail($datosValidados['posicion_id']);
+
         $datosJugador = [
-            'nombre' => $request->nombre,
-            'apellido' => $request->apellido,
-            'dorsal' => $request->dorsal,
-            'posicion' => $request->posicion,
-            'fecha_nacimiento' => $request->fecha_nacimiento,
-            'equipo_id' => $request->equipo_id,
+            'nombre' => $datosValidados['nombre'],
+            'apellido' => $datosValidados['apellido'],
+            'dorsal' => $datosValidados['dorsal'] ?? null,
+            'posicion_id' => $posicion->id,
+            'posicion' => $posicion->nombre,
+            'fecha_nacimiento' => $datosValidados['fecha_nacimiento'] ?? null,
+            'equipo_id' => $datosValidados['equipo_id'],
         ];
 
         if ($request->hasFile('imagen_jugador')) {
@@ -75,50 +94,49 @@ class JugadorController extends Controller
 
     public function edit($id)
     {
-        $jugador = Jugador::findOrFail($id);
-        $equipos = Equipo::orderBy('nombre')->get(); // Para el desplegable de cambio de equipo
-        $posicionesDisponibles = Jugador::query()
-            ->select('posicion')
-            ->distinct()
-            ->whereNotNull('posicion')
-            ->orderBy('posicion')
-            ->pluck('posicion');
+        $jugador = Jugador::with(['equipo', 'posicion'])->deEquiposLocales()->findOrFail($id);
+        $equipos = Equipo::locales()->orderBy('nombre')->get();
+        $posiciones = Posicion::orderBy('nombre')->get();
 
-        return view('admin.jugadores.edit', compact('jugador', 'equipos', 'posicionesDisponibles'));
+        return view('admin.jugadores.edit', compact('jugador', 'equipos', 'posiciones'));
     }
 
     public function update(Request $request, $id)
     {
 
-        $request->validate([
+        $datosValidados = $request->validate([
             'nombre'           => 'required|string|max:255',
             'apellido'         => 'required|string|max:255',
-            'dorsal'           => 'required|integer|min:0|max:99',
-            'posicion'         => 'required|string',
-            'fecha_nacimiento' => 'required|date',
-            'equipo_id'        => 'required|exists:equipos,id',
-            'imagen_jugador'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'dorsal'           => 'nullable|integer|min:0|max:99',
+            'posicion_id'      => 'required|exists:posiciones,id',
+            'fecha_nacimiento' => 'nullable|date',
+            'equipo_id'        => ['required', Rule::exists('equipos', 'id')->where('es_local', true)],
+            'imagen_jugador'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
         ], [
             'nombre.required'           => 'El nombre es obligatorio.',
             'apellido.required'         => 'El apellido es obligatorio.',
-            'dorsal.required'           => 'El dorsal es obligatorio.',
             'dorsal.integer'            => 'El dorsal debe ser un número.',
+            'posicion_id.required'      => 'Debes seleccionar una posición.',
+            'posicion_id.exists'        => 'La posición seleccionada no es válida.',
             'equipo_id.required'        => 'Debes asignar al jugador a un equipo.',
-            'equipo_id.exists'          => 'El equipo seleccionado no es válido.',
+            'equipo_id.exists'          => 'El jugador solo puede pertenecer a un equipo local.',
             'imagen_jugador.image'      => 'El archivo debe ser una imagen.',
-            'imagen_jugador.mimes'      => 'La foto debe ser JPG o PNG.',
-            'imagen_jugador.max'        => 'La foto es demasiado pesada (máximo 2MB).',
+            'imagen_jugador.mimes'      => 'La foto debe ser JPG, PNG o WEBP.',
+            'imagen_jugador.max'        => 'La foto es demasiado pesada (máximo 4MB).',
         ]);
 
-        $jugador = Jugador::findOrFail($id);
+        $jugador = Jugador::deEquiposLocales()->findOrFail($id);
+
+        $posicion = Posicion::findOrFail($datosValidados['posicion_id']);
 
         $datosJugador = [
-            'nombre' => $request->nombre,
-            'apellido' => $request->apellido,
-            'dorsal' => $request->dorsal,
-            'posicion' => $request->posicion,
-            'fecha_nacimiento' => $request->fecha_nacimiento,
-            'equipo_id' => $request->equipo_id,
+            'nombre' => $datosValidados['nombre'],
+            'apellido' => $datosValidados['apellido'],
+            'dorsal' => $datosValidados['dorsal'] ?? null,
+            'posicion_id' => $posicion->id,
+            'posicion' => $posicion->nombre,
+            'fecha_nacimiento' => $datosValidados['fecha_nacimiento'] ?? null,
+            'equipo_id' => $datosValidados['equipo_id'],
         ];
 
         if ($request->hasFile('imagen_jugador')) {
@@ -139,7 +157,7 @@ class JugadorController extends Controller
     public function destroy($id)
     {
         // 1. Buscamos al jugador o lanzamos error 404 si no existe
-        $jugador = Jugador::findOrFail($id);
+        $jugador = Jugador::deEquiposLocales()->findOrFail($id);
 
         // 2. Definimos la ruta de su imagen
         if ($jugador->imagen_jugador) {
@@ -156,7 +174,7 @@ class JugadorController extends Controller
     public function show($id)
     {
         // Usamos with('equipo') para traer también los datos del equipo al que pertenece
-        $jugador = Jugador::with('equipo')->findOrFail($id);
+        $jugador = Jugador::with(['equipo.category', 'posicion'])->deEquiposLocales()->findOrFail($id);
         return view('admin.jugadores.show', compact('jugador'));
     }
 
@@ -165,50 +183,27 @@ class JugadorController extends Controller
     /////////////
     public function search(Request $request)
     {
-        $search = $request->get('search');
+        return $this->index($request);
+    }
 
-        $jugadores = Jugador::with('equipo')
-            ->where(function ($query) use ($search) {
-                $query->where('nombre', 'like', '%' . $search . '%')
-                    ->orWhere('apellido', 'like', '%' . $search . '%');
-            })
-            ->orderBy('apellido', 'ASC')
-            ->paginate(10);
-            
-        // Importante para que al cambiar de página no se pierda la búsqueda
-        $jugadores->appends(['search' => $search]);
+    private function equipoLocalSeleccionado(Request $request, $equiposLocales): ?int
+    {
+        $equipoId = $request->integer('equipo_id') ?: $request->integer('equipo');
 
-        return view('admin.jugadores.index', compact('jugadores', 'search'));
+        if (!$equipoId) {
+            return null;
+        }
+
+        return $equiposLocales->contains('id', $equipoId) ? $equipoId : null;
     }
 
     private function eliminarImagenSiExiste(?string $rutaImagen): void
     {
-        $rutaNormalizada = $this->normalizarRutaImagen($rutaImagen);
-
-        if ($rutaNormalizada && !Str::startsWith($rutaNormalizada, ['http://', 'https://'])) {
-            Storage::disk('public')->delete($rutaNormalizada);
-        }
+        ImagePath::deleteFromPublicDisk($rutaImagen, 'jugadores');
     }
 
     private function normalizarRutaImagen(?string $rutaImagen): ?string
     {
-        if (!$rutaImagen) {
-            return null;
-        }
-
-        $rutaNormalizada = trim(str_replace('\\', '/', $rutaImagen));
-
-        if ($rutaNormalizada === '') {
-            return null;
-        }
-
-        if (Str::startsWith($rutaNormalizada, ['http://', 'https://'])) {
-            return $rutaNormalizada;
-        }
-
-        $rutaNormalizada = preg_replace('#^/?storage/#', '', $rutaNormalizada);
-        $rutaNormalizada = preg_replace('#^/?public/#', '', $rutaNormalizada);
-
-        return ltrim($rutaNormalizada, '/');
+        return ImagePath::normalize($rutaImagen, 'jugadores');
     }
 }

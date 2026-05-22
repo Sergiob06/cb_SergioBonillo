@@ -28,8 +28,8 @@ class DatabaseSeeder extends Seeder
             EquipoSeeder::class,
             JugadorSeeder::class,
             PartidoSeeder::class,
-            ClasificacionSeeder::class,
             EstadisticaSeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }

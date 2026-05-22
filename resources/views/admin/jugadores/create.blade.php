@@ -60,12 +60,14 @@
                         </div>
                         <div class="campo-ficha">
                             <label>Posición</label>
-                            <input type="text" name="posicion" list="lista-posiciones" value="{{ old('posicion') }}" placeholder="Ej: Base" class="input-ficha">
-                            <datalist id="lista-posiciones">
-                                @foreach($posicionesDisponibles as $posicion)
-                                    <option value="{{ $posicion }}">
+                            <select name="posicion_id" required class="input-ficha" style="background: white;">
+                                <option value="" disabled {{ old('posicion_id') ? '' : 'selected' }}>Selecciona posición</option>
+                                @foreach($posiciones as $posicion)
+                                    <option value="{{ $posicion->id }}" {{ (int) old('posicion_id') === (int) $posicion->id ? 'selected' : '' }}>
+                                        {{ $posicion->nombre }}
+                                    </option>
                                 @endforeach
-                            </datalist>
+                            </select>
                         </div>
                     </div>
 
@@ -92,8 +94,8 @@
                     
                     <div class="admin-form-upload-field" style="flex: 1;">
                         <label>Subir fotografía del jugador</label>
-                        <input type="file" name="imagen_jugador" class="input-ficha" style="background: white;">
-                        <p style="margin: 10px 0 0; font-size: 0.8em; color: #718096;">Formatos: JPG o PNG. La foto se guardará en public/jugadores.</p>
+                        <input type="file" name="imagen_jugador" class="input-ficha" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" style="background: white;">
+                        <p style="margin: 10px 0 0; font-size: 0.8em; color: #718096;">Formatos: JPG, PNG o WEBP.</p>
                     </div>
                 </div>
             </div>

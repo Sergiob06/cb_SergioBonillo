@@ -49,15 +49,6 @@
         </article>
         <article class="tarjeta-vacia admin-dashboard-card">
             <div class="admin-dashboard-icono">
-                <i class="fas fa-trophy" aria-hidden="true"></i>
-            </div>
-            <div class="admin-dashboard-card-body">
-                <h3>{{ $resumenAdmin['clasificaciones'] }}</h3>
-                <p>Clasificación</p>
-            </div>
-        </article>
-        <article class="tarjeta-vacia admin-dashboard-card">
-            <div class="admin-dashboard-icono">
                 <i class="fas fa-camera" aria-hidden="true"></i>
             </div>
             <div class="admin-dashboard-card-body">

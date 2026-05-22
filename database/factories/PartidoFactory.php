@@ -40,6 +40,12 @@ class PartidoFactory extends Factory
         return [
             'equipo_local_id' => $equipoLocal->id,
             'equipo_visitante_id' => $equipoVisitante->id,
+            'estadisticas_equipo_id' => $equipoLocal->es_local
+                ? $equipoLocal->id
+                : ($equipoVisitante->es_local ? $equipoVisitante->id : null),
+            'category_id' => $equipoLocal->es_local
+                ? $equipoLocal->category_id
+                : ($equipoVisitante->es_local ? $equipoVisitante->category_id : $equipoLocal->category_id),
             'equipo_local' => $equipoLocal->nombre,
             'equipo_visitante' => $equipoVisitante->nombre,
             'fecha_partido' => $faker->dateTimeBetween('-2 months', '+4 months'),

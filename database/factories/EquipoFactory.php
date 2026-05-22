@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Equipo;
 use Database\Seeders\Support\LocalLeagueCatalog;
+use Database\Seeders\Support\PublicImageCatalog;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Equipo>
@@ -60,7 +61,7 @@ class EquipoFactory extends Factory
             'nombre' => $teamName,
             'categoria' => $category->name,
             'category_id' => $category->id,
-            'imagen_club' => 'https://placehold.co/600x600/e63946/ffffff?text=' . urlencode($teamName),
+            'imagen_club' => PublicImageCatalog::teamImageFor($teamName),
             'descripcion' => $faker->paragraph(3),
             'numero_jugadores' => 0,
             'es_local' => true,

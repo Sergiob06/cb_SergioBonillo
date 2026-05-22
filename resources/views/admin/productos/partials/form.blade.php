@@ -36,8 +36,8 @@
 
         <div class="admin-form-upload-field" style="flex: 1;">
             <label>{{ $product ? 'Subir nueva imagen' : 'Subir imagen' }}</label>
-            <input type="file" name="image" class="input-ficha" style="background: white;">
-            <p style="margin: 10px 0 0; font-size: 0.8em; color: #718096;">Formatos permitidos: JPG, PNG o WEBP.</p>
+            <input type="file" name="image" class="input-ficha" accept=".jpg,.jpeg,.png,.webp,.svg,image/jpeg,image/png,image/webp,image/svg+xml" style="background: white;">
+            <p style="margin: 10px 0 0; font-size: 0.8em; color: #718096;">Formatos permitidos: JPG, PNG, WEBP o SVG.</p>
         </div>
     </div>
 </div>

@@ -4,12 +4,7 @@
 
         <div class="campo-ficha">
             <label>Título</label>
-            <input type="text" name="titulo" value="{{ old('titulo', $galeria?->titulo) }}" required class="input-ficha">
-        </div>
-
-        <div class="campo-ficha">
-            <label>Categoría</label>
-            <input type="text" name="categoria" value="{{ old('categoria', $galeria?->categoria) }}" placeholder="Ej: Partidos, Equipo, Eventos..." required class="input-ficha">
+            <input type="text" name="titulo" value="{{ old('titulo', $galeria?->titulo) }}" placeholder="Ej: Victoria del Junior en casa" required class="input-ficha">
         </div>
 
         <div class="campo-ficha">

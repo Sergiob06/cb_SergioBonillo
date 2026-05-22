@@ -77,19 +77,6 @@
         </div>
     </div>
 
-    <div class="seccion-mapa">
-        <div class="titulo-mapa-centrado">
-            <h2>Cómo Llegar</h2>
-            <p>Encuéntranos en el Pabellón Municipal de Bellreguard</p>
-        </div>
-        <div class="mapa-placeholder">
-            <div class="pin-mapa">
-                <i class="fas fa-map-marked-alt"></i>
-                <p>Mapa interactivo</p>
-                <small>Pabellón Municipal de Bellreguard</small>
-            </div>
-        </div>
-    </div>
 </section>
 
 @endsection

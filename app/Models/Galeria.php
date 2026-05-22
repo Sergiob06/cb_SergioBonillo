@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+use App\Support\ImagePath;
 
 class Galeria extends Model
 {
@@ -15,7 +15,6 @@ class Galeria extends Model
     protected $fillable = [
         'titulo',
         'descripcion',
-        'categoria',
         'imagen',
         'fecha_imagen',
     ];
@@ -31,37 +30,11 @@ class Galeria extends Model
 
     public function getImageAttribute(): ?string
     {
-        if (!$this->imagen) {
-            return null;
-        }
-
-        $normalized = str_replace('\\', '/', trim($this->imagen));
-
-        if ($normalized === '') {
-            return null;
-        }
-
-        if (Str::startsWith($normalized, ['http://', 'https://', 'storage/', '/storage/'])) {
-            return ltrim($normalized, '/');
-        }
-
-        if (Str::startsWith($normalized, 'galeria/')) {
-            return $normalized;
-        }
-
-        return 'galeria/' . ltrim($normalized, '/');
+        return ImagePath::normalize($this->imagen, 'galeria');
     }
 
     public function getImageUrlAttribute(): string
     {
-        if (!$this->image) {
-            return asset('img/basket.jpeg');
-        }
-
-        if (Str::startsWith($this->image, ['http://', 'https://'])) {
-            return $this->image;
-        }
-
-        return asset('storage/' . ltrim($this->image, '/'));
+        return ImagePath::url($this->imagen, 'galeria');
     }
 }

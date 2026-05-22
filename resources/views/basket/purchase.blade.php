@@ -18,13 +18,13 @@
     <p>{{ $product->description ?: 'Producto oficial del Bellreguard Club de Basket.' }}</p>
 
     @if(session('mensaje'))
-        <div style="max-width: 720px; margin: 20px auto; padding: 15px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 8px;">
+        <div class="alerta-compra alerta-compra--ok">
             <i class="fas fa-check-circle"></i> {{ session('mensaje') }}
         </div>
     @endif
 
     @if ($errors->any())
-        <div style="max-width: 720px; margin: 20px auto; background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 15px; border-radius: 8px; text-align: left;">
+        <div class="alerta-compra alerta-compra--error">
             <strong>Revisa el formulario:</strong>
             <ul style="margin-top: 5px; margin-bottom: 0; list-style: none; padding-left: 0;">
                 @foreach ($errors->all() as $error)
@@ -64,6 +64,11 @@
                     <div class="campo">
                         <label for="email">Email</label>
                         <input id="email" type="email" name="email" value="{{ old('email') }}" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="telefono">Telefono opcional</label>
+                        <input id="telefono" type="text" name="telefono" value="{{ old('telefono') }}" maxlength="30">
                     </div>
 
                     <div class="campo">

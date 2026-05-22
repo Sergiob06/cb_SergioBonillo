@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Galeria;
+use App\Support\ImagePath;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class GaleriaController extends Controller
 {
@@ -31,7 +30,6 @@ class GaleriaController extends Controller
         Galeria::create([
             'titulo' => $datosValidados['titulo'],
             'descripcion' => $datosValidados['descripcion'],
-            'categoria' => $datosValidados['categoria'],
             'fecha_imagen' => $datosValidados['fecha_imagen'] ?? null,
             'imagen' => $nombreImagen,
         ]);
@@ -65,7 +63,7 @@ class GaleriaController extends Controller
 
         $galeria->titulo = $datosValidados['titulo'];
         $galeria->descripcion = $datosValidados['descripcion'];
-        $galeria->categoria = $datosValidados['categoria'];
+        $galeria->categoria = null;
         $galeria->fecha_imagen = $datosValidados['fecha_imagen'] ?? null;
         $galeria->save();
 
@@ -87,7 +85,6 @@ class GaleriaController extends Controller
 
         $galerias = Galeria::where('titulo', 'like', '%' . $search . '%')
             ->orWhere('descripcion', 'like', '%' . $search . '%')
-            ->orWhere('categoria', 'like', '%' . $search . '%')
             ->orderBy('fecha_imagen', 'desc')
             ->paginate(12);
 
@@ -105,13 +102,11 @@ class GaleriaController extends Controller
         return $request->validate([
             'titulo' => 'required|string|max:255',
             'descripcion' => 'required|string|max:1000',
-            'categoria' => 'required|string|max:255',
             'fecha_imagen' => 'nullable|date',
             'imagen' => $reglaImagen,
         ], [
             'titulo.required' => 'El título es obligatorio.',
             'descripcion.required' => 'La descripción es obligatoria.',
-            'categoria.required' => 'La categoría es obligatoria.',
             'imagen.required' => 'Debes subir una imagen.',
             'imagen.max' => 'La imagen no puede superar 2MB.',
         ]);
@@ -126,32 +121,11 @@ class GaleriaController extends Controller
 
     private function borrarImagenSiExiste(?string $nombreImagen): void
     {
-        $rutaNormalizada = $this->normalizarRutaImagen($nombreImagen);
-
-        if ($rutaNormalizada && !Str::startsWith($rutaNormalizada, ['http://', 'https://'])) {
-            Storage::disk('public')->delete($rutaNormalizada);
-        }
+        ImagePath::deleteFromPublicDisk($nombreImagen, 'galeria');
     }
 
     private function normalizarRutaImagen(?string $rutaImagen): ?string
     {
-        if (!$rutaImagen) {
-            return null;
-        }
-
-        $rutaNormalizada = trim(str_replace('\\', '/', $rutaImagen));
-
-        if ($rutaNormalizada === '') {
-            return null;
-        }
-
-        if (Str::startsWith($rutaNormalizada, ['http://', 'https://'])) {
-            return $rutaNormalizada;
-        }
-
-        $rutaNormalizada = preg_replace('#^/?storage/#', '', $rutaNormalizada);
-        $rutaNormalizada = preg_replace('#^/?public/#', '', $rutaNormalizada);
-
-        return ltrim($rutaNormalizada, '/');
+        return ImagePath::normalize($rutaImagen, 'galeria');
     }
 }

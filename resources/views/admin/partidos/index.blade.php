@@ -12,20 +12,35 @@
     </a>
 </header>
 
-<div class="contenedor-buscador">
-    <form action="{{ route('partidos.search') }}" method="GET" class="form-buscador">
-        <div class="input-grupal">
+<div class="contenedor-buscador admin-partidos-filter-wrap">
+    <form action="{{ route('partidos.index') }}" method="GET" class="form-buscador admin-partidos-filter-form">
+        <div class="input-grupal admin-partidos-search-group">
             <input type="text"
                    name="search"
                    placeholder="Buscar por equipo o lugar..."
                    value="{{ $search ?? '' }}"
-                   class="input-search">
+                   class="input-search admin-partidos-search-input">
             <button type="submit" class="btn-buscar">
                 <i class="fas fa-search"></i>
             </button>
         </div>
 
-        @if(isset($search) && $search != '')
+        <select name="categoria" class="input-search admin-partidos-filter-select admin-partidos-filter-select--categoria" onchange="this.form.submit()">
+            <option value="">Todas las categorías</option>
+            @foreach(($categories ?? collect()) as $category)
+                <option value="{{ $category->id }}" {{ (int) ($categoriaSeleccionada ?? 0) === (int) $category->id ? 'selected' : '' }}>
+                    {{ $category->name }}
+                </option>
+            @endforeach
+        </select>
+
+        <select name="estado" class="input-search admin-partidos-filter-select admin-partidos-filter-select--estado" onchange="this.form.submit()">
+            <option value="">Todos los estados</option>
+            <option value="proximo" {{ ($estadoSeleccionado ?? '') === 'proximo' ? 'selected' : '' }}>Próximo</option>
+            <option value="jugado" {{ ($estadoSeleccionado ?? '') === 'jugado' ? 'selected' : '' }}>Jugado</option>
+        </select>
+
+        @if((isset($search) && $search != '') || !empty($categoriaSeleccionada) || !empty($estadoSeleccionado))
             <a href="{{ route('partidos.index') }}" class="btn-limpiar" title="Limpiar búsqueda">
                 <i class="fas fa-times"></i>
             </a>
@@ -46,7 +61,10 @@
             <tr>
                 <th>Local</th>
                 <th>Visitante</th>
+                <th>Categoría</th>
+                <th>Estado</th>
                 <th>Fecha</th>
+                <th>Resultado</th>
                 <th>Lugar</th>
                 <th>Acciones</th>
             </tr>
@@ -56,7 +74,10 @@
                 <tr>
                     <td data-label="Local" class="tabla-admin-principal">{{ $partido->equipoLocal->nombre ?? $partido->equipo_local }}</td>
                     <td data-label="Visitante">{{ $partido->equipoVisitante->nombre ?? $partido->equipo_visitante }}</td>
+                    <td data-label="Categoría">{{ $partido->category?->name ?? $partido->equipoLocal?->category?->name ?? '-' }}</td>
+                    <td data-label="Estado"><span class="estado-partido estado-partido--{{ $partido->estado }}">{{ $partido->estado_nombre }}</span></td>
                     <td data-label="Fecha">{{ $partido->fecha_partido->format('d/m/Y H:i') }}</td>
+                    <td data-label="Resultado">{{ $partido->resultado }}</td>
                     <td data-label="Lugar">{{ $partido->lugar }}</td>
                     <td data-label="Acciones" class="tabla-admin-celda-acciones">
                         <div class="tabla-admin-acciones">
@@ -80,7 +101,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="tabla-admin-vacia">Todavía no hay partidos registrados.</td>
+                    <td colspan="8" class="tabla-admin-vacia">Todavía no hay partidos registrados.</td>
                 </tr>
             @endforelse
         </tbody>

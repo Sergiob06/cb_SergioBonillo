@@ -25,8 +25,12 @@
                 <i class="fas fa-search"></i>
             </button>
         </div>
+        <label style="display: inline-flex; align-items: center; gap: 8px; font-weight: 600; color: #333;">
+            <input type="checkbox" name="locales" value="1" {{ !empty($mostrarLocales) ? 'checked' : '' }} onchange="this.form.submit()">
+            Solo locales
+        </label>
         {{-- Si hay una búsqueda activa, mostramos un botón para limpiar --}}
-        @if(isset($search) && $search != '')
+        @if((isset($search) && $search != '') || !empty($mostrarLocales))
             <a href="{{ route('equipos.index') }}" class="btn-limpiar" title="Limpiar búsqueda">
                 <i class="fas fa-times"></i>
             </a>
@@ -59,9 +63,9 @@
             @foreach($equipos as $equipo)
             <tr>
                 <td data-label="Escudo" class="tabla-admin-imagen">
-                    <div class="contenedor-escudo">
+                    <div class="admin-table-media admin-table-media--logo">
                         {{-- Muestra la foto guardada en la carpeta public/escudos --}}
-                        <img src="{{ $equipo->image_url }}" alt="Escudo" width="60" height="60" style="object-fit: contain;">
+                        <img src="{{ $equipo->image_url }}" alt="Escudo de {{ $equipo->nombre }}">
                     </div> {{-- DIV cerrado correctamente --}}
                 </td>
                 <td data-label="Nombre Equipo" class="tabla-admin-principal"><strong>{{ $equipo->nombre }}</strong></td>
@@ -74,6 +78,19 @@
                         <a href="{{ route('equipos.show', $equipo->id) }}" class="btn-accion" title="Ver Detalle" style="background-color: #00b4d8; color: white;">
                             <i class="fas fa-eye"></i>
                         </a>
+
+                        @if($equipo->es_local)
+                            <a href="{{ route('jugadores.index', ['equipo_id' => $equipo->id]) }}" class="btn-accion" title="Ver jugadores" style="background-color: #198754; color: white;">
+                                <i class="fas fa-users"></i>
+                            </a>
+                            <a href="{{ route('equipos.analisis', $equipo) }}" class="btn-accion" title="Análisis del equipo" style="background-color: #6f42c1; color: white;">
+                                <i class="fas fa-chart-line"></i>
+                            </a>
+                        @else
+                            <span class="btn-accion btn-accion-deshabilitada" title="Los equipos externos no tienen jugadores gestionables">
+                                <i class="fas fa-users-slash"></i>
+                            </span>
+                        @endif
 
                         {{-- Botón Editar: Pasa el ID del equipo en la URL para saber cuál editar --}}
                         <a href="{{ route('equipos.edit', $equipo->id) }}" class="btn-accion editar" title="Editar" style="margin: 0;">

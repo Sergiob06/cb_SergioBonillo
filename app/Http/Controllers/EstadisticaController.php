@@ -2,27 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Equipo;
 use App\Models\Estadistica;
+use App\Models\Partido;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class EstadisticaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $estadisticas = Estadistica::with('equipo')
-            ->orderBy('temporada', 'desc')
-            ->paginate(10);
+        $search = trim((string) $request->get('search', ''));
 
-        return view('admin.estadisticas.index', compact('estadisticas'));
+        $equipos = Equipo::locales()
+            ->with('category')
+            ->withCount(['partidosConEstadisticas as partidos_jugados_count' => fn ($query) => $query->jugados()])
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where('nombre', 'like', '%' . $search . '%')
+                    ->orWhere('categoria', 'like', '%' . $search . '%');
+            })
+            ->orderBy('nombre')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('admin.estadisticas.index', compact('equipos', 'search'));
     }
 
     public function create()
     {
-        $equipos = Equipo::orderBy('nombre', 'asc')->get();
+        $partidos = Partido::with(['equipoLocal', 'equipoVisitante', 'equipoEstadisticas', 'estadistica'])
+            ->jugados()
+            ->whereHas('equipoEstadisticas', fn ($query) => $query->where('es_local', true))
+            ->orderByDesc('fecha_partido')
+            ->get();
 
-        return view('admin.estadisticas.create', compact('equipos'));
+        return view('admin.estadisticas.create', [
+            'partidos' => $partidos,
+            'partidoSeleccionado' => request()->integer('partido'),
+        ]);
     }
 
     public function store(Request $request)
@@ -36,22 +54,26 @@ class EstadisticaController extends Controller
 
     public function show($id)
     {
-        $estadistica = Estadistica::with('equipo')->findOrFail($id);
+        $estadistica = Estadistica::with(['partido.equipoLocal.category', 'partido.equipoVisitante.category', 'partido.category'])->findOrFail($id);
 
         return view('admin.estadisticas.show', compact('estadistica'));
     }
 
     public function edit($id)
     {
-        $estadistica = Estadistica::findOrFail($id);
-        $equipos = Equipo::orderBy('nombre', 'asc')->get();
+        $estadistica = Estadistica::with(['partido.equipoLocal', 'partido.equipoVisitante'])->findOrFail($id);
 
-        return view('admin.estadisticas.edit', compact('estadistica', 'equipos'));
+        return view('admin.estadisticas.edit', compact('estadistica'));
     }
 
     public function update(Request $request, $id)
     {
         $estadistica = Estadistica::findOrFail($id);
+
+        $request->merge([
+            'partido_id' => $estadistica->partido_id,
+        ]);
+
         $datosValidados = $this->validarEstadistica($request, $estadistica->id);
 
         $estadistica->update($datosValidados);
@@ -69,38 +91,18 @@ class EstadisticaController extends Controller
 
     public function search(Request $request)
     {
-        $search = $request->get('search');
-
-        $estadisticas = Estadistica::with('equipo')
-            ->where(function ($query) use ($search) {
-                $query->where('temporada', 'like', '%' . $search . '%')
-                    ->orWhereHas('equipo', function ($subQuery) use ($search) {
-                        $subQuery->where('nombre', 'like', '%' . $search . '%')
-                            ->orWhere('categoria', 'like', '%' . $search . '%');
-                    });
-            })
-            ->orderBy('temporada', 'desc')
-            ->paginate(10);
-
-        $estadisticas->appends(['search' => $search]);
-
-        return view('admin.estadisticas.index', compact('estadisticas', 'search'));
+        return $this->index($request);
     }
 
     private function validarEstadistica(Request $request, ?int $estadisticaId = null): array
     {
-        return $request->validate([
-            'equipo_id' => [
+        $datos = $request->validate([
+            'partido_id' => [
                 'required',
-                'exists:equipos,id',
+                Rule::exists('partidos', 'id')->where('estado', 'jugado'),
                 Rule::unique('estadisticas')
-                    ->where(function ($query) use ($request) {
-                        return $query->where('equipo_id', $request->equipo_id)
-                            ->where('temporada', $request->temporada);
-                    })
                     ->ignore($estadisticaId),
             ],
-            'temporada' => 'required|string|max:255',
             'puntos_totales' => 'required|integer|min:0',
             'rebotes' => 'required|integer|min:0',
             'asistencias' => 'required|integer|min:0',
@@ -108,14 +110,20 @@ class EstadisticaController extends Controller
             'rebotes_defensivos' => 'required|integer|min:0',
             'rebotes_ofensivos' => 'required|integer|min:0',
             'tapones' => 'required|integer|min:0',
-            'partidos_jugados' => 'required|integer|min:0',
-            'victorias' => 'required|integer|min:0',
-            'derrotas' => 'required|integer|min:0',
         ], [
-            'equipo_id.required' => 'Debes seleccionar un equipo.',
-            'equipo_id.exists' => 'El equipo seleccionado no existe.',
-            'equipo_id.unique' => 'Ya existe una estadística para ese equipo en esa temporada.',
-            'temporada.required' => 'La temporada es obligatoria.',
+            'partido_id.required' => 'Debes seleccionar un partido.',
+            'partido_id.exists' => 'El partido seleccionado no existe o todavía no está marcado como jugado.',
+            'partido_id.unique' => 'Ese partido ya tiene estadísticas registradas.',
         ]);
+
+        $partido = Partido::with('equipoEstadisticas')->find($datos['partido_id']);
+
+        if (!$partido?->equipoEstadisticas?->es_local) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'partido_id' => 'Solo se pueden crear estadísticas para partidos con un equipo Bellreguard asignado.',
+            ]);
+        }
+
+        return $datos;
     }
 }
