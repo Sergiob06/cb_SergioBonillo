@@ -108,6 +108,8 @@ class JugadorSeeder extends Seeder
 
             $equipo->update(['numero_jugadores' => $equipo->jugadores()->count()]);
         });
+
+        $this->replaceLegacyPlaceholderImages();
     }
 
     private function teamIsFemale(Equipo $equipo): bool
@@ -120,6 +122,37 @@ class JugadorSeeder extends Seeder
         $image = $images[$index % count($images)];
 
         return is_file(public_path($image)) ? $image : PublicImageCatalog::PLAYER_FALLBACK;
+    }
+
+    private function replaceLegacyPlaceholderImages(): void
+    {
+        $localImages = PublicImageCatalog::playerImages();
+
+        Jugador::query()
+            ->where('imagen_jugador', 'like', '%placehold.co%')
+            ->orderBy('id')
+            ->chunkById(100, function ($jugadores) use ($localImages) {
+                foreach ($jugadores as $jugador) {
+                    $jugador->update([
+                        'imagen_jugador' => $this->legacyReplacementImage($localImages, $jugador),
+                    ]);
+                }
+            });
+    }
+
+    /**
+     * @param  array<int, string>  $localImages
+     */
+    private function legacyReplacementImage(array $localImages, Jugador $jugador): string
+    {
+        if ($localImages === []) {
+            return PublicImageCatalog::PLAYER_FALLBACK;
+        }
+
+        $key = Str::slug($jugador->nombre.' '.$jugador->apellido.' '.$jugador->id);
+        $index = abs(crc32($key)) % count($localImages);
+
+        return $localImages[$index];
     }
 
     private function birthDateFor(Equipo $equipo, int $index): string
