@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Estadistica;
 use App\Models\Equipo;
 use App\Models\Partido;
 use Carbon\CarbonImmutable;
@@ -19,9 +18,6 @@ class PartidoSeeder extends Seeder
         if ($equipos->count() < 2) {
             return;
         }
-
-        Estadistica::whereNotNull('partido_id')->delete();
-        Partido::query()->delete();
 
         $fechaBase = CarbonImmutable::create(2026, 1, 10, 10, 0);
         $slot = 0;
@@ -89,19 +85,23 @@ class PartidoSeeder extends Seeder
     {
         [$puntosLocal, $puntosVisitante] = $this->resultadoRealista($local, $visitante);
 
-        return Partido::create([
-                'equipo_local_id' => $local->id,
-                'equipo_visitante_id' => $visitante->id,
-                'estadisticas_equipo_id' => $equipoEstadisticas?->id,
-                'category_id' => $equipoEstadisticas?->category_id ?? $local->category_id,
-                'equipo_local' => $local->nombre,
-                'equipo_visitante' => $visitante->nombre,
-                'fecha_partido' => $fecha,
-                'estado' => 'jugado',
-                'lugar' => LocalLeagueCatalog::venueForTeam($local->nombre),
-                'puntos_local' => $puntosLocal,
-                'puntos_visitante' => $puntosVisitante,
-            ] + $this->estadisticasDeEjemplo($puntosLocal, $puntosVisitante));
+        return Partido::updateOrCreate([
+            'equipo_local_id' => $local->id,
+            'equipo_visitante_id' => $visitante->id,
+            'fecha_partido' => $fecha,
+        ], [
+            'equipo_local_id' => $local->id,
+            'equipo_visitante_id' => $visitante->id,
+            'estadisticas_equipo_id' => $equipoEstadisticas?->id,
+            'category_id' => $equipoEstadisticas?->category_id ?? $local->category_id,
+            'equipo_local' => $local->nombre,
+            'equipo_visitante' => $visitante->nombre,
+            'fecha_partido' => $fecha,
+            'estado' => 'jugado',
+            'lugar' => LocalLeagueCatalog::venueForTeam($local->nombre),
+            'puntos_local' => $puntosLocal,
+            'puntos_visitante' => $puntosVisitante,
+        ] + $this->estadisticasDeEjemplo($puntosLocal, $puntosVisitante));
     }
 
     /**
@@ -109,14 +109,14 @@ class PartidoSeeder extends Seeder
      */
     private function resultadoRealista(Equipo $local, Equipo $visitante): array
     {
-        $baseLocal = 62 + ($local->es_local ? 5 : 0) + fake()->numberBetween(-8, 18);
-        $baseVisitante = 58 + ($visitante->es_local ? 5 : 0) + fake()->numberBetween(-10, 16);
+        $baseLocal = 62 + ($local->es_local ? 5 : 0) + $this->numberFor('local', $local->id, $visitante->id, -8, 18);
+        $baseVisitante = 58 + ($visitante->es_local ? 5 : 0) + $this->numberFor('visitante', $local->id, $visitante->id, -10, 16);
 
         $puntosLocal = max(42, $baseLocal);
         $puntosVisitante = max(38, $baseVisitante);
 
         if ($puntosLocal === $puntosVisitante) {
-            $puntosLocal += fake()->boolean() ? 2 : 0;
+            $puntosLocal += $this->numberFor('desempate', $local->id, $visitante->id, 0, 1) === 1 ? 2 : 0;
             $puntosVisitante += $puntosLocal === $puntosVisitante ? 2 : 0;
         }
 
@@ -145,13 +145,18 @@ class PartidoSeeder extends Seeder
         $puntosReferencia = max($puntosLocal, $puntosVisitante);
 
         return [
-            'triples' => max(2, min(16, intdiv($puntosReferencia, 9) + fake()->numberBetween(-2, 3))),
-            'tiros_libres' => max(4, min(30, intdiv($puntosReferencia, 5) + fake()->numberBetween(-3, 5))),
-            'rebotes' => fake()->numberBetween(24, 48),
-            'asistencias' => fake()->numberBetween(8, 26),
-            'robos' => fake()->numberBetween(3, 14),
-            'perdidas' => fake()->numberBetween(6, 18),
-            'faltas' => fake()->numberBetween(10, 25),
+            'triples' => max(2, min(16, intdiv($puntosReferencia, 9) + $this->numberFor('triples', $puntosLocal, $puntosVisitante, -2, 3))),
+            'tiros_libres' => max(4, min(30, intdiv($puntosReferencia, 5) + $this->numberFor('tl', $puntosLocal, $puntosVisitante, -3, 5))),
+            'rebotes' => $this->numberFor('rebotes', $puntosLocal, $puntosVisitante, 24, 48),
+            'asistencias' => $this->numberFor('asistencias', $puntosLocal, $puntosVisitante, 8, 26),
+            'robos' => $this->numberFor('robos', $puntosLocal, $puntosVisitante, 3, 14),
+            'perdidas' => $this->numberFor('perdidas', $puntosLocal, $puntosVisitante, 6, 18),
+            'faltas' => $this->numberFor('faltas', $puntosLocal, $puntosVisitante, 10, 25),
         ];
+    }
+
+    private function numberFor(string $salt, int $a, int $b, int $min, int $max): int
+    {
+        return $min + (abs(crc32($salt.'|'.$a.'|'.$b)) % ($max - $min + 1));
     }
 }

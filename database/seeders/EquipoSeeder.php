@@ -13,7 +13,7 @@ class EquipoSeeder extends Seeder
     public function run(): void
     {
         $categorias = collect(LocalLeagueCatalog::categories())
-            ->map(fn (string $name) => Category::firstOrCreate(['name' => $name]));
+            ->map(fn (string $name) => Category::updateOrCreate(['name' => $name]));
 
         foreach (LocalLeagueCatalog::clubs() as $club) {
             $category = $categorias->firstWhere('name', $club['categoria']);
@@ -25,7 +25,7 @@ class EquipoSeeder extends Seeder
                 'categoria' => $category->name,
                 'category_id' => $category->id,
                 'imagen_club' => PublicImageCatalog::teamImageFor($club['name']),
-                'descripcion' => 'Equipo de ' . $club['ciudad'] . ' que compite en categoria ' . strtolower($category->name) . ' dentro de una simulacion de liga local.',
+                'descripcion' => 'Equipo de '.$club['ciudad'].' que compite en categoria '.strtolower($category->name).' dentro de una simulacion de liga local.',
                 'es_local' => $club['es_local'],
             ]);
         }

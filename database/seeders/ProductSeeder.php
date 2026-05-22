@@ -89,11 +89,10 @@ class ProductSeeder extends Seeder
 
     private function imagePath(string $preferredImage, string $productName): string
     {
-        $directory = public_path('productos');
-        $preferredPath = $directory . DIRECTORY_SEPARATOR . $preferredImage;
+        $preferredPath = public_path('productos'.DIRECTORY_SEPARATOR.$preferredImage);
 
         if (is_file($preferredPath)) {
-            return 'productos/' . $preferredImage;
+            return 'productos/'.$preferredImage;
         }
 
         return 'img/basket.jpeg';

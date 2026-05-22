@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 class PublicImageCatalog
 {
     public const TEAM_FALLBACK = 'img/equipo-default.svg';
+
     public const PLAYER_FALLBACK = 'img/basket.jpeg';
 
     /** @var array<int, string> */
@@ -42,7 +43,7 @@ class PublicImageCatalog
     }
 
     /**
-     * @param array<int, string> $extensions
+     * @param  array<int, string>  $extensions
      */
     private static function imageFor(string $directory, string $name, array $extensions, string $fallback, int $offset = 0): string
     {
@@ -67,24 +68,24 @@ class PublicImageCatalog
     }
 
     /**
-     * @param array<int, string> $extensions
+     * @param  array<int, string>  $extensions
      * @return array<int, string>
      */
     private static function imagesFrom(string $directory, array $extensions): array
     {
         $basePath = public_path($directory);
 
-        if (!is_dir($basePath)) {
+        if (! is_dir($basePath)) {
             return [];
         }
 
         return collect(scandir($basePath) ?: [])
             ->filter(function (string $filename) use ($basePath, $extensions) {
-                return is_file($basePath . DIRECTORY_SEPARATOR . $filename)
+                return is_file($basePath.DIRECTORY_SEPARATOR.$filename)
                     && in_array(Str::lower(pathinfo($filename, PATHINFO_EXTENSION)), $extensions, true);
             })
             ->sort()
-            ->map(fn (string $filename) => $directory . '/' . $filename)
+            ->map(fn (string $filename) => $directory.'/'.$filename)
             ->values()
             ->all();
     }

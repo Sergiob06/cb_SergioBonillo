@@ -13,7 +13,7 @@ class SeasonSimulationStore
     private static ?array $payload = null;
 
     /**
-     * @param Collection<int, Equipo> $equipos
+     * @param  Collection<int, Equipo>  $equipos
      * @return array{temporada:string,fixtures:Collection<int, array<string, mixed>>,standings:Collection<int, array<string, mixed>>,statistics:Collection<int, array<string, mixed>>}
      */
     public static function getOrBuild(Collection $equipos, string $temporada = '2025/2026'): array

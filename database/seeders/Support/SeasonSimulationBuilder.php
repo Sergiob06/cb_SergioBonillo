@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 class SeasonSimulationBuilder
 {
     /**
-     * @param Collection<int, Equipo> $equipos
+     * @param  Collection<int, Equipo>  $equipos
      * @return array{temporada:string,fixtures:Collection<int, array<string, mixed>>,standings:Collection<int, array<string, mixed>>,statistics:Collection<int, array<string, mixed>>}
      */
     public static function build(Collection $equipos, string $temporada = '2025/2026'): array
@@ -85,7 +85,7 @@ class SeasonSimulationBuilder
                             ]);
 
                             self::accumulate($teamStats[$local->id], $puntosLocal, $puntosVisitante, $ganadorLocal, $faker);
-                            self::accumulate($teamStats[$visitante->id], $puntosVisitante, $puntosLocal, !$ganadorLocal, $faker);
+                            self::accumulate($teamStats[$visitante->id], $puntosVisitante, $puntosLocal, ! $ganadorLocal, $faker);
                         }
                     }
                 }
@@ -118,7 +118,7 @@ class SeasonSimulationBuilder
     }
 
     /**
-     * @param array<string, mixed> $teamRow
+     * @param  array<string, mixed>  $teamRow
      */
     private static function accumulate(array &$teamRow, int $favor, int $contra, bool $victoria, $faker): void
     {

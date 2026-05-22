@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Equipo;
 use App\Models\Jugador;
 use App\Models\Posicion;
+use Database\Seeders\Support\PublicImageCatalog;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -77,12 +78,10 @@ class JugadorSeeder extends Seeder
         $posicionesPorNombre = collect($this->positions)
             ->unique()
             ->mapWithKeys(fn (string $nombre) => [
-                $nombre => Posicion::firstOrCreate(['nombre' => $nombre]),
+                $nombre => Posicion::updateOrCreate(['nombre' => $nombre]),
             ]);
 
         $equiposLocales = Equipo::locales()->orderBy('id')->get();
-
-        Jugador::whereIn('equipo_id', $equiposLocales->pluck('id'))->delete();
 
         $equiposLocales->values()->each(function (Equipo $equipo, int $teamIndex) use ($posicionesPorNombre) {
             $esFemenino = $this->teamIsFemale($equipo);
@@ -94,10 +93,11 @@ class JugadorSeeder extends Seeder
                 $player = $roster[($offset + $index) % count($roster)];
                 $position = $this->positions[$index];
 
-                Jugador::create([
-                    'equipo_id' => $equipo->id,
+                Jugador::updateOrCreate([
                     'nombre' => $player['nombre'],
                     'apellido' => $player['apellido'],
+                    'equipo_id' => $equipo->id,
+                ], [
                     'dorsal' => $this->dorsals[$index],
                     'posicion_id' => $posicionesPorNombre[$position]->id,
                     'posicion' => $position,
@@ -106,21 +106,20 @@ class JugadorSeeder extends Seeder
                 ]);
             }
 
-            $equipo->update(['numero_jugadores' => count($this->dorsals)]);
+            $equipo->update(['numero_jugadores' => $equipo->jugadores()->count()]);
         });
-
-        Jugador::whereHas('equipo', fn ($query) => $query->where('es_local', false))->delete();
-        Equipo::externos()->update(['numero_jugadores' => 0]);
     }
 
     private function teamIsFemale(Equipo $equipo): bool
     {
-        return Str::contains(Str::lower($equipo->categoria . ' ' . $equipo->nombre), ['femenino', 'femeni']);
+        return Str::contains(Str::lower($equipo->categoria.' '.$equipo->nombre), ['femenino', 'femeni']);
     }
 
     private function imageFor(array $images, int $index): string
     {
-        return $images[$index % count($images)];
+        $image = $images[$index % count($images)];
+
+        return is_file(public_path($image)) ? $image : PublicImageCatalog::PLAYER_FALLBACK;
     }
 
     private function birthDateFor(Equipo $equipo, int $index): string
@@ -138,6 +137,6 @@ class JugadorSeeder extends Seeder
         $month = str_pad((string) (($index % 12) + 1), 2, '0', STR_PAD_LEFT);
         $day = str_pad((string) ((($index * 2) % 27) + 1), 2, '0', STR_PAD_LEFT);
 
-        return $year . '-' . $month . '-' . $day;
+        return $year.'-'.$month.'-'.$day;
     }
 }
