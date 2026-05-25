@@ -71,6 +71,11 @@ class Equipo extends Model
         return $this->hasMany(Partido::class, 'estadisticas_equipo_id');
     }
 
+    public function estadisticasEquipos()
+    {
+        return $this->hasMany(EstadisticaEquipo::class);
+    }
+
     public function getImageUrlAttribute(): string
     {
         return ImagePath::urlFromDirectories(

@@ -102,10 +102,11 @@
                                     <i class="fa-solid fa-location-dot"></i>
                                     {{ $partido->lugar }}
                                 </div>
-                                @if($partido->es_jugado && $partido->tiene_estadisticas_equipo)
+                                @if($partido->es_jugado && $partido->estadisticasEquipos->isNotEmpty())
+                                    @php($estadisticaBellreguard = $partido->estadisticasEquipos->first(fn ($estadistica) => $estadistica->equipo?->es_local))
                                     <div class="dato-horario">
                                         <i class="fa-solid fa-chart-line"></i>
-                                        {{ $partido->puntos_anotados }} anotados · {{ $partido->rebotes }} reb · {{ $partido->asistencias }} ast
+                                        {{ $estadisticaBellreguard?->puntos_anotados ?? '-' }} anotados · {{ $estadisticaBellreguard?->rebotes_totales ?? '-' }} reb · {{ $estadisticaBellreguard?->asistencias ?? '-' }} ast
                                     </div>
                                 @elseif(!$partido->es_jugado)
                                     <div class="dato-horario">

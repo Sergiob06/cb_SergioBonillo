@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Equipo;
+use App\Models\EstadisticaEquipo;
 use App\Models\Partido;
 use App\Support\ImagePath;
 use Illuminate\Http\Request;
@@ -210,7 +211,7 @@ class EquipoController extends Controller
                 ->values();
 
             $analisisEquipo = $equipo->es_local
-                ? $this->calcularAnalisisEquipo($this->partidosAnalisisEquipo($equipo)->get())
+                ? $this->calcularAnalisisEquipo($this->estadisticasAnalisisEquipo($equipo)->with(['partido.estadisticasEquipos'])->get())
                 : null;
 
             return view('equipos.show', compact('equipo', 'partidos', 'analisisEquipo'));
@@ -224,27 +225,28 @@ class EquipoController extends Controller
     {
         abort_unless($equipo->es_local, 404);
 
-        $partidos = $this->partidosAnalisisEquipo($equipo)
-            ->with(['equipoLocal', 'equipoVisitante', 'equipoEstadisticas', 'category'])
+        $estadisticas = $this->estadisticasAnalisisEquipo($equipo)
+            ->with(['partido.equipoLocal', 'partido.equipoVisitante', 'partido.category', 'partido.estadisticasEquipos'])
             ->get();
 
-        $analisisEquipo = $this->calcularAnalisisEquipo($partidos);
+        $analisisEquipo = $this->calcularAnalisisEquipo($estadisticas);
         $chartData = [
-            'labels' => $partidos->map(function (Partido $partido) use ($equipo) {
+            'labels' => $estadisticas->map(function (EstadisticaEquipo $estadistica) use ($equipo) {
+                $partido = $estadistica->partido;
                 $rival = (int) $partido->equipo_local_id === (int) $equipo->id
                     ? ($partido->equipoVisitante?->nombre ?? $partido->equipo_visitante)
                     : ($partido->equipoLocal?->nombre ?? $partido->equipo_local);
 
                 return $partido->fecha_partido->format('d/m') . ' vs ' . $rival;
             })->values(),
-            'puntosAnotados' => $partidos->pluck('puntos_anotados')->values(),
-            'puntosRecibidos' => $partidos->pluck('puntos_recibidos')->values(),
-            'diferencias' => $partidos->pluck('diferencia_puntos')->values(),
+            'puntosAnotados' => $estadisticas->pluck('puntos_anotados')->values(),
+            'puntosRecibidos' => $estadisticas->map(fn (EstadisticaEquipo $estadistica) => $estadistica->estadisticaRival()?->puntos_anotados)->values(),
+            'diferencias' => $estadisticas->map(fn (EstadisticaEquipo $estadistica) => $this->diferenciaEstadistica($estadistica))->values(),
             'victorias' => $analisisEquipo['victorias'],
             'derrotas' => $analisisEquipo['derrotas'],
         ];
 
-        return view('admin.equipos.analisis', compact('equipo', 'partidos', 'analisisEquipo', 'chartData'));
+        return view('admin.equipos.analisis', ['equipo' => $equipo, 'partidos' => $estadisticas, 'analisisEquipo' => $analisisEquipo, 'chartData' => $chartData]);
     }
 
     ////////////////
@@ -278,13 +280,13 @@ class EquipoController extends Controller
         return ImagePath::normalizeFromDirectories($rutaImagen, Equipo::IMAGE_DIRECTORIES);
     }
 
-    private function calcularAnalisisEquipo($partidos): array
+    private function calcularAnalisisEquipo($estadisticas): array
     {
-        $partidosConResultado = $partidos
-            ->filter(fn (Partido $partido) => $partido->puntos_anotados !== null && $partido->puntos_recibidos !== null)
+        $estadisticasConResultado = $estadisticas
+            ->filter(fn (EstadisticaEquipo $estadistica) => $estadistica->puntos_anotados !== null && $estadistica->estadisticaRival()?->puntos_anotados !== null)
             ->values();
 
-        $partidosJugados = $partidosConResultado->count();
+        $partidosJugados = $estadisticasConResultado->count();
 
         if ($partidosJugados === 0) {
             return [
@@ -301,13 +303,13 @@ class EquipoController extends Controller
 
         return [
             'partidos_jugados' => $partidosJugados,
-            'victorias' => $partidosConResultado->filter(fn (Partido $partido) => $partido->diferencia_puntos > 0)->count(),
-            'derrotas' => $partidosConResultado->filter(fn (Partido $partido) => $partido->diferencia_puntos < 0)->count(),
-            'media_puntos_anotados' => round($partidosConResultado->avg('puntos_anotados'), 1),
-            'media_puntos_recibidos' => round($partidosConResultado->avg('puntos_recibidos'), 1),
-            'diferencia_media' => round($partidosConResultado->avg('diferencia_puntos'), 1),
-            'mejor_partido_ofensivo' => $partidosConResultado->sortByDesc('puntos_anotados')->first(),
-            'peor_partido_defensivo' => $partidosConResultado->sortByDesc('puntos_recibidos')->first(),
+            'victorias' => $estadisticasConResultado->filter(fn (EstadisticaEquipo $estadistica) => $this->diferenciaEstadistica($estadistica) > 0)->count(),
+            'derrotas' => $estadisticasConResultado->filter(fn (EstadisticaEquipo $estadistica) => $this->diferenciaEstadistica($estadistica) < 0)->count(),
+            'media_puntos_anotados' => round($estadisticasConResultado->avg('puntos_anotados'), 1),
+            'media_puntos_recibidos' => round($estadisticasConResultado->map(fn (EstadisticaEquipo $estadistica) => $estadistica->estadisticaRival()?->puntos_anotados)->avg(), 1),
+            'diferencia_media' => round($estadisticasConResultado->map(fn (EstadisticaEquipo $estadistica) => $this->diferenciaEstadistica($estadistica))->avg(), 1),
+            'mejor_partido_ofensivo' => $estadisticasConResultado->sortByDesc('puntos_anotados')->first(),
+            'peor_partido_defensivo' => $estadisticasConResultado->sortByDesc(fn (EstadisticaEquipo $estadistica) => $estadistica->estadisticaRival()?->puntos_anotados)->first(),
         ];
     }
 
@@ -317,5 +319,27 @@ class EquipoController extends Controller
             ->where('estadisticas_equipo_id', $equipo->id)
             ->jugados()
             ->orderBy('fecha_partido');
+    }
+
+    private function estadisticasAnalisisEquipo(Equipo $equipo)
+    {
+        return EstadisticaEquipo::query()
+            ->where('equipo_id', $equipo->id)
+            ->whereHas('equipo', fn ($query) => $query->where('es_local', true))
+            ->whereHas('partido', fn ($query) => $query->jugados())
+            ->join('partidos', 'partidos.id', '=', 'estadisticas_equipos.partido_id')
+            ->select('estadisticas_equipos.*')
+            ->orderBy('partidos.fecha_partido');
+    }
+
+    private function diferenciaEstadistica(EstadisticaEquipo $estadistica): ?int
+    {
+        $puntosRival = $estadistica->estadisticaRival()?->puntos_anotados;
+
+        if ($estadistica->puntos_anotados === null || $puntosRival === null) {
+            return null;
+        }
+
+        return $estadistica->puntos_anotados - $puntosRival;
     }
 }

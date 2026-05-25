@@ -1,15 +1,17 @@
 @extends('layouts.admin') {{-- Carga la base (el diseño general del panel) --}}
 
 @section('contenido_admin') {{-- Aquí empieza el contenido que se mete dentro del diseño --}}
+@php($esAdmin = auth()->user()?->rol === 'admin')
 <header class="header-admin">
     <div>
         <h2>Gestión de Equipos</h2>
         <p style="color: #777;">Categorías y grupos del Bellreguard CB</p>
     </div>
-    {{-- Botón para ir a la vista de crear equipo nuevo --}}
-    <a href="{{ route('equipos.create') }}" class="btn-nuevo">
-        <i class="fas fa-plus"></i> Nuevo Equipo
-    </a>
+    @if($esAdmin)
+        <a href="{{ route('equipos.create') }}" class="btn-nuevo">
+            <i class="fas fa-plus"></i> Nuevo Equipo
+        </a>
+    @endif
 </header>
 
 {{-- Buscador de Equipos --}}
@@ -92,19 +94,19 @@
                             </span>
                         @endif
 
-                        {{-- Botón Editar: Pasa el ID del equipo en la URL para saber cuál editar --}}
-                        <a href="{{ route('equipos.edit', $equipo->id) }}" class="btn-accion editar" title="Editar" style="margin: 0;">
-                            <i class="fas fa-pen"></i>
-                        </a>
-                        
-                        {{-- Formulario para Borrar: Es un formulario porque usa el método DELETE --}}
-                        <form action="{{ route('equipos.destroy', $equipo->id) }}" method="POST" onsubmit="return confirm('¿Eliminar equipo?')" style="margin: 0; display: flex; align-items: center;">
-                            @csrf {{-- Token de seguridad obligatorio --}}
-                            @method('DELETE') {{-- Le dice a Laravel que use la función destroy --}}
-                            <button type="submit" class="btn-accion borrar" title="Eliminar" style="margin: 0;">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
+                        @if($esAdmin)
+                            <a href="{{ route('equipos.edit', $equipo->id) }}" class="btn-accion editar" title="Editar" style="margin: 0;">
+                                <i class="fas fa-pen"></i>
+                            </a>
+
+                            <form action="{{ route('equipos.destroy', $equipo->id) }}" method="POST" onsubmit="return confirm('¿Eliminar equipo?')" style="margin: 0; display: flex; align-items: center;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-accion borrar" title="Eliminar" style="margin: 0;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        @endif
         
                     </div>
                 </td>

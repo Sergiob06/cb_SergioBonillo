@@ -17,7 +17,7 @@ class EstadisticaController extends Controller
 
         $equipos = Equipo::locales()
             ->with('category')
-            ->withCount(['partidosConEstadisticas as partidos_jugados_count' => fn ($query) => $query->jugados()])
+            ->withCount(['estadisticasEquipos as partidos_jugados_count' => fn ($query) => $query->whereHas('partido', fn ($partidoQuery) => $partidoQuery->jugados())])
             ->when($search !== '', function ($query) use ($search) {
                 $query->where('nombre', 'like', '%' . $search . '%')
                     ->orWhere('categoria', 'like', '%' . $search . '%');

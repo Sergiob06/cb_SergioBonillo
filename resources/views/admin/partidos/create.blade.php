@@ -108,28 +108,46 @@
                     </div>
                 </div>
 
-                    <div class="seccion-form-ficha seccion-personal admin-form-span-full">
-                        <h3><i class="fas fa-chart-bar"></i> Estadísticas del equipo Bellreguard</h3>
-                        <small class="admin-help-text">Solo se registran datos del equipo de Bellreguard que participe, juegue como local o visitante.</small>
+                    @php
+                        $camposEstadisticas = [
+                            'puntos_anotados' => 'Puntos anotados',
+                            't2_intentados' => 'T2 intentados',
+                            't3_intentados' => 'T3 intentados',
+                            'tl_intentados' => 'TL intentados',
+                            'balones_perdidos' => 'Balones perdidos',
+                            'rebotes_ofensivos' => 'Rebotes ofensivos',
+                            'tiros_anotados' => 'Tiros anotados',
+                            'rebotes_defensivos' => 'Rebotes defensivos',
+                            'asistencias' => 'Asistencias',
+                            'robos' => 'Robos',
+                            'tapones' => 'Tapones',
+                            'faltas' => 'Faltas',
+                        ];
+                    @endphp
 
-                        <div class="campo-ficha" style="margin-top: 18px;">
-                            <label>Equipo de las estadísticas</label>
-                            <select name="estadisticas_equipo_id" class="input-ficha js-estadisticas-equipo" style="background: white;">
-                                <option value="">Asignación automática si solo participa un equipo Bellreguard</option>
-                                @foreach($equiposLocales as $equipo)
-                                    <option value="{{ $equipo->id }}" {{ old('estadisticas_equipo_id') == $equipo->id ? 'selected' : '' }}>
-                                        {{ $equipo->nombre }} ({{ $equipo->categoria }})
-                                    </option>
-                                @endforeach
-                            </select>
-                            <small class="admin-help-text js-estadisticas-help">Si no participa ningún equipo Bellreguard, estos campos se ignorarán.</small>
-                        </div>
+                    <div class="seccion-form-ficha seccion-personal admin-form-span-full">
+                        <h3><i class="fas fa-chart-bar"></i> Estadísticas del equipo local</h3>
+                        <small class="admin-help-text">Se guardan para el equipo seleccionado como local. Pueden quedar vacías en partidos próximos.</small>
 
                         <div class="admin-form-inline-grid" style="margin-top: 18px;">
-                            @foreach(['triples' => 'Triples', 'tiros_libres' => 'Tiros libres', 'rebotes' => 'Rebotes', 'asistencias' => 'Asistencias', 'robos' => 'Robos', 'perdidas' => 'Pérdidas', 'faltas' => 'Faltas'] as $campo => $label)
+                            @foreach($camposEstadisticas as $campo => $label)
                                 <div class="campo-ficha">
                                     <label>{{ $label }}</label>
-                                    <input type="number" min="0" name="{{ $campo }}" value="{{ old('estado', 'proximo') === 'jugado' ? old($campo) : '' }}" class="input-ficha js-estadistica-partido" style="background: white;">
+                                    <input type="number" min="0" name="estadisticas[local][{{ $campo }}]" value="{{ old('estado', 'proximo') === 'jugado' ? old('estadisticas.local.'.$campo) : '' }}" class="input-ficha js-estadistica-partido" style="background: white;">
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div class="seccion-form-ficha seccion-personal admin-form-span-full">
+                        <h3><i class="fas fa-chart-bar"></i> Estadísticas del equipo visitante</h3>
+                        <small class="admin-help-text">Se guardan para el equipo seleccionado como visitante.</small>
+
+                        <div class="admin-form-inline-grid" style="margin-top: 18px;">
+                            @foreach($camposEstadisticas as $campo => $label)
+                                <div class="campo-ficha">
+                                    <label>{{ $label }}</label>
+                                    <input type="number" min="0" name="estadisticas[visitante][{{ $campo }}]" value="{{ old('estado', 'proximo') === 'jugado' ? old('estadisticas.visitante.'.$campo) : '' }}" class="input-ficha js-estadistica-partido" style="background: white;">
                                 </div>
                             @endforeach
                         </div>
@@ -152,20 +170,11 @@
             const estado = document.querySelector('.js-estado-partido');
             const equipoLocal = document.querySelector('.js-equipo-local');
             const equipoVisitante = document.querySelector('.js-equipo-visitante');
-            const equipoEstadisticas = document.querySelector('.js-estadisticas-equipo');
-            const ayudaEstadisticas = document.querySelector('.js-estadisticas-help');
             const puntos = document.querySelectorAll('.js-puntos-partido');
             const estadisticas = document.querySelectorAll('.js-estadistica-partido');
 
             const actualizarMarcador = () => {
                 const esProximo = estado.value === 'proximo';
-                const localSeleccionado = equipoLocal.selectedOptions[0];
-                const visitanteSeleccionado = equipoVisitante.selectedOptions[0];
-                const participantesBellreguard = [localSeleccionado, visitanteSeleccionado]
-                    .filter((option) => option && option.dataset.esLocal === '1')
-                    .map((option) => option.value);
-                const sinEquipoBellreguard = participantesBellreguard.length === 0;
-
                 puntos.forEach((input) => {
                     input.disabled = esProximo;
 
@@ -175,9 +184,9 @@
                 });
 
                 estadisticas.forEach((input) => {
-                    input.disabled = esProximo || sinEquipoBellreguard;
+                    input.disabled = esProximo;
 
-                    if (esProximo || sinEquipoBellreguard) {
+                    if (esProximo) {
                         input.value = '';
                     }
                 });
@@ -186,26 +195,6 @@
                     input.required = !esProximo;
                 });
 
-                if (equipoEstadisticas) {
-                    [...equipoEstadisticas.options].forEach((option) => {
-                        option.hidden = option.value !== '' && !participantesBellreguard.includes(option.value);
-                    });
-
-                    equipoEstadisticas.disabled = esProximo || sinEquipoBellreguard;
-                    equipoEstadisticas.required = !esProximo && participantesBellreguard.length > 1;
-
-                    if (!participantesBellreguard.includes(equipoEstadisticas.value)) {
-                        equipoEstadisticas.value = '';
-                    }
-                }
-
-                if (ayudaEstadisticas) {
-                    ayudaEstadisticas.textContent = sinEquipoBellreguard
-                        ? 'No participa ningún equipo Bellreguard: no se guardarán estadísticas.'
-                        : participantesBellreguard.length > 1
-                            ? 'Participan dos equipos Bellreguard: selecciona a cuál pertenecen las estadísticas.'
-                            : 'Las estadísticas se asignarán al equipo Bellreguard participante.';
-                }
             };
 
             estado.addEventListener('change', actualizarMarcador);

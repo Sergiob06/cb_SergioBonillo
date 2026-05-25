@@ -128,8 +128,8 @@
                 <div>
                     <h4>Mejor partido ofensivo</h4>
                 @php($mejor = $analisisEquipo['mejor_partido_ofensivo'])
-                    <p>{{ $mejor?->equipoLocal?->nombre ?? $mejor?->equipo_local }} vs {{ $mejor?->equipoVisitante?->nombre ?? $mejor?->equipo_visitante }}</p>
-                    <strong>{{ $mejor?->puntos_anotados }} puntos · {{ $mejor?->fecha_partido?->format('d/m/Y') }}</strong>
+                    <p>{{ $mejor?->partido?->equipoLocal?->nombre ?? $mejor?->partido?->equipo_local }} vs {{ $mejor?->partido?->equipoVisitante?->nombre ?? $mejor?->partido?->equipo_visitante }}</p>
+                    <strong>{{ $mejor?->puntos_anotados }} puntos · {{ $mejor?->partido?->fecha_partido?->format('d/m/Y') }}</strong>
                 </div>
             </div>
             <div class="admin-highlight-card">
@@ -137,8 +137,8 @@
                 <div>
                     <h4>Peor partido defensivo</h4>
                 @php($peor = $analisisEquipo['peor_partido_defensivo'])
-                    <p>{{ $peor?->equipoLocal?->nombre ?? $peor?->equipo_local }} vs {{ $peor?->equipoVisitante?->nombre ?? $peor?->equipo_visitante }}</p>
-                    <strong>{{ $peor?->puntos_recibidos }} puntos recibidos · {{ $peor?->fecha_partido?->format('d/m/Y') }}</strong>
+                    <p>{{ $peor?->partido?->equipoLocal?->nombre ?? $peor?->partido?->equipo_local }} vs {{ $peor?->partido?->equipoVisitante?->nombre ?? $peor?->partido?->equipo_visitante }}</p>
+                    <strong>{{ $peor?->estadisticaRival()?->puntos_anotados }} puntos recibidos · {{ $peor?->partido?->fecha_partido?->format('d/m/Y') }}</strong>
                 </div>
             </div>
         </div>

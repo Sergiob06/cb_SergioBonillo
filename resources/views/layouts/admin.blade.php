@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="admin-panel">
+    @php($esAdmin = auth()->user()?->rol === 'admin')
     <div class="contenedor-admin">
         <button type="button" class="admin-overlay" data-admin-nav-close hidden aria-hidden="true" aria-label="Cerrar menu lateral"></button>
 
@@ -48,19 +49,28 @@
                     <i class="fas fa-chart-line"></i> Estadísticas
                 </a>
 
-                <a href="{{ route('galerias.index') }}" class="item-admin {{ request()->is('admin/galerias*') ? 'activo' : '' }}">
-                    <i class="fas fa-camera"></i> Galería
-                </a>
+                @if($esAdmin)
+                    <a href="{{ route('galerias.index') }}" class="item-admin {{ request()->is('admin/galerias*') ? 'activo' : '' }}">
+                        <i class="fas fa-camera"></i> Galería
+                    </a>
 
-                <a href="{{ route('productos.index') }}" class="item-admin {{ request()->is('admin/productos*') ? 'activo' : '' }}">
-                    <i class="fas fa-bag-shopping"></i> Productos
-                </a>
+                    <a href="{{ route('productos.index') }}" class="item-admin {{ request()->is('admin/productos*') ? 'activo' : '' }}">
+                        <i class="fas fa-bag-shopping"></i> Productos
+                    </a>
+                @endif
 
                 <div class="separador-admin"></div>
     
                 <a href="{{ url('/') }}" class="item-admin volver-web">
                     <i class="fas fa-arrow-left"></i> Ver Web
                 </a>
+
+                <form action="{{ route('logout') }}" method="POST" class="admin-logout-form">
+                    @csrf
+                    <button type="submit" class="item-admin admin-logout-button">
+                        <i class="fas fa-right-from-bracket"></i> Cerrar sesión
+                    </button>
+                </form>
             </nav>
         </aside>
 

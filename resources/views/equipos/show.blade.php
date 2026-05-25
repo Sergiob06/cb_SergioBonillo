@@ -54,8 +54,8 @@
                     <div class="caja-detalle">
                         @php($mejor = $analisisEquipo['mejor_partido_ofensivo'])
                         @php($peor = $analisisEquipo['peor_partido_defensivo'])
-                        <div class="fila-detalle"><span>Mejor partido ofensivo</span><div class="valor"><strong>{{ $mejor?->puntos_anotados ?? '-' }} pts</strong><small>{{ $mejor?->fecha_partido?->format('d/m/Y') }}</small></div></div>
-                        <div class="fila-detalle"><span>Peor partido defensivo</span><div class="valor"><strong>{{ $peor?->puntos_recibidos ?? '-' }} recibidos</strong><small>{{ $peor?->fecha_partido?->format('d/m/Y') }}</small></div></div>
+                        <div class="fila-detalle"><span>Mejor partido ofensivo</span><div class="valor"><strong>{{ $mejor?->puntos_anotados ?? '-' }} pts</strong><small>{{ $mejor?->partido?->fecha_partido?->format('d/m/Y') }}</small></div></div>
+                        <div class="fila-detalle"><span>Peor partido defensivo</span><div class="valor"><strong>{{ $peor?->estadisticaRival()?->puntos_anotados ?? '-' }} recibidos</strong><small>{{ $peor?->partido?->fecha_partido?->format('d/m/Y') }}</small></div></div>
                     </div>
                 </div>
             @else

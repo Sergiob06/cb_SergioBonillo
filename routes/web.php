@@ -57,23 +57,48 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         ]);
     })->name('dashboard');
 
-    // RUTAS DE BÚSQUEDA (SIEMPRE antes de los resource)
-    Route::get('equipos/search', [EquipoController::class, 'search'])->name('equipos.search');
-    Route::get('equipos/{equipo}/analisis', [EquipoController::class, 'analisis'])->name('equipos.analisis');
-    Route::get('jugadores/search', [JugadorController::class, 'search'])->name('jugadores.search');
-    Route::get('partidos/search', [PartidoController::class, 'search'])->name('partidos.search');
-    Route::get('estadisticas/search', [EstadisticaController::class, 'search'])->name('estadisticas.search');
-    Route::get('galerias/search', [GaleriaController::class, 'search'])->name('galerias.search');
-    Route::get('productos/search', [ProductController::class, 'search'])->name('productos.search');
-    Route::get('productos/{product}/solicitudes', [ProductoSolicitudController::class, 'index'])->name('productos.solicitudes.index');
-    Route::get('solicitudes-productos/{solicitud}', [ProductoSolicitudController::class, 'show'])->name('productos.solicitudes.show');
-    Route::patch('solicitudes-productos/{solicitud}/estado', [ProductoSolicitudController::class, 'updateEstado'])->name('productos.solicitudes.estado');
+    Route::middleware('role:admin')->group(function () {
+        Route::get('galerias/search', [GaleriaController::class, 'search'])->name('galerias.search');
+        Route::get('productos/search', [ProductController::class, 'search'])->name('productos.search');
+        Route::get('productos/{product}/solicitudes', [ProductoSolicitudController::class, 'index'])->name('productos.solicitudes.index');
+        Route::get('solicitudes-productos/{solicitud}', [ProductoSolicitudController::class, 'show'])->name('productos.solicitudes.show');
+        Route::patch('solicitudes-productos/{solicitud}/estado', [ProductoSolicitudController::class, 'updateEstado'])->name('productos.solicitudes.estado');
 
-    // Route::resource ya crea las 7 rutas (index, create, store, show, edit, update, destroy)
-    Route::resource("equipos", EquipoController::class);
-    Route::resource("jugadores", JugadorController::class);
-    Route::resource("partidos", PartidoController::class);
-    Route::resource("estadisticas", EstadisticaController::class);
-    Route::resource("galerias", GaleriaController::class);
-    Route::resource("productos", ProductController::class);
+        Route::resource("equipos", EquipoController::class)->except(['index', 'show']);
+        Route::resource("jugadores", JugadorController::class)->except(['index', 'show']);
+        Route::get('partidos/create', [PartidoController::class, 'create'])->name('partidos.create');
+        Route::post('partidos', [PartidoController::class, 'store'])->name('partidos.store');
+        Route::get('partidos/{partido}/edit', [PartidoController::class, 'edit'])->name('partidos.edit');
+        Route::match(['put', 'patch'], 'partidos/{partido}', [PartidoController::class, 'update'])->name('partidos.update');
+        Route::delete('partidos/{partido}', [PartidoController::class, 'destroy'])->name('partidos.destroy');
+        Route::delete('estadisticas/{estadistica}', [EstadisticaController::class, 'destroy'])->name('estadisticas.destroy');
+        Route::resource("galerias", GaleriaController::class);
+        Route::resource("productos", ProductController::class);
+    });
+
+    // Rutas deportivas: admin y entrenador pueden consultar e introducir datos.
+    Route::middleware('role:admin,entrenador')->group(function () {
+        Route::get('equipos/search', [EquipoController::class, 'search'])->name('equipos.search');
+        Route::get('equipos/{equipo}/analisis', [EquipoController::class, 'analisis'])->name('equipos.analisis');
+        Route::get('equipos', [EquipoController::class, 'index'])->name('equipos.index');
+        Route::get('equipos/{equipo}', [EquipoController::class, 'show'])->name('equipos.show');
+
+        Route::get('jugadores/search', [JugadorController::class, 'search'])->name('jugadores.search');
+        Route::get('jugadores', [JugadorController::class, 'index'])->name('jugadores.index');
+        Route::get('jugadores/{jugador}', [JugadorController::class, 'show'])->name('jugadores.show');
+
+        Route::get('partidos/search', [PartidoController::class, 'search'])->name('partidos.search');
+        Route::get('partidos', [PartidoController::class, 'index'])->name('partidos.index');
+        Route::get('partidos/{partido}/estadisticas', [PartidoController::class, 'editEstadisticas'])->name('partidos.estadisticas.edit');
+        Route::match(['put', 'patch'], 'partidos/{partido}/estadisticas', [PartidoController::class, 'updateEstadisticas'])->name('partidos.estadisticas.update');
+        Route::get('partidos/{partido}', [PartidoController::class, 'show'])->name('partidos.show');
+
+        Route::get('estadisticas/search', [EstadisticaController::class, 'search'])->name('estadisticas.search');
+        Route::get('estadisticas', [EstadisticaController::class, 'index'])->name('estadisticas.index');
+        Route::get('estadisticas/create', [EstadisticaController::class, 'create'])->name('estadisticas.create');
+        Route::post('estadisticas', [EstadisticaController::class, 'store'])->name('estadisticas.store');
+        Route::get('estadisticas/{estadistica}', [EstadisticaController::class, 'show'])->name('estadisticas.show');
+        Route::get('estadisticas/{estadistica}/edit', [EstadisticaController::class, 'edit'])->name('estadisticas.edit');
+        Route::match(['put', 'patch'], 'estadisticas/{estadistica}', [EstadisticaController::class, 'update'])->name('estadisticas.update');
+    });
 });

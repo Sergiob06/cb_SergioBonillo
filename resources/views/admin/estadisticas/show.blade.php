@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 
 @section('contenido_admin')
+@php($esAdmin = auth()->user()?->rol === 'admin')
 <header class="header-admin">
     <div>
         <h2>Ficha de Estadísticas</h2>
@@ -40,13 +41,15 @@
                 <i class="fas fa-pen"></i>
             </a>
 
-            <form action="{{ route('estadisticas.destroy', $estadistica->id) }}" method="POST" onsubmit="return confirm('¿Eliminar estadística?')" class="admin-detail-inline-form" style="margin: 0; display: flex; align-items: center;">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn-accion borrar" title="Eliminar" style="margin: 0;">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </form>
+            @if($esAdmin)
+                <form action="{{ route('estadisticas.destroy', $estadistica->id) }}" method="POST" onsubmit="return confirm('¿Eliminar estadística?')" class="admin-detail-inline-form" style="margin: 0; display: flex; align-items: center;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn-accion borrar" title="Eliminar" style="margin: 0;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+            @endif
         </div>
     </div>
 </div>

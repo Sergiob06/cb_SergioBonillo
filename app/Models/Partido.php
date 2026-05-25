@@ -61,6 +61,21 @@ class Partido extends Model
         return $this->hasOne(Estadistica::class);
     }
 
+    public function estadisticasEquipos()
+    {
+        return $this->hasMany(EstadisticaEquipo::class);
+    }
+
+    public function estadisticaLocal()
+    {
+        return $this->hasOne(EstadisticaEquipo::class)->where('es_local', true);
+    }
+
+    public function estadisticaVisitante()
+    {
+        return $this->hasOne(EstadisticaEquipo::class)->where('es_local', false);
+    }
+
     public function scopeJugados($query)
     {
         return $query->where('estado', 'jugado');
@@ -96,6 +111,10 @@ class Partido extends Model
 
     public function getPuntosAnotadosAttribute(): ?int
     {
+        if ($estadistica = $this->estadisticaEquipoResuelta()) {
+            return $estadistica->puntos_anotados;
+        }
+
         if ($this->estadisticasPertenecenAlVisitante()) {
             return $this->puntos_visitante;
         }
@@ -109,6 +128,10 @@ class Partido extends Model
 
     public function getPuntosRecibidosAttribute(): ?int
     {
+        if ($estadistica = $this->estadisticaEquipoResuelta()) {
+            return $estadistica->estadisticaRival()?->puntos_anotados;
+        }
+
         if ($this->estadisticasPertenecenAlVisitante()) {
             return $this->puntos_local;
         }
@@ -131,6 +154,14 @@ class Partido extends Model
 
     public function getTieneEstadisticasEquipoAttribute(): bool
     {
+        if ($this->relationLoaded('estadisticasEquipos')) {
+            return $this->estadisticasEquipos->count() >= 2;
+        }
+
+        if ($this->estadisticasEquipos()->exists()) {
+            return $this->estadisticasEquipos()->count() >= 2;
+        }
+
         return $this->es_jugado
             && $this->puntos_local !== null
             && $this->puntos_visitante !== null
@@ -154,6 +185,21 @@ class Partido extends Model
         }
 
         return null;
+    }
+
+    public function estadisticaEquipoResuelta(): ?EstadisticaEquipo
+    {
+        $equipo = $this->equipo_estadisticas_resuelto;
+
+        if (! $equipo) {
+            return null;
+        }
+
+        $estadisticas = $this->relationLoaded('estadisticasEquipos')
+            ? $this->estadisticasEquipos
+            : $this->estadisticasEquipos()->with('partido.estadisticasEquipos')->get();
+
+        return $estadisticas->firstWhere('equipo_id', $equipo->id);
     }
 
     public function participaEquipoLocal(): bool

@@ -1,15 +1,18 @@
 @extends('layouts.admin')
 
 @section('contenido_admin')
+@php($esAdmin = auth()->user()?->rol === 'admin')
 <header class="header-admin">
     <div>
         <h2>Gestión de Partidos</h2>
         <p style="color: #777;">Calendario de encuentros del Bellreguard CB</p>
     </div>
 
-    <a href="{{ route('partidos.create') }}" class="btn-nuevo">
-        <i class="fas fa-plus"></i> Nuevo Partido
-    </a>
+    @if($esAdmin)
+        <a href="{{ route('partidos.create') }}" class="btn-nuevo">
+            <i class="fas fa-plus"></i> Nuevo Partido
+        </a>
+    @endif
 </header>
 
 <div class="contenedor-buscador admin-partidos-filter-wrap">
@@ -54,6 +57,12 @@
     </div>
 @endif
 
+@if(session('mensaje_error'))
+    <div style="padding: 15px; background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; border-radius: 5px; margin-bottom: 20px;">
+        <i class="fas fa-exclamation-circle"></i> {{ session('mensaje_error') }}
+    </div>
+@endif
+
 <div class="pizarra-admin">
     <div class="tabla-admin-wrapper">
     <table class="tabla-admin tabla-admin-listado">
@@ -85,17 +94,31 @@
                                 <i class="fas fa-eye"></i>
                             </a>
 
-                            <a href="{{ route('partidos.edit', $partido->id) }}" class="btn-accion editar" title="Editar" style="margin: 0;">
-                                <i class="fas fa-pen"></i>
-                            </a>
+                            @if($esAdmin)
+                                <a href="{{ route('partidos.edit', $partido->id) }}" class="btn-accion editar" title="Editar partido" style="margin: 0;">
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                            @endif
 
-                            <form action="{{ route('partidos.destroy', $partido->id) }}" method="POST" onsubmit="return confirm('¿Eliminar partido?')" style="margin: 0; display: flex; align-items: center;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-accion borrar" title="Eliminar" style="margin: 0;">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
+                            @if($partido->es_jugado)
+                                <a href="{{ route('partidos.estadisticas.edit', $partido->id) }}" class="btn-accion" title="{{ $partido->tiene_estadisticas_equipo ? 'Editar estadísticas' : 'Añadir estadísticas' }}" style="background-color: #023e8a; color: white;">
+                                    <i class="fas fa-chart-bar"></i>
+                                </a>
+                            @else
+                                <span class="btn-accion" title="Las estadísticas solo pueden añadirse cuando el partido ya ha sido jugado." style="background-color: #bbb; color: white; cursor: not-allowed;">
+                                    <i class="fas fa-chart-bar"></i>
+                                </span>
+                            @endif
+
+                            @if($esAdmin)
+                                <form action="{{ route('partidos.destroy', $partido->id) }}" method="POST" onsubmit="return confirm('¿Eliminar partido?')" style="margin: 0; display: flex; align-items: center;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-accion borrar" title="Eliminar" style="margin: 0;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            @endif
                         </div>
                     </td>
                 </tr>

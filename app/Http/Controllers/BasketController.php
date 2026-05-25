@@ -35,17 +35,10 @@ class BasketController extends Controller
         $equiposLocales = Equipo::where('es_local', true)->orderBy('nombre')->get();
         $categories = Category::orderBy('name')->get();
 
-        $partidos = Partido::with(['category', 'equipoLocal.category', 'equipoVisitante.category', 'equipoEstadisticas.category'])
+        $partidos = Partido::with(['category', 'equipoLocal.category', 'equipoVisitante.category', 'equipoEstadisticas.category', 'estadisticasEquipos.equipo'])
             ->jugados()
-            ->whereHas('equipoEstadisticas', fn ($query) => $query->where('es_local', true))
-            ->whereNotNull('triples')
-            ->whereNotNull('tiros_libres')
-            ->whereNotNull('rebotes')
-            ->whereNotNull('asistencias')
-            ->whereNotNull('robos')
-            ->whereNotNull('perdidas')
-            ->whereNotNull('faltas')
-            ->when($equipoSeleccionado, fn ($query) => $query->where('estadisticas_equipo_id', $equipoSeleccionado))
+            ->whereHas('estadisticasEquipos.equipo', fn ($query) => $query->where('es_local', true))
+            ->when($equipoSeleccionado, fn ($query) => $query->whereHas('estadisticasEquipos', fn ($statsQuery) => $statsQuery->where('equipo_id', $equipoSeleccionado)))
             ->when($categoriaSeleccionada, fn ($query) => $query->where('category_id', $categoriaSeleccionada))
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($searchQuery) use ($search) {
@@ -78,7 +71,7 @@ class BasketController extends Controller
         $equiposLocales = Equipo::where('es_local', true)->orderBy('nombre')->get();
         $categories = Category::orderBy('name')->get();
 
-        $partidos = Partido::with(['equipoLocal.category', 'equipoVisitante.category', 'equipoEstadisticas.category', 'category'])
+        $partidos = Partido::with(['equipoLocal.category', 'equipoVisitante.category', 'equipoEstadisticas.category', 'category', 'estadisticasEquipos.equipo'])
             ->when($equipoSeleccionado, function ($query) use ($equipoSeleccionado) {
                 $query->where(function ($equipoQuery) use ($equipoSeleccionado) {
                     $equipoQuery->where('equipo_local_id', $equipoSeleccionado)
@@ -125,7 +118,7 @@ class BasketController extends Controller
 
     public function partido(Partido $partido)
     {
-        $partido->load(['equipoLocal.category', 'equipoVisitante.category', 'equipoEstadisticas.category']);
+        $partido->load(['equipoLocal.category', 'equipoVisitante.category', 'equipoEstadisticas.category', 'estadisticasEquipos.equipo']);
 
         return view('basket.partido', compact('partido'));
     }

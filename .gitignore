@@ -14,5 +14,7 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+*.sql
+*.tar.gz
 .idea
 .vscode

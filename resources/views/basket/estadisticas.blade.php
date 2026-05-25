@@ -51,6 +51,11 @@
         @php
             $nombreLocal = $partido?->equipoLocal?->nombre ?? $partido?->equipo_local ?? 'Sin local';
             $nombreVisitante = $partido?->equipoVisitante?->nombre ?? $partido?->equipo_visitante ?? 'Sin visitante';
+            $estadisticaBellreguard = $partido->estadisticasEquipos->first(fn ($estadistica) => $estadistica->equipo?->es_local);
+            $estadisticaRival = $estadisticaBellreguard?->estadisticaRival();
+            $diferencia = $estadisticaBellreguard && $estadisticaRival
+                ? $estadisticaBellreguard->puntos_anotados - $estadisticaRival->puntos_anotados
+                : null;
         @endphp
 
         <article class="caja-detalle estadistica-card">
@@ -62,16 +67,16 @@
                         {{ $partido?->fecha_partido?->format('d/m/Y H:i') ?? 'Sin fecha' }}
                         · {{ $partido?->lugar ?? 'Sin lugar' }}
                         · Resultado: {{ $partido?->resultado ?? 'Pendiente' }}
-                        · Estadísticas: {{ $partido?->equipo_estadisticas_resuelto?->nombre ?? 'Bellreguard' }}
+                        · Estadísticas: {{ $estadisticaBellreguard?->equipo?->nombre ?? 'Bellreguard' }}
                     </p>
                 </div>
             </div>
 
             <div class="rejilla-stats-top estadistica-card-stats">
-                <div class="card-stat"><div class="stat-info"><h3>{{ $partido->puntos_anotados ?? '-' }}</h3><p>Puntos anotados</p></div></div>
-                <div class="card-stat"><div class="stat-info"><h3>{{ $partido->puntos_recibidos ?? '-' }}</h3><p>Puntos recibidos</p></div></div>
-                <div class="card-stat"><div class="stat-info"><h3>{{ $partido->diferencia_puntos ?? '-' }}</h3><p>Diferencia</p></div></div>
-                <div class="card-stat"><div class="stat-info"><h3>{{ $partido->rebotes ?? '-' }}</h3><p>Rebotes</p></div></div>
+                <div class="card-stat"><div class="stat-info"><h3>{{ $estadisticaBellreguard?->puntos_anotados ?? '-' }}</h3><p>Puntos anotados</p></div></div>
+                <div class="card-stat"><div class="stat-info"><h3>{{ $estadisticaRival?->puntos_anotados ?? '-' }}</h3><p>Puntos recibidos</p></div></div>
+                <div class="card-stat"><div class="stat-info"><h3>{{ $diferencia ?? '-' }}</h3><p>Diferencia</p></div></div>
+                <div class="card-stat"><div class="stat-info"><h3>{{ $estadisticaBellreguard?->rebotes_totales ?? '-' }}</h3><p>Rebotes</p></div></div>
             </div>
 
             <div class="estadistica-card-actions">

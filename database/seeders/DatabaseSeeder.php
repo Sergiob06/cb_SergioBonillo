@@ -19,20 +19,35 @@ class DatabaseSeeder extends Seeder
     {
         SeasonSimulationStore::reset();
 
-        User::firstOrCreate(
+        $admin = User::firstOrCreate(
             ['email' => 'admin@bellreguard.com'],
             [
                 'name' => 'Admin Bellreguard',
+                'rol' => 'admin',
                 'password' => Hash::make('12345678'),
             ]
         );
 
+        $admin->forceFill(['rol' => 'admin'])->save();
+
+        User::updateOrCreate(
+            ['email' => 'entrenador@basketbellreguard.es'],
+            [
+                'name' => 'Entrenador Bellreguard',
+                'rol' => 'entrenador',
+                'password' => Hash::make('password'),
+            ]
+        );
+
         $this->call([
+            CategoriaSeeder::class,
+            PosicionSeeder::class,
             EquipoSeeder::class,
             JugadorSeeder::class,
             PartidoSeeder::class,
             EstadisticaSeeder::class,
             ProductSeeder::class,
+            ProductoSolicitudSeeder::class,
             GaleriaSeeder::class,
         ]);
     }

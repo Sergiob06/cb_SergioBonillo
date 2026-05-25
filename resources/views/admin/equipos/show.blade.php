@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 
 @section('contenido_admin')
+@php($esAdmin = auth()->user()?->rol === 'admin')
 <header class="header-admin">
     <h2>Ficha del Equipo: {{ $equipo->nombre }}</h2>
     <a href="{{ route('equipos.index') }}" class="btn-nuevo" style="background-color: #777;">
@@ -48,10 +49,11 @@
 
             <div class="admin-detail-actions">
 
-                {{-- Botón Editar: Pasa el ID del equipo en la URL para saber cuál editar --}}
-                <a href="{{ route('equipos.edit', $equipo->id) }}" class="btn-accion editar" title="Editar" style="margin: 0;">
-                    <i class="fas fa-pen"></i>
-                </a>
+                @if($esAdmin)
+                    <a href="{{ route('equipos.edit', $equipo->id) }}" class="btn-accion editar" title="Editar" style="margin: 0;">
+                        <i class="fas fa-pen"></i>
+                    </a>
+                @endif
 
                 @if($equipo->es_local)
                     <a href="{{ route('equipos.analisis', $equipo) }}" class="btn-accion" title="Análisis del equipo" style="background-color: #6f42c1; color: white;">
@@ -59,14 +61,15 @@
                     </a>
                 @endif
                         
-                {{-- Formulario para Borrar: Es un formulario porque usa el método DELETE --}}
-                <form action="{{ route('equipos.destroy', $equipo->id) }}" method="POST" onsubmit="return confirm('¿Eliminar equipo?')" class="admin-detail-inline-form" style="margin: 0; display: flex; align-items: center;">
-                    @csrf {{-- Token de seguridad obligatorio --}}
-                    @method('DELETE') {{-- Le dice a Laravel que use la función destroy --}}
-                    <button type="submit" class="btn-accion borrar" title="Eliminar" style="margin: 0;">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </form>
+                @if($esAdmin)
+                    <form action="{{ route('equipos.destroy', $equipo->id) }}" method="POST" onsubmit="return confirm('¿Eliminar equipo?')" class="admin-detail-inline-form" style="margin: 0; display: flex; align-items: center;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn-accion borrar" title="Eliminar" style="margin: 0;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                @endif
             </div>
         </div>
     </div>

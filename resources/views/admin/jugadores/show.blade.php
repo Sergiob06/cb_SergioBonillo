@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 
 @section('contenido_admin')
+@php($esAdmin = auth()->user()?->rol === 'admin')
 <div class="contenedor-edit-jugador">
     
     <header class="header-ficha">
@@ -10,17 +11,19 @@
         </div>
         <div class="acciones-header-ficha">
             
-            <a href="{{ route('jugadores.edit', $jugador->id) }}" class="btn-ficha-accion btn-ficha-edit">
-                <i class="fas fa-edit"></i>&nbsp;EDITAR
-            </a>
+            @if($esAdmin)
+                <a href="{{ route('jugadores.edit', $jugador->id) }}" class="btn-ficha-accion btn-ficha-edit">
+                    <i class="fas fa-edit"></i>&nbsp;EDITAR
+                </a>
 
-            <form action="{{ route('jugadores.destroy', $jugador->id) }}" method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar este jugador?')" class="admin-detail-inline-form" style="margin: 0;">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn-ficha-accion btn-ficha-delete">
-                    <i class="fas fa-trash-alt"></i>&nbsp;ELIMINAR
-                </button>
-            </form>
+                <form action="{{ route('jugadores.destroy', $jugador->id) }}" method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar este jugador?')" class="admin-detail-inline-form" style="margin: 0;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn-ficha-accion btn-ficha-delete">
+                        <i class="fas fa-trash-alt"></i>&nbsp;ELIMINAR
+                    </button>
+                </form>
+            @endif
 
             <a href="{{ route('jugadores.index') }}" class="btn-ficha-accion btn-ficha-volver" style="background-color: #777;">
                 <i class="fas fa-arrow-left"></i> Volver al listado

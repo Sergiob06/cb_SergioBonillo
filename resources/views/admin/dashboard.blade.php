@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 
 @section('contenido_admin')
+@php($esAdmin = auth()->user()?->rol === 'admin')
 <section class="admin-dashboard">
 <header class="header-admin admin-dashboard-header">
     <div class="admin-dashboard-heading">
@@ -47,24 +48,26 @@
                 <p>Estadísticas</p>
             </div>
         </article>
-        <article class="tarjeta-vacia admin-dashboard-card">
-            <div class="admin-dashboard-icono">
-                <i class="fas fa-camera" aria-hidden="true"></i>
-            </div>
-            <div class="admin-dashboard-card-body">
-                <h3>{{ $resumenAdmin['galerias'] }}</h3>
-                <p>Galería</p>
-            </div>
-        </article>
-        <article class="tarjeta-vacia admin-dashboard-card">
-            <div class="admin-dashboard-icono">
-                <i class="fas fa-bag-shopping" aria-hidden="true"></i>
-            </div>
-            <div class="admin-dashboard-card-body">
-                <h3>{{ $resumenAdmin['productos'] }}</h3>
-                <p>Productos</p>
-            </div>
-        </article>
+        @if($esAdmin)
+            <article class="tarjeta-vacia admin-dashboard-card">
+                <div class="admin-dashboard-icono">
+                    <i class="fas fa-camera" aria-hidden="true"></i>
+                </div>
+                <div class="admin-dashboard-card-body">
+                    <h3>{{ $resumenAdmin['galerias'] }}</h3>
+                    <p>Galería</p>
+                </div>
+            </article>
+            <article class="tarjeta-vacia admin-dashboard-card">
+                <div class="admin-dashboard-icono">
+                    <i class="fas fa-bag-shopping" aria-hidden="true"></i>
+                </div>
+                <div class="admin-dashboard-card-body">
+                    <h3>{{ $resumenAdmin['productos'] }}</h3>
+                    <p>Productos</p>
+                </div>
+            </article>
+        @endif
     </div>
 </div>
 </section>

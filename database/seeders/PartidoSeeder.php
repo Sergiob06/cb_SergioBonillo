@@ -79,11 +79,14 @@ class PartidoSeeder extends Seeder
                     }
                 }
             });
+
+        $this->crearProximosDeEjemplo($equipos);
     }
 
     private function crearPartido(Equipo $local, Equipo $visitante, Equipo $equipoEstadisticas, CarbonImmutable $fecha): Partido
     {
-        [$puntosLocal, $puntosVisitante] = $this->resultadoRealista($local, $visitante);
+        $esProximo = $fecha->greaterThan(CarbonImmutable::create(2026, 5, 25, 23, 59));
+        [$puntosLocal, $puntosVisitante] = $esProximo ? [null, null] : $this->resultadoRealista($local, $visitante);
 
         return Partido::updateOrCreate([
             'equipo_local_id' => $local->id,
@@ -97,11 +100,51 @@ class PartidoSeeder extends Seeder
             'equipo_local' => $local->nombre,
             'equipo_visitante' => $visitante->nombre,
             'fecha_partido' => $fecha,
-            'estado' => 'jugado',
+            'estado' => $esProximo ? 'proximo' : 'jugado',
             'lugar' => LocalLeagueCatalog::venueForTeam($local->nombre),
             'puntos_local' => $puntosLocal,
             'puntos_visitante' => $puntosVisitante,
-        ] + $this->estadisticasDeEjemplo($puntosLocal, $puntosVisitante));
+        ] + ($esProximo ? $this->estadisticasVacias() : $this->estadisticasDeEjemplo($puntosLocal, $puntosVisitante)));
+    }
+
+    private function crearProximosDeEjemplo(Collection $equipos): void
+    {
+        $bellreguard = $equipos->first(fn (Equipo $equipo) => $equipo->es_local);
+
+        if (! $bellreguard) {
+            return;
+        }
+
+        $rival = $equipos->first(fn (Equipo $equipo) => ! $equipo->es_local && $equipo->category_id === $bellreguard->category_id)
+            ?? $equipos->first(fn (Equipo $equipo) => ! $equipo->es_local);
+
+        if (! $rival) {
+            return;
+        }
+
+        $this->crearPartidoProximo($bellreguard, $rival, $bellreguard, CarbonImmutable::create(2026, 6, 6, 18, 30));
+        $this->crearPartidoProximo($rival, $bellreguard, $bellreguard, CarbonImmutable::create(2026, 6, 13, 18, 30));
+    }
+
+    private function crearPartidoProximo(Equipo $local, Equipo $visitante, Equipo $equipoEstadisticas, CarbonImmutable $fecha): Partido
+    {
+        return Partido::updateOrCreate([
+            'equipo_local_id' => $local->id,
+            'equipo_visitante_id' => $visitante->id,
+            'fecha_partido' => $fecha,
+        ], [
+            'equipo_local_id' => $local->id,
+            'equipo_visitante_id' => $visitante->id,
+            'estadisticas_equipo_id' => $equipoEstadisticas->id,
+            'category_id' => $equipoEstadisticas->category_id ?? $local->category_id,
+            'equipo_local' => $local->nombre,
+            'equipo_visitante' => $visitante->nombre,
+            'fecha_partido' => $fecha,
+            'estado' => 'proximo',
+            'lugar' => LocalLeagueCatalog::venueForTeam($local->nombre),
+            'puntos_local' => null,
+            'puntos_visitante' => null,
+        ] + $this->estadisticasVacias());
     }
 
     /**
@@ -152,6 +195,22 @@ class PartidoSeeder extends Seeder
             'robos' => $this->numberFor('robos', $puntosLocal, $puntosVisitante, 3, 14),
             'perdidas' => $this->numberFor('perdidas', $puntosLocal, $puntosVisitante, 6, 18),
             'faltas' => $this->numberFor('faltas', $puntosLocal, $puntosVisitante, 10, 25),
+        ];
+    }
+
+    /**
+     * @return array<string, null>
+     */
+    private function estadisticasVacias(): array
+    {
+        return [
+            'triples' => null,
+            'tiros_libres' => null,
+            'rebotes' => null,
+            'asistencias' => null,
+            'robos' => null,
+            'perdidas' => null,
+            'faltas' => null,
         ];
     }
 

@@ -1,15 +1,18 @@
 @extends('layouts.admin')
 
 @section('contenido_admin')
+@php($esAdmin = auth()->user()?->rol === 'admin')
 <header class="header-admin">
     <div>
         <h2>Gestión de Jugadores</h2>
         <p style="color: #777;">Plantilla completa del club</p>
     </div>
     
-    <a href="{{ route('jugadores.create') }}" class="btn-nuevo">
-        <i class="fas fa-plus"></i> Añadir Jugador
-    </a>
+    @if($esAdmin)
+        <a href="{{ route('jugadores.create') }}" class="btn-nuevo">
+            <i class="fas fa-plus"></i> Añadir Jugador
+        </a>
+    @endif
 </header>
 
 
@@ -115,19 +118,19 @@
                             <i class="fas fa-eye"></i>
                         </a>
 
-                        {{-- Botón Editar --}}
-                        <a href="{{ route ('jugadores.edit', $jugador->id)}}" class="btn-accion editar" title="Editar" style="margin: 0;">
-                            <i class="fas fa-pen"></i>
-                        </a>
-                        
-                        {{-- Formulario Borrar --}}
-                        <form action="{{ route ('jugadores.destroy', $jugador->id)}}" method="POST" onsubmit="return confirm('¿Eliminar jugador?')" style="margin: 0; display: flex; align-items: center;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn-accion borrar" title="Eliminar" style="margin: 0;">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
+                        @if($esAdmin)
+                            <a href="{{ route ('jugadores.edit', $jugador->id)}}" class="btn-accion editar" title="Editar" style="margin: 0;">
+                                <i class="fas fa-pen"></i>
+                            </a>
+
+                            <form action="{{ route ('jugadores.destroy', $jugador->id)}}" method="POST" onsubmit="return confirm('¿Eliminar jugador?')" style="margin: 0; display: flex; align-items: center;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-accion borrar" title="Eliminar" style="margin: 0;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        @endif
 
                     </div>
                 </td>

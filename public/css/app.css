@@ -2447,6 +2447,18 @@ body, html {
     transition: 0.3s;
 }
 
+.admin-logout-form {
+    margin: 0;
+}
+
+.admin-logout-button {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
+    cursor: pointer;
+}
+
 .item-admin i { width: 20px; text-align: center; font-size: 18px; }
 
 .item-admin:hover {

@@ -18,7 +18,7 @@ class PartidoController extends Controller
         $estadoSeleccionado = $request->get('estado');
         $categories = Category::orderBy('name')->get();
 
-        $partidos = Partido::with(['equipoLocal.category', 'equipoVisitante.category', 'equipoEstadisticas.category', 'category'])
+        $partidos = Partido::with(['equipoLocal.category', 'equipoVisitante.category', 'equipoEstadisticas.category', 'category', 'estadisticasEquipos'])
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($searchQuery) use ($search) {
                     $searchQuery->where('equipo_local', 'like', '%' . $search . '%')
@@ -62,7 +62,7 @@ class PartidoController extends Controller
         $equipoEstadisticas = $this->resolverEquipoEstadisticas($datosValidados, $equipoLocal, $equipoVisitante);
         $datosValidados = $this->normalizarEstadisticas($datosValidados, $equipoEstadisticas);
 
-        Partido::create([
+        $partido = Partido::create([
             'equipo_local_id' => $equipoLocal->id,
             'equipo_visitante_id' => $equipoVisitante->id,
             'estadisticas_equipo_id' => $equipoEstadisticas?->id,
@@ -83,23 +83,38 @@ class PartidoController extends Controller
             'faltas' => $datosValidados['faltas'] ?? null,
         ]);
 
+        $this->sincronizarEstadisticasEquipos($partido, $datosValidados, $equipoLocal, $equipoVisitante);
+
         return redirect()->route('partidos.index')->with('mensaje', 'Partido creado correctamente');
     }
 
     public function show($id)
     {
-        $partido = Partido::with(['equipoLocal.category', 'equipoVisitante.category', 'equipoEstadisticas.category', 'category'])->findOrFail($id);
+        $partido = Partido::with(['equipoLocal.category', 'equipoVisitante.category', 'equipoEstadisticas.category', 'category', 'estadisticasEquipos.equipo'])->findOrFail($id);
 
         return view('admin.partidos.show', compact('partido'));
     }
 
     public function edit($id)
     {
-        $partido = Partido::findOrFail($id);
+        $partido = Partido::with('estadisticasEquipos')->findOrFail($id);
         $equipos = Equipo::orderBy('nombre', 'asc')->get();
         $equiposLocales = $equipos->where('es_local', true)->values();
 
         return view('admin.partidos.edit', compact('partido', 'equipos', 'equiposLocales'));
+    }
+
+    public function editEstadisticas(Partido $partido)
+    {
+        $partido->load(['equipoLocal', 'equipoVisitante', 'estadisticasEquipos.equipo']);
+
+        if (!$partido->es_jugado) {
+            return redirect()
+                ->route('partidos.show', $partido)
+                ->with('mensaje_error', 'Las estadísticas solo pueden añadirse cuando el partido ya ha sido jugado.');
+        }
+
+        return view('admin.partidos.estadisticas', compact('partido'));
     }
 
     public function update(Request $request, $id)
@@ -132,7 +147,54 @@ class PartidoController extends Controller
         $partido->faltas = $datosValidados['faltas'] ?? null;
         $partido->save();
 
+        $this->sincronizarEstadisticasEquipos($partido, $datosValidados, $equipoLocal, $equipoVisitante);
+
         return redirect()->route('partidos.index')->with('mensaje', 'Partido actualizado correctamente');
+    }
+
+    public function updateEstadisticas(Request $request, Partido $partido)
+    {
+        $partido->load(['equipoLocal', 'equipoVisitante']);
+
+        if (!$partido->es_jugado) {
+            throw ValidationException::withMessages([
+                'estadisticas' => 'Las estadísticas solo pueden añadirse cuando el partido ya ha sido jugado.',
+            ]);
+        }
+
+        if (!$partido->equipoLocal || !$partido->equipoVisitante) {
+            throw ValidationException::withMessages([
+                'estadisticas' => 'El partido debe tener equipo local y visitante para introducir estadísticas.',
+            ]);
+        }
+
+        $datosValidados = $this->validarEstadisticasEquipos($request);
+        $estadisticasLocal = $datosValidados['estadisticas']['local'];
+        $estadisticasVisitante = $datosValidados['estadisticas']['visitante'];
+
+        $this->guardarEstadisticaEquipo(
+            $partido,
+            $partido->equipoLocal,
+            true,
+            $estadisticasLocal,
+            $partido->puntos_local
+        );
+
+        $this->guardarEstadisticaEquipo(
+            $partido,
+            $partido->equipoVisitante,
+            false,
+            $estadisticasVisitante,
+            $partido->puntos_visitante
+        );
+
+        $this->sincronizarResultadoDesdeEstadisticas(
+            $partido,
+            (int) $estadisticasLocal['puntos_anotados'],
+            (int) $estadisticasVisitante['puntos_anotados']
+        );
+
+        return redirect()->route('partidos.show', $partido)->with('mensaje', 'Estadísticas actualizadas correctamente');
     }
 
     public function destroy($id)
@@ -166,6 +228,33 @@ class PartidoController extends Controller
             'robos' => 'nullable|integer|min:0|max:99',
             'perdidas' => 'nullable|integer|min:0|max:99',
             'faltas' => 'nullable|integer|min:0|max:99',
+            'estadisticas' => 'nullable|array',
+            'estadisticas.local' => 'nullable|array',
+            'estadisticas.visitante' => 'nullable|array',
+            'estadisticas.local.puntos_anotados' => 'nullable|integer|min:0|max:300',
+            'estadisticas.visitante.puntos_anotados' => 'nullable|integer|min:0|max:300',
+            'estadisticas.local.t2_intentados' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.t2_intentados' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.t3_intentados' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.t3_intentados' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.tl_intentados' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.tl_intentados' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.balones_perdidos' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.balones_perdidos' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.rebotes_ofensivos' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.rebotes_ofensivos' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.tiros_anotados' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.tiros_anotados' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.rebotes_defensivos' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.rebotes_defensivos' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.asistencias' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.asistencias' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.robos' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.robos' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.tapones' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.tapones' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.faltas' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.faltas' => 'nullable|integer|min:0|max:200',
         ], [
             'equipo_local_id.required' => 'Debes seleccionar el equipo local.',
             'equipo_local_id.exists' => 'El equipo local seleccionado no existe.',
@@ -187,11 +276,48 @@ class PartidoController extends Controller
         return $datos;
     }
 
+    private function validarEstadisticasEquipos(Request $request): array
+    {
+        return $request->validate([
+            'estadisticas' => 'required|array',
+            'estadisticas.local' => 'required|array',
+            'estadisticas.visitante' => 'required|array',
+            'estadisticas.local.puntos_anotados' => 'required|integer|min:0|max:300',
+            'estadisticas.visitante.puntos_anotados' => 'required|integer|min:0|max:300',
+            'estadisticas.local.t2_intentados' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.t2_intentados' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.t3_intentados' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.t3_intentados' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.tl_intentados' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.tl_intentados' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.balones_perdidos' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.balones_perdidos' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.rebotes_ofensivos' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.rebotes_ofensivos' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.tiros_anotados' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.tiros_anotados' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.rebotes_defensivos' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.rebotes_defensivos' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.asistencias' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.asistencias' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.robos' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.robos' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.tapones' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.tapones' => 'nullable|integer|min:0|max:200',
+            'estadisticas.local.faltas' => 'nullable|integer|min:0|max:200',
+            'estadisticas.visitante.faltas' => 'nullable|integer|min:0|max:200',
+        ], [
+            'estadisticas.local.puntos_anotados.required' => 'Debes indicar los puntos anotados del equipo local para actualizar el resultado.',
+            'estadisticas.visitante.puntos_anotados.required' => 'Debes indicar los puntos anotados del equipo visitante para actualizar el resultado.',
+        ]);
+    }
+
     private function normalizarMarcador(array $datos): array
     {
         if (($datos['estado'] ?? 'proximo') === 'proximo') {
             $datos['puntos_local'] = null;
             $datos['puntos_visitante'] = null;
+            $datos['estadisticas'] = [];
             foreach (['triples', 'tiros_libres', 'rebotes', 'asistencias', 'robos', 'perdidas', 'faltas'] as $campo) {
                 $datos[$campo] = null;
             }
@@ -228,13 +354,7 @@ class PartidoController extends Controller
             return $equiposBellreguard->first();
         }
 
-        if ($equiposBellreguard->count() === 1) {
-            return $equiposBellreguard->first();
-        }
-
-        throw ValidationException::withMessages([
-            'estadisticas_equipo_id' => 'Si participan dos equipos de Bellreguard, selecciona a qué equipo pertenecen las estadísticas.',
-        ]);
+        return $equiposBellreguard->first();
     }
 
     private function normalizarEstadisticas(array $datos, ?Equipo $equipoEstadisticas): array
@@ -251,5 +371,84 @@ class PartidoController extends Controller
         $datos['estadisticas_equipo_id'] = $equipoEstadisticas->id;
 
         return $datos;
+    }
+
+    private function sincronizarEstadisticasEquipos(Partido $partido, array $datos, Equipo $equipoLocal, Equipo $equipoVisitante): void
+    {
+        if (($datos['estado'] ?? 'proximo') !== 'jugado') {
+            $partido->estadisticasEquipos()->delete();
+            return;
+        }
+
+        $partido->estadisticasEquipos()
+            ->whereNotIn('equipo_id', [$equipoLocal->id, $equipoVisitante->id])
+            ->delete();
+
+        $estadisticas = $datos['estadisticas'] ?? [];
+
+        $this->guardarEstadisticaEquipo(
+            $partido,
+            $equipoLocal,
+            true,
+            $estadisticas['local'] ?? [],
+            $datos['puntos_local'] ?? null
+        );
+
+        $this->guardarEstadisticaEquipo(
+            $partido,
+            $equipoVisitante,
+            false,
+            $estadisticas['visitante'] ?? [],
+            $datos['puntos_visitante'] ?? null
+        );
+
+        $this->sincronizarResultadoDesdeEstadisticas(
+            $partido,
+            (int) ($estadisticas['local']['puntos_anotados'] ?? $datos['puntos_local']),
+            (int) ($estadisticas['visitante']['puntos_anotados'] ?? $datos['puntos_visitante'])
+        );
+    }
+
+    private function guardarEstadisticaEquipo(Partido $partido, Equipo $equipo, bool $esLocal, array $estadisticas, ?int $puntosMarcador): void
+    {
+        $campos = [
+            'puntos_anotados',
+            't2_intentados',
+            't3_intentados',
+            'tl_intentados',
+            'balones_perdidos',
+            'rebotes_ofensivos',
+            'tiros_anotados',
+            'rebotes_defensivos',
+            'asistencias',
+            'robos',
+            'tapones',
+            'faltas',
+        ];
+
+        $datos = [
+            'es_local' => $esLocal,
+            'puntos_anotados' => $estadisticas['puntos_anotados'] ?? $puntosMarcador,
+        ];
+
+        foreach ($campos as $campo) {
+            if ($campo === 'puntos_anotados') {
+                continue;
+            }
+
+            $datos[$campo] = $estadisticas[$campo] ?? null;
+        }
+
+        $partido->estadisticasEquipos()->updateOrCreate([
+            'equipo_id' => $equipo->id,
+        ], $datos);
+    }
+
+    private function sincronizarResultadoDesdeEstadisticas(Partido $partido, int $puntosLocal, int $puntosVisitante): void
+    {
+        $partido->forceFill([
+            'puntos_local' => $puntosLocal,
+            'puntos_visitante' => $puntosVisitante,
+        ])->save();
     }
 }
